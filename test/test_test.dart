@@ -18,12 +18,6 @@ void main() {
   });
 }
 
-
-Dart
-// FILE: test.dart
-
-import 'package:flutter/material.dart';
-
 // Dummy widget for testing
 class MyApp extends StatelessWidget {
   @override
