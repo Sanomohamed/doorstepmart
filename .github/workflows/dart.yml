@@ -21,6 +21,9 @@ jobs:
         echo "${{ github.workspace }}/flutter/bin" >> $GITHUB_PATH
         flutter/bin/flutter doctor
 
+    - name: Create test directory if missing
+      run: mkdir -p test
+
     - name: Install dependencies
       run: flutter pub get
 
