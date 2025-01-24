@@ -1,0 +1,32 @@
+{
+    "cSpell.words": [
+        "allprojects",
+        "ananas",
+        "appinvite",
+        "beveragesection",
+        "doorstepmart",
+        "favoritemodel",
+        "firebaseapp",
+        "firebasestorage",
+        "fluttertoast",
+        "forgetpassword",
+        "googleservice",
+        "headeersection",
+        "homeheader",
+        "locationsection",
+        "loginbuttons",
+        "loginform",
+        "mobilesdk",
+        "offersection",
+        "orderbutton",
+        "ordersumary",
+        "paymentmethod",
+        "productgrid",
+        "promocode",
+        "promotionsection",
+        "redbull",
+        "signupform",
+        "subprojects"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
+}
