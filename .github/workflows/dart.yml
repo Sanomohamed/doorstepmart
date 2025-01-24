@@ -1,42 +1,66 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Dart
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push,github/workflows/dart.yml`:
+
+```yaml
+name: Dart:
+
+```yaml
+name: Dart
+
+on: [push, pull_request pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-l
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+atest
+
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout repository
+-on: ubuntu-latest
 
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+    steps:
+    - name: Checkout repository    steps:
+    - uses: actions/checkout@v2
 
-      - name: Install dependencies
-        run: flutter pub get
+    - name
+      uses: actions/checkout@v2
 
-      # Uncomment this step to verify the use of 'dart format' on each commit.
-      # - name: Verify formatting
-      #   run: dart format --output=none --set-exit-if-changed .
+    - name      uses: actions/checkout@v2
 
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
-      - name: Analyze project source
-        run: dart analyze
+    - name: Set up Dart: Set up Dart
+      uses: dart-lang/setup-dart@: Set up Dart
+      uses: dart-lang/setup-dart@
+      uses: dart-lang/setup-dart@v1
+      with:
+v1
+      with:
+        sdk: stable
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
-      - name: Run tests
-        run: flutter test
+    - name: Install Flutter
+             sdk: stable
+
+    - name: Set up Flutter
+      run: |
+        git clone https://github.com/flutter/flutter.git -b stable --depth 1
+        echo "$ run: |
+        git clone https://github.com/flutter/flutterGITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
+
+   v1
+      with:
+        sdk: stable
+    
+    - name:.git -b stable --depth 1
+        echo "$PWD/flutter/bin - name: Flutter Pub Get
+      run: flutter pub get
