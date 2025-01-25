@@ -26,6 +26,7 @@ class HomeHeader extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
                     color: Colors.white.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(20),
                   ),
