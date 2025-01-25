@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "892621779554",
-    "project_id": "doorstep-96389",
-    "storage_bucket": "doorstep-96389.firebasestorage.app"
+    "project_number": "572521062790",
+    "project_id": "doorstepmart-9c3ad",
+    "storage_bucket": "doorstepmart-9c3ad.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:892621779554:android:29c07f9a045994f562573b",
+        "mobilesdk_app_id": "1:572521062790:android:c9ef1d3b699f3649db4c07",
         "android_client_info": {
           "package_name": "com.example.doorstepmart"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAkXKEc_2sTyXAQxnXO8xI9p_6SeBggNRA"
+          "current_key": "AIzaSyCO9ZztK3mpYE5BTfNR4pjynkULJ4ysp2E"
         }
       ],
       "services": {
