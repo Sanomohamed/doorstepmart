@@ -134,24 +134,24 @@ class Login extends StatelessWidget {
                       ),
 
                       SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomIconButton(
-                            icon: Icons.login,
-                            onPressed: () {
+                      //Row(
+                      //  mainAxisAlignment: MainAxisAlignment.center,
+                      //  children: [
+                          //CustomIconButton(
+                           // icon: Icons.login,
+                         //   onPressed: () {
                               // Add your onPressed code here!
-                            },
-                          ),
+                          //  },
+                         // ),
                           SizedBox(width: 20),
-                          CustomIconButton(
-                            icon: Icons.apple,
-                            onPressed: () {
+                          //CustomIconButton(
+                          //  icon: Icons.apple,
+                          //  onPressed: () {
                               // Add your onPressed code here!
-                            },
-                          ),
-                        ],
-                      ),
+                          //  },
+                         // ),
+                       // ],
+                     // ),
                     ],
                   ),
                 ),

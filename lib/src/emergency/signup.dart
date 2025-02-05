@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../custom_widgets.dart';
+//import '../custom_widgets.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});
@@ -96,25 +96,25 @@ class Signup extends StatelessWidget {
                         thickness: 1,
                       ),
                       SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomIconButton(
-                            icon: Icons.login,
-                            onPressed: () {
+                     // Row(
+                     //   mainAxisAlignment: MainAxisAlignment.center,
+                       // children: [
+                         // CustomIconButton(
+                          //  icon: Icons.login,
+                          //  onPressed: () {
+                          //    // Add your onPressed code here!
+                          //  },
+                         // ),
+                         // SizedBox(width: 20),
+                          //CustomIconButton(
+                          //  icon: Icons.apple,
+                         //   onPressed: () {
                               // Add your onPressed code here!
-                            },
-                          ),
-                          SizedBox(width: 20),
-                          CustomIconButton(
-                            icon: Icons.apple,
-                            onPressed: () {
-                              // Add your onPressed code here!
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
+                        //    },
+                        //  ),
+                      //  ],
+                    //  ),
+    ],
                   ),
                 ),
               ],

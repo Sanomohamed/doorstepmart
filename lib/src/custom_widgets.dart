@@ -1,40 +1,34 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget{
+class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
+  final TextEditingController controller;
 
   const CustomTextField({
     super.key,
-   required this.hintText,
-    this.obscureText = false, required TextEditingController controller,
+    required this.hintText,
+    this.obscureText = false,
+    required this.controller,
   });
 
   @override
-  Widget build(BuildContext context){
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(color: Colors.white),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          // ignore: deprecated_member_use
-          fillColor: Colors.white.withOpacity(0.3),
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        hintText: hintText,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-        style: TextStyle(color: Colors.white),
-        obscureText: obscureText,
       ),
     );
   }
 }
 
-class CustomIconButton extends StatelessWidget{
-  final IconData icon;
+class CustomIconButton extends StatelessWidget {
+  final Widget icon;
   final VoidCallback onPressed;
 
   const CustomIconButton({
@@ -44,10 +38,9 @@ class CustomIconButton extends StatelessWidget{
   });
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(icon),
-      color: Colors.white,
+      icon: icon,
       iconSize: 40,
       onPressed: onPressed,
     );

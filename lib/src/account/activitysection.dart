@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 class ActivitySection extends StatelessWidget {
+  
   const ActivitySection({super.key});
 
   @override

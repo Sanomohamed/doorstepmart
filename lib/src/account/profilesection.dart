@@ -1,8 +1,38 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ProfileSection extends StatelessWidget {
+class ProfileSection extends StatefulWidget {
   const ProfileSection({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _ProfileSectionState createState() => _ProfileSectionState();
+}
+
+class _ProfileSectionState extends State<ProfileSection> {
+  final TextEditingController _usernameController = TextEditingController();
+  String? _email;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserEmail();
+  }
+
+  Future<void> _fetchUserEmail() async {
+    try {
+      final User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        setState(() {
+          _email = user.email;
+          _usernameController.text = user.displayName ?? 'Username'; // Replace with actual username if available
+        });
+      }
+    } catch (e) {
+      print('Error fetching user email: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +64,15 @@ class ProfileSection extends StatelessWidget {
               ],
             ),
             const SizedBox(width: 16.0),
-            Text(
-              'Username', // Replace with actual username
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8.0),
+                Text(
+                  _email ?? 'Email not available',
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
             ),
           ],
         ),
@@ -48,5 +84,11 @@ class ProfileSection extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    super.dispose();
   }
 }

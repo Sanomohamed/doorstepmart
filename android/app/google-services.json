@@ -12,7 +12,20 @@
           "package_name": "com.example.doorstepmart"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "572521062790-r00ap8obpfptt0llnqhlrqa6amefah9v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.doorstepmart",
+            "certificate_hash": "c748670750faa9d3c05b66147479f031c737f20c"
+          }
+        },
+        {
+          "client_id": "572521062790-n5pqtqt8qs2eku42c00mve0niom1evvm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCO9ZztK3mpYE5BTfNR4pjynkULJ4ysp2E"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "572521062790-n5pqtqt8qs2eku42c00mve0niom1evvm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "572521062790-eijd5gtr2uqv8k5lfocanv305llrollo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.doorstepmart"
+              }
+            }
+          ]
         }
       }
     }
