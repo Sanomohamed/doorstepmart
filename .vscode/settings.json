@@ -13,6 +13,7 @@
         "firebasestorage",
         "fluttertoast",
         "forgetpassword",
+        "geolocator",
         "googleservice",
         "googleusercontent",
         "headeersection",

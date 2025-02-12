@@ -4,12 +4,14 @@ import 'package:doorstepmart/src/account/ProfileSection.dart';
 import 'package:doorstepmart/src/account/PurchaseSection.dart';
 import 'package:doorstepmart/src/account/SupportSection.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator_platform_interface/src/models/position.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 
 class AccountPage extends StatefulWidget {
-  const AccountPage({super.key});
+   final Position? position;
+  const AccountPage({super.key, this.position});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -20,6 +22,7 @@ class _AccountPageState extends State<AccountPage> {
 
 final AuthService authService = AuthService();
 bool _isLoggingOut = false;
+
 
      void _logout() async {
     if (_isLoggingOut) {
@@ -41,9 +44,11 @@ bool _isLoggingOut = false;
     } catch (e) {
       print('Error during logout: $e');
     } finally {
+       if (mounted) {
       setState(() {
         _isLoggingOut = false;
       });
+    }
     }
   }
 
@@ -68,6 +73,11 @@ bool _isLoggingOut = false;
           ),
           const SizedBox(height: 8.0),
         //  ProductGrid(itemCount: 10), // Replace with actual product count
+        if (widget.position != null)
+            Text(
+              'Location: ${widget.position!.latitude}, ${widget.position!.longitude}',
+              style: TextStyle(fontSize: 16.0),
+            ),
           const SizedBox(height: 16.0),
          // LogoutButton(),
          IconButton(

@@ -3,8 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    );
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Future<UserCredential?> registerWithEmailPassword(String email, String password) async {
     try {
@@ -78,6 +77,7 @@ class AuthService {
     }
     return null;
   }
+
   Future<void> signOut() async {
     // Implement your sign-out logic here
      try {
@@ -87,4 +87,5 @@ class AuthService {
       print('Error signing out: $e');
     }
   }
+  
 }
