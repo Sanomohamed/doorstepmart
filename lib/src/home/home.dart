@@ -5,11 +5,10 @@ import 'package:doorstepmart/src/home/homeheader.dart';
 import 'package:doorstepmart/src/home/locationsection.dart';
 import 'package:doorstepmart/src/home/promotionsection.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator_platform_interface/src/models/position.dart';
 
 
 class Home extends StatelessWidget {
-  const Home({super.key, Position? position});
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {

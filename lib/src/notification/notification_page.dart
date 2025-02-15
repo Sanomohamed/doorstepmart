@@ -25,12 +25,15 @@ class NotificationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notifications'),
+         backgroundColor: const Color.fromARGB(255, 137, 185, 138),
       ),
+       backgroundColor: const Color.fromARGB(255, 137, 185, 138),
       body: ListView.builder(
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           final notification = notifications[index];
           return Card(
+            color: const Color.fromARGB(255, 99, 165, 104), // Set the background color of the card
             margin: EdgeInsets.all(10),
             child: ListTile(
               leading: Image.asset(
@@ -47,7 +50,7 @@ class NotificationPage extends StatelessWidget {
                   SizedBox(height: 5),
                   Text(
                     '${notification['date']} at ${notification['time']}',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(fontSize: 12, color: const Color.fromARGB(255, 0, 0, 0)),
                   ),
                 ],
               ),

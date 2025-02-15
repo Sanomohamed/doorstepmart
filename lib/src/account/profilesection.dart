@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:doorstepmart/src/profile/profile.dart';
 
 class ProfileSection extends StatefulWidget {
   const ProfileSection({super.key});
@@ -56,6 +57,10 @@ class _ProfileSectionState extends State<ProfileSection> {
                     child: IconButton(
                       icon: const Icon(Icons.edit, size: 15),
                       onPressed: () {
+                         Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ProfilePage()),
+                        );
                         // Handle edit profile action
                       },
                     ),

@@ -3,12 +3,9 @@ import 'package:doorstepmart/src/home/home.dart';
 import 'package:doorstepmart/src/cart/cart.dart';
 import 'package:doorstepmart/src/notification/notification_page.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 class Landing extends StatefulWidget {
-final Position? position;
-
- const Landing({super.key, this.position});
+ const Landing({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -25,7 +22,7 @@ class _LandingState extends State<Landing> {
    NotificationPage(),
    //Center(child: Text('Notifications')),
    // Replace with your notifications page
-   AccountPage(position: widget.position),
+   AccountPage(),
   ];
 
   @override

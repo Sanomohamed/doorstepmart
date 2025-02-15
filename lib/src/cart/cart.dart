@@ -11,10 +11,11 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 159, 182, 169),
       appBar: AppBar(
         title: const Text('Cart Page'),
+         backgroundColor: const Color.fromARGB(255, 137, 185, 138),
       ),
+       backgroundColor: const Color.fromARGB(255, 137, 185, 138),
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
           return Column(
@@ -26,6 +27,7 @@ class CartPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final item = cart.items[index];
                     return Card(
+                       color: const Color.fromARGB(157, 155, 235, 152), // Set the background color of the card
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(
                         leading: Image.asset(item.image.toString(), width: 50, height: 50),
@@ -68,7 +70,7 @@ class CartPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: Colors.green[50],
+                  color: const Color.fromARGB(255, 142, 223, 149),
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
@@ -109,7 +111,7 @@ class CartPage extends StatelessWidget {
                     'Checkout',
                     style: TextStyle(color: Colors.black),
                   ),
-                ),
+                 ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

@@ -1,4 +1,5 @@
 // ignore: file_names
+import 'package:doorstepmart/src/favorite/favorite_page.dart';
 import 'package:flutter/material.dart';
 
 class ActivitySection extends StatelessWidget {
@@ -18,7 +19,7 @@ class ActivitySection extends StatelessWidget {
           leading: const Icon(Icons.favorite),
           title: const Text('My Favorite'),
           onTap: () {
-            // Handle my favorite action
+             Navigator.push(context, MaterialPageRoute(builder: (context) => FavoritePage()));
           },
         ),
         ListTile(

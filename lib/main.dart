@@ -15,7 +15,6 @@ void main() async {
   await Firebase.initializeApp(
      options: DefaultFirebaseOptions.currentPlatform,
   );
-  await _requestLocationPermission();
   runApp(
     MultiProvider(
       providers: [
@@ -26,37 +25,6 @@ void main() async {
     ),
   );
 }
-
-Future<Position?> _requestLocationPermission() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-
-  // Check if location services are enabled
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    // Location services are not enabled, request the user to enable them
-    return Future.error('Location services are disabled.');
-  }
-
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      // Permissions are denied, next time you could try requesting permissions again
-      return Future.error('Location permissions are denied');
-    }
-  }
-
-  if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately
-    return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
-  }
-
-  // When we reach here, permissions are granted and we can get the location
-  await Geolocator.getCurrentPosition();
-}
-
 
 class MyApp extends StatelessWidget {
   final Position? position;
@@ -88,7 +56,7 @@ class AuthWrapper extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.hasData) {
-          return Landing(position: position); // Replace with your home screen
+          return Landing(); // Replace with your home screen
         } else {
           return Login(); // Replace with your login form
         }

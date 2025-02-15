@@ -8,16 +8,20 @@ class FavoritePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+       return Scaffold(
+
       appBar: AppBar(
         title: Text('My Favorites'),
+        backgroundColor: const Color.fromARGB(255, 137, 185, 138),
       ),
+
+      backgroundColor: const Color.fromARGB(255, 137, 185, 138),
       body: Consumer<FavoriteModel>(
         builder: (context, favoriteModel, child) {
-          return Padding(
+            return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+             child: GridView.builder(
+               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 1,
                 mainAxisSpacing: 0,
