@@ -4,6 +4,7 @@ import 'package:doorstepmart/src/landing.dart';
 import 'package:doorstepmart/src/login/login.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:doorstepmart/src/signup/signup.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ void main() async {
   await Firebase.initializeApp(
      options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+ 
   runApp(
     MultiProvider(
       providers: [
