@@ -1,4 +1,4 @@
-import 'package:doorstepmart/src/emergency/beverage.dart';
+import 'package:doorstepmart/src/home/beverage.dart';
 import 'package:doorstepmart/src/home/beveragesection.dart';
 import 'package:doorstepmart/src/home/categories_section.dart';
 import 'package:doorstepmart/src/home/homeheader.dart';
@@ -33,7 +33,7 @@ class Home extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFD2DBD6),
+      backgroundColor: const Color.fromARGB(255, 234, 236, 235),
       body: Align(
         child: SingleChildScrollView(
           child: Padding(
@@ -41,7 +41,7 @@ class Home extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 4.0),
                 const HomeHeader(),
                 const SizedBox(height: 8.0),
                 const LocationSection(),

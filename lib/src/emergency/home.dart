@@ -1,4 +1,4 @@
-import 'package:doorstepmart/src/emergency/beverage.dart';
+import 'package:doorstepmart/src/home/beverage.dart';
 import 'package:doorstepmart/src/shop/productgrid.dart';
 import 'package:doorstepmart/src/shop/shop.dart';
 import 'package:doorstepmart/src/cart/shop_cart.dart';

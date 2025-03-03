@@ -58,12 +58,12 @@ class _LandingState extends State<Landing> {
         children: _pages,
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        unselectedItemColor: Colors.white,
-        backgroundColor: const Color.fromARGB(255, 88, 153, 90),
+        selectedItemColor: const Color.fromARGB(255, 99, 245, 143),
+        unselectedItemColor: const Color.fromARGB(255, 8, 8, 8),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(

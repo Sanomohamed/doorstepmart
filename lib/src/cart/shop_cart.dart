@@ -33,7 +33,7 @@ class ProductCard extends StatelessWidget {
                 icon: Icon(
                   icon,
                   size: 50,
-                  color: Colors.green, // Customize the icon color
+                  color: const Color.fromARGB(255, 97, 194, 101), // Customize the icon color
                 ),
                 onPressed: () {
                   Navigator.push(

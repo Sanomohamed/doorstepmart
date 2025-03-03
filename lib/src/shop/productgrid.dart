@@ -11,14 +11,14 @@ class ProductGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 1,
-          mainAxisSpacing: 0,
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 20,
           childAspectRatio: 0.95,
         ),
         itemCount: products.length,
@@ -51,12 +51,15 @@ class ProductGrid extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                           ),
+
                           Positioned(
                             bottom: 10,
                             right: 10,
                             child: CircleAvatar(
+                              backgroundColor: Colors.green,
+                              child:Center(
                               child: IconButton(
-                                icon: const Icon(Icons.add, size: 27, color: Colors.black),
+                                icon: const Icon(Icons.add, size: 25, color: Color.fromARGB(255, 255, 255, 255)),
                                 onPressed: () {
                                   Provider.of<CartModel>(context, listen: false).add(
                                     CartItem(
@@ -69,18 +72,23 @@ class ProductGrid extends StatelessWidget {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text('${product['name']} added to cart'),
-                                      duration: const Duration(seconds: 1),
+                                      duration: const Duration(milliseconds: 100),
                                     ),
                                   );
                                 },
                               ),
+                              ),
                             ),
                           ),
-                          Positioned(bottom: 5,
+
+                          Positioned(
+                          bottom: 10,
                           left: 10,
                           child: CircleAvatar(
+                            backgroundColor: Colors.green,
+                            child:Center(
                             child: IconButton(
-                              icon: const Icon(Icons.favorite, size: 27, color: Colors.black),
+                              icon: const Icon(Icons.favorite_border, size: 25, color: Color.fromARGB(255, 252, 252, 252)),
                                onPressed: () {
                                   final favoriteModel = Provider.of<FavoriteModel>(context, listen: false);
                                   final isAlreadyFavorite = favoriteModel.favorites.any((item) => item.name == product['name']);
@@ -109,11 +117,13 @@ class ProductGrid extends StatelessWidget {
                                   }
                                 },
                             ),
+                            )
                           ),
                           ),
                         ],
                       ),
                     ),
+
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -121,13 +131,13 @@ class ProductGrid extends StatelessWidget {
                           Text(
                             product['name'],
                             style: const TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '\$${product['price']}',
+                            'RM${product['price']}',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -137,6 +147,7 @@ class ProductGrid extends StatelessWidget {
                         ],
                       ),
                     ),
+
                   ],
                 ),
               ),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
@@ -13,9 +12,9 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cart Page'),
-         backgroundColor: const Color.fromARGB(255, 137, 185, 138),
+         backgroundColor: const Color.fromARGB(255, 189, 238, 190),
       ),
-       backgroundColor: const Color.fromARGB(255, 137, 185, 138),
+      backgroundColor: const Color.fromARGB(255, 252, 253, 252),
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
           return Column(
@@ -27,15 +26,15 @@ class CartPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final item = cart.items[index];
                     return Card(
-                       color: const Color.fromARGB(157, 155, 235, 152), // Set the background color of the card
-                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      color: const Color.fromARGB(157, 208, 255, 204), // Set the background color of the card
+                      //margin: const EdgeInsets.symmetric(vertical: 15.0),
                       child: ListTile(
                         leading: Image.asset(item.image.toString(), width: 50, height: 50),
                         title: Text(item.name),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('\$${item.price}'),
+                            Text('\RM${item.price}'),
                             Row(
                               children: [
                                 IconButton(
@@ -70,7 +69,7 @@ class CartPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 142, 223, 149),
+                  color: const Color.fromARGB(255, 189, 238, 190),
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
@@ -105,11 +104,11 @@ class CartPage extends StatelessWidget {
                           );
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 110, 146, 111),
+                    backgroundColor: const Color.fromARGB(255, 211, 243, 211),
                   ),
                   child: const Text(
                     'Checkout',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                  ),
                     Column(

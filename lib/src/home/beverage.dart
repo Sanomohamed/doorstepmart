@@ -7,10 +7,64 @@ class BeverageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Map<String, dynamic>> products = [
+      {
+        'name': 'Coca Cola',
+        'image': 'assets/image.png',
+        'price': 3.50,
+      },
+      {
+        'name': 'Pepsi',
+        'image': 'assets/image.png',
+        'price': 3.00,
+      },
+      {
+        'name': 'Sprite',
+        'image': 'assets/image.png',
+        'price': 2.50,
+      },
+      {
+        'name': 'Fanta',
+        'image': 'assets/image.png',
+        'price': 3.20,
+      },
+      {
+        'name': 'Mountain Dew',
+        'image': 'assets/image.png',
+        'price': 3.10,
+      },
+      {
+        'name': 'Dr Pepper',
+        'image': 'assets/image.png',
+        'price': 3.40,
+      },
+      {
+        'name': '7 Up',
+        'image': 'assets/image.png',
+        'price': 2.80,
+      },
+      {
+        'name': 'Mirinda',
+        'image': 'assets/image.png',
+        'price': 3.00,
+      },
+      {
+        'name': 'Red Bull',
+        'image': 'assets/image.png',
+        'price': 4.00,
+      },
+      {
+        'name': 'Monster',
+        'image': 'assets/image.png',
+        'price': 4.50,
+      },
+    ];
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-         color: Color(0xFFD2DBD6),
+         color: Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.circular(8),
       ),
       padding: const EdgeInsets.all(10.0),
@@ -23,7 +77,7 @@ class BeverageSection extends StatelessWidget {
               const Text(
                 'Beverage',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 20,
                    fontWeight: FontWeight.bold,
                    color: Colors.black87),
               ),
@@ -34,16 +88,15 @@ class BeverageSection extends StatelessWidget {
                 child: Row(
                   children: const [
                     Text(
-                      'See more',
+                      'View more',
                       style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                         color: Colors.black,
                       ),
                     ),
                     Icon(
-                      Icons.arrow_forward_ios,
-                      size: 14,
+                      Icons.arrow_forward,
+                      size: 16,
                       color: Colors.black54,
                     ),
                   ],
@@ -53,12 +106,14 @@ class BeverageSection extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           SizedBox(
-            height: 290, 
+            height: 270, 
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
-              itemCount: 10, // Add more items if needed
-              separatorBuilder: (context, index) => const SizedBox(width: 10),
+              itemCount: products.length, // Add more items if needed
+              separatorBuilder: (context, index) => const SizedBox(width: 5),
               itemBuilder: (context, index) {
+                final product = products[index];
+
                 return Column(
                   children: [
                     Container(
@@ -66,7 +121,7 @@ class BeverageSection extends StatelessWidget {
                       height: 160,
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(50),
                       ),
                       child: Image.asset(
                             'assets/image.png',// Replace with your image/icon
@@ -74,27 +129,35 @@ class BeverageSection extends StatelessWidget {
                      ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Coca Cola',
+
+                     Text(
+                      product['name'],
                       style: TextStyle(
-                        fontSize: 19,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      '3.50',
+                     Text(
+                      'RM${product['price']}',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black54,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 4),
                     GestureDetector(
                       onTap: () {
-                        Provider.of<CartModel>(context, listen: false).add('Beverage $index' as CartItem);
+                       Provider.of<CartModel>(context, listen: false).add(
+                          CartItem(
+                            name: product['name'],
+                            image: product['image'],
+                            price: product['price'],
+                            quantity: 1,
+                          ),
+                        );
                         // Add action for adding to cart
                       },
                       child: Container(
