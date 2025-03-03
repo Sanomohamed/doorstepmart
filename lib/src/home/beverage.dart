@@ -64,7 +64,7 @@ class BeverageSection extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-         color: Color.fromARGB(255, 255, 255, 255),
+         color: Color.fromARGB(211, 255, 255, 255),
         borderRadius: BorderRadius.circular(8),
       ),
       padding: const EdgeInsets.all(10.0),
@@ -159,6 +159,12 @@ class BeverageSection extends StatelessWidget {
                           ),
                         );
                         // Add action for adding to cart
+                         ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('${product['name']} added to cart'),
+                                      duration: const Duration(milliseconds: 700),
+                                    ),
+                                  );
                       },
                       child: Container(
                         padding: const EdgeInsets.all(4),

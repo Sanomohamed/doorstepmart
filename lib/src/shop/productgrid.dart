@@ -72,7 +72,7 @@ class ProductGrid extends StatelessWidget {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text('${product['name']} added to cart'),
-                                      duration: const Duration(milliseconds: 100),
+                                      duration: const Duration(milliseconds: 700),
                                     ),
                                   );
                                 },
@@ -104,14 +104,14 @@ class ProductGrid extends StatelessWidget {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text('${product['name']} added to favorites'),
-                                        duration: const Duration(seconds: 1),
+                                        duration: const Duration(microseconds: 700),
                                       ),
                                     );
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text('${product['name']} is already in favorites'),
-                                        duration: const Duration(seconds: 1),
+                                        duration: const Duration(milliseconds: 700),
                                       ),
                                     );
                                   }

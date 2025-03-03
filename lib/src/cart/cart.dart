@@ -5,14 +5,23 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({super.key});
-
+  final bool showBackArrow;
+  const CartPage({super.key, this.showBackArrow = false});
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cart Page'),
-         backgroundColor: const Color.fromARGB(255, 189, 238, 190),
+        title: const Text('My Cart'),
+        backgroundColor: const Color.fromARGB(255, 254, 255, 254),
+        leading: showBackArrow
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : null,
       ),
       backgroundColor: const Color.fromARGB(255, 252, 253, 252),
       body: Consumer<CartModel>(
@@ -26,15 +35,25 @@ class CartPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final item = cart.items[index];
                     return Card(
-                      color: const Color.fromARGB(157, 208, 255, 204), // Set the background color of the card
+                      color: const Color.fromARGB(255, 236, 248, 233), // Set the background color of the card
                       //margin: const EdgeInsets.symmetric(vertical: 15.0),
                       child: ListTile(
                         leading: Image.asset(item.image.toString(), width: 50, height: 50),
-                        title: Text(item.name),
+                        title: Text(item.name,
+                            style: TextStyle(
+                              //fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.black,
+                            )),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('\RM${item.price}'),
+                            Text('RM${item.price}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  color: Colors.green,
+                                )),
                             Row(
                               children: [
                                 IconButton(
@@ -69,7 +88,7 @@ class CartPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 189, 238, 190),
+                  color: const Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
@@ -104,24 +123,24 @@ class CartPage extends StatelessWidget {
                           );
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 211, 243, 211),
+                    backgroundColor: const Color.fromARGB(255, 105, 216, 105),
                   ),
                   child: const Text(
-                    'Checkout',
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                    'Check Out',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 20),
                   ),
                  ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Total: \$${cart.totalPrice.toStringAsFixed(2)}'),
-                        Text('Tax: \$${cart.tax.toStringAsFixed(2)}'),
-                        Text('Service Fee: \$${cart.serviceFee.toStringAsFixed(2)}'),
-                        Divider(),
-                        Text(
-                          'Grand Total: \$${cart.Total.toStringAsFixed(2)}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
+                        Text('Subtotal: \RM${cart.totalPrice.toStringAsFixed(2)}'),
+                       // Text('Delivery: \$${cart.tax.toStringAsFixed(2)}'),
+                       // Text('Service Fee: \$${cart.serviceFee.toStringAsFixed(2)}'),
+                       // Divider(),
+                        //Text(
+                       //   'Grand Total: \$${cart.Total.toStringAsFixed(2)}',
+                      //    style: TextStyle(fontWeight: FontWeight.bold),
+                      //  ),
                       ],
                     ),
                   ],

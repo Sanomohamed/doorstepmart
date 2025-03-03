@@ -33,7 +33,7 @@ class Home extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 234, 236, 235),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Align(
         child: SingleChildScrollView(
           child: Padding(

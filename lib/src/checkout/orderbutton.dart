@@ -10,13 +10,13 @@ class OrderButton extends StatelessWidget {
         // Handle order action
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(255, 110, 146, 111),
+        backgroundColor: const Color.fromARGB(255, 120, 212, 123),
       ),
       child: const Text(
         'Order',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: Colors.black,
+          color: Color.fromARGB(255, 255, 255, 255),
         ),
       ),
     );
