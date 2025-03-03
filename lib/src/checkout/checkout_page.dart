@@ -1,10 +1,10 @@
-import 'package:doorstepmart/src/checkout/orderbutton.dart';
-import 'package:doorstepmart/src/checkout/ordersumary.dart';
-import 'package:doorstepmart/src/checkout/paymentmethod.dart';
-import 'package:doorstepmart/src/checkout/promocode.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'order_summary_widget.dart';
+import 'promo_code_widget.dart';
+import 'payment_method_widget.dart';
+import 'bottom_bar_widget.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
@@ -39,41 +39,50 @@ class _CheckoutPageState extends State<CheckoutPage> {
         title: Consumer<CartModel>(
           builder: (context, cart, child) {
             return Text(
-              'Checkout (${cart.items.length})',
-              style: const TextStyle(color: Colors.black, 
-              fontSize: 20.0, 
-              fontWeight: FontWeight.bold),
+              'Checkout (${cart.items.length} items)',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
             );
           },
         ),
       ),
-      
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                OrderSummary(discount: _discount),
-                const SizedBox(height: 16.0),
-                PromoCode(
-                  promoCodeController: _promoCodeController,
-                  applyPromoCode: _applyPromoCode,
+          final double totalWithDiscount = cart.totalPrice - _discount;
+          final double grandTotalWithDiscount = totalWithDiscount + cart.tax + cart.serviceFee;
+
+          return Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      OrderSummaryWidget(cart: cart, discount: _discount),
+                      const SizedBox(height: 16.0),
+                      PromoCodeWidget(
+                        promoCodeController: _promoCodeController,
+                        applyPromoCode: () => _applyPromoCode(cart),
+                      ),
+                      const SizedBox(height: 16.0),
+                      PaymentMethodWidget(
+                        paymentMethod: _paymentMethod,
+                        onChanged: (value) {
+                          setState(() {
+                            _paymentMethod = value.toString();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16.0),
-                PaymentMethod(
-                  paymentMethod: _paymentMethod,
-                  onChanged: (value) {
-                    setState(() {
-                      _paymentMethod = value.toString();
-                    });
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                const OrderButton(),
-              ],
-            ),
+              ),
+              BottomBarWidget(grandTotalWithDiscount: grandTotalWithDiscount),
+            ],
           );
         },
       ),

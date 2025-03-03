@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-class PaymentMethod extends StatelessWidget {
+class PaymentMethodWidget extends StatelessWidget {
   final String paymentMethod;
-  final Function(String?) onChanged;
+  final ValueChanged<String?> onChanged;
 
-  const PaymentMethod({
-    super.key,
-    required this.paymentMethod,
-    required this.onChanged,
-  });
+  const PaymentMethodWidget({super.key, required this.paymentMethod, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +13,7 @@ class PaymentMethod extends StatelessWidget {
       children: [
         const Text(
           'Select Payment Method',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8.0),
         ListTile(
@@ -25,6 +21,7 @@ class PaymentMethod extends StatelessWidget {
           leading: Radio(
             value: 'Card',
             groupValue: paymentMethod,
+            activeColor: Colors.green,
             onChanged: onChanged,
           ),
         ),
@@ -33,6 +30,7 @@ class PaymentMethod extends StatelessWidget {
           leading: Radio(
             value: 'E-Wallet',
             groupValue: paymentMethod,
+            activeColor: Colors.green,
             onChanged: onChanged,
           ),
         ),
@@ -41,6 +39,7 @@ class PaymentMethod extends StatelessWidget {
           leading: Radio(
             value: 'Online Banking',
             groupValue: paymentMethod,
+            activeColor: Colors.green,
             onChanged: onChanged,
           ),
         ),

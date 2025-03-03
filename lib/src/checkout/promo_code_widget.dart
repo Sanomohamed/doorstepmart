@@ -1,22 +1,13 @@
-import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-
-class PromoCode extends StatelessWidget {
+class PromoCodeWidget extends StatelessWidget {
   final TextEditingController promoCodeController;
-  final Function(CartModel) applyPromoCode;
+  final VoidCallback applyPromoCode;
 
-  const PromoCode({
-    super.key,
-    required this.promoCodeController,
-    required this.applyPromoCode,
-  });
+  const PromoCodeWidget({super.key, required this.promoCodeController, required this.applyPromoCode});
 
   @override
   Widget build(BuildContext context) {
-    final cart = Provider.of<CartModel>(context);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,17 +20,16 @@ class PromoCode extends StatelessWidget {
         ),
         const SizedBox(height: 8.0),
         ElevatedButton(
-          onPressed: () {
-            applyPromoCode(cart);
-          },
+          onPressed: applyPromoCode,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 110, 146, 111),
+            backgroundColor: const Color.fromARGB(255, 102, 230, 106),
           ),
           child: const Text(
             'Apply',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: Colors.white,
+              fontSize: 18,
             ),
           ),
         ),

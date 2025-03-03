@@ -1,5 +1,5 @@
 import 'package:doorstepmart/src/shop/cart_model.dart';
-import 'package:doorstepmart/src/emergency/checkout_page.dart';
+import 'package:doorstepmart/src/checkout/checkout_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -113,7 +113,7 @@ class CartPage extends StatelessWidget {
                             timeInSecForIosWeb: 1,
                             backgroundColor: Colors.red,
                             textColor: Colors.white,
-                            fontSize: 16.0,
+                            fontSize: 18.0,
                           );
                         }
                       : () {
