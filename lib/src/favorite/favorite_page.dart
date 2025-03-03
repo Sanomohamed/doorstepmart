@@ -9,17 +9,15 @@ class FavoritePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
        return Scaffold(
-
       appBar: AppBar(
-        title: Text('My Favorites'),
-        backgroundColor: const Color.fromARGB(255, 137, 185, 138),
+        title: Text('Favorites'),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
-
-      backgroundColor: const Color.fromARGB(255, 137, 185, 138),
+      backgroundColor: const Color.fromARGB(255, 237, 252, 237),
       body: Consumer<FavoriteModel>(
         builder: (context, favoriteModel, child) {
             return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
              child: GridView.builder(
                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -69,7 +67,7 @@ class FavoritePage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '\$${product.price}',
+                                  '\RM${product.price}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -83,11 +81,13 @@ class FavoritePage extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      bottom: 60,
-                      right: 15,
+                      bottom: 40,
+                      right: 20,
                       child: CircleAvatar(
+                        backgroundColor: Colors.green,
+                        child:Center(
                         child: IconButton(
-                          icon: const Icon(Icons.add, size: 27, color: Colors.black),
+                          icon: const Icon(Icons.add, size: 25, color: Color.fromARGB(255, 252, 252, 252)),
                           onPressed: () {
                             Provider.of<CartModel>(context, listen: false).add(
                               CartItem(
@@ -100,10 +100,11 @@ class FavoritePage extends StatelessWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('${product.name} added to cart'),
-                                duration: const Duration(seconds: 1),
+                                duration: const Duration(milliseconds: 100),
                               ),
                             );
                           },
+                        ),
                         ),
                       ),
                     ),
