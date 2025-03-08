@@ -25,15 +25,15 @@ class NotificationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notifications'),
-         backgroundColor: const Color.fromARGB(255, 137, 185, 138),
+         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
-       backgroundColor: const Color.fromARGB(255, 137, 185, 138),
+       backgroundColor: const Color.fromARGB(255, 252, 252, 252),
       body: ListView.builder(
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           final notification = notifications[index];
           return Card(
-            color: const Color.fromARGB(255, 99, 165, 104), // Set the background color of the card
+            color: const Color.fromARGB(181, 145, 173, 147), // Set the background color of the card
             margin: EdgeInsets.all(10),
             child: ListTile(
               leading: Image.asset(

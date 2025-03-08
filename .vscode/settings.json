@@ -12,6 +12,7 @@
         "firebaseapp",
         "firebasestorage",
         "firestore",
+        "flutterfire",
         "fluttertoast",
         "forgetpassword",
         "geolocator",

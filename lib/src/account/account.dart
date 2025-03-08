@@ -50,7 +50,7 @@ bool _isLoggingOut = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 137, 185, 138),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [

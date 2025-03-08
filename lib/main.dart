@@ -2,6 +2,7 @@ import 'package:doorstepmart/firebase_options.dart';
 import 'package:doorstepmart/src/favorite/favoritemodel.dart';
 import 'package:doorstepmart/src/landing.dart';
 import 'package:doorstepmart/src/login/login.dart';
+import 'package:doorstepmart/src/sell/sell.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:doorstepmart/src/signup/signup.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         '/Signup': (context) => Signup(),
         '/Landing': (context) => Landing(),
         '/Login': (context) => Login(),
+        '/sell': (context) => SellPage(),
         
       },
     );

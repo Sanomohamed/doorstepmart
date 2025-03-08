@@ -1,3 +1,4 @@
+import 'package:doorstepmart/src/sell/sell.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -140,6 +141,20 @@ class _ProfileFormState extends State<ProfileForm> {
               backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Text color
             ),
             child: const Text('Save'),
+          ),
+          const SizedBox(height: 30),
+           ElevatedButton(
+            onPressed: () {
+             Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SellPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Text color
+            ),
+            child: const Text('Sell'),
           ),
         ],
       ),

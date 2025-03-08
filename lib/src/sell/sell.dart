@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+import 'sell_form.dart';
+
+class SellPage extends StatefulWidget {
+  const SellPage({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _SellPageState createState() => _SellPageState();
+}
+
+class _SellPageState extends State<SellPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Sell Product")),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: SellForm(),
+      ),
+    );
+  }
+}

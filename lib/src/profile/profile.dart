@@ -9,7 +9,7 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile'),
-        backgroundColor: const Color.fromARGB(255, 137, 185, 138),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         iconTheme: IconThemeData(color: Colors.black),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -18,7 +18,7 @@ class ProfilePage extends StatelessWidget {
           },
         ),
       ),
-       backgroundColor: const Color.fromARGB(255, 137, 185, 138),
+       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ProfileForm(),

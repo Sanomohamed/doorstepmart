@@ -1,180 +1,49 @@
-# doorstepmart
+Code Structure 
+main.dart 
+Entry point of the app it's integrates 
+Firebase core ... initializes firebase in my app
+Firebase authentication  ....  Manage user authentication 
+Firebase app check   ...... Protect my app from abuse
+Provider   .....   Manages state using the provider packages
+Geolocator ...... Access the device's location
 
-A new Flutter project.
+***Main functions 
+WidgetsFlutterBinding.ensureInitialization(): Ensures that flutter framework is properly initialized before running the app 
 
+Firebase.initializeApp(): Initializes firebase with the specified options.
 
+runApp(): Runs my application. It uses MultiProvider to provide instances of CartModel and FavoriteModel to the widget tree.
 
-class LoginForm extends StatelessWidget {
+***App Class
+MyApp: Is a stateless widget  that serves as the root of my application.
 
-  const LoginForm({super.key});
+MaterialApp: Is the main app widget that provides navigation and theming
 
+home: Is the initial route of the app, set to AuthWrapper.
 
+routes: Is the mao of named routes for navigation within the app 
 
-  @override
+****AuthWrapper Class:
+AuthWrapper: Is a stateless widget that determines which screen to show base on the user's authentication state.
 
-  Widget build(BuildContext context) {
+StreamBuilder: Listens to the authentication state changes from firebase. 
 
-    return Container(
 
-      width: 500,
 
-      padding: const EdgeInsets.all(16.0),
+****firebase_options.dart
+'flutterfire configure'  this command guide through the process of setting up firebase for the app before generating the file 
+firebase_options contains the default firebase configuration for different platform
 
-      decoration: BoxDecoration(
+****Landing.dart 
+Use as the main landing page it uses a PageView and a BottomNavigationBar to allow users to navigate between different sections of the app, such as Home, Cart, Notifications, and Account.
+The landing.dart file is the main landing page of the application.
+It uses a PageView to display different pages (Home, Cart, Notifications, Account).
+It uses a BottomNavigationBar to allow users to navigate between these pages.
+The _selectedIndex keeps track of the currently selected tab, and the _pageController controls the PageView.
+The initState method initializes the _pageController, and the dispose method disposes of it when the widget is removed.
+The build method constructs the UI, including the PageView and BottomNavigationBar.
 
-        color: const Color(0xFF77AB8A),
+******Signup folder
+******Signup.dart
 
-        borderRadius: BorderRadius.circular(20),
-
-      ),
-
-      child: Column(
-
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-
-          const Text(
-
-            'Login',
-
-            style: TextStyle(
-
-              fontSize: 35,
-
-              color: Colors.white,
-
-              fontWeight: FontWeight.bold,
-
-            ),
-
-          ),
-
-          const SizedBox(height: 15),
-
-          CustomTextField(hintText: 'Email', controller: TextEditingController(),),
-
-          const SizedBox(height: 10),
-
-          CustomTextField(hintText: 'Password', obscureText: true, controller: TextEditingController(),),
-
-          const SizedBox(height: 20),
-
-          ElevatedButton(
-
-            onPressed: () {
-
-              // Add your onPressed code here!
-
-            },
-
-            style: ElevatedButton.styleFrom(
-
-              backgroundColor: const Color.fromARGB(255, 88, 187, 126),
-
-              elevation: 5, // Elevation
-
-              shadowColor: Colors.black, // Shadow color
-
-              shape: RoundedRectangleBorder(
-
-                borderRadius: BorderRadius.circular(20), // Border radius
-
-              ),
-
-            ),
-
-            child: const Text(
-
-              'Login',
-
-              style: TextStyle(
-
-                fontSize: 18, // Text size
-
-                fontWeight: FontWeight.bold, // Bold text
-
-                color: Colors.white, // Text color
-
-              ),
-
-            ),
-
-          ),
-
-          ForgotPassword(),
-
-        ],
-
-      ),
-
-    );
-
-  }
-
-}
-
-
-
-
-
-
-import 'package:doorstepmart/src/custom_widgets.dart';
-import 'package:flutter/material.dart';
-
-
-class SignupForm extends StatelessWidget {
-  const SignupForm({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 500,
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: const Color(0xFF77AB8A),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Signup',
-            style: TextStyle(
-              fontSize: 35,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 15),
-          CustomTextField(hintText: 'Name', controller: TextEditingController(),),
-          CustomTextField(hintText: 'Email', controller: TextEditingController(),),
-          CustomTextField(hintText: 'Password', obscureText: true, controller: TextEditingController(),),
-          CustomTextField(hintText: 'Confirm Password', obscureText: true, controller: TextEditingController(),),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              // Add your onPressed code here!
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 88, 187, 126),
-              elevation: 5, // Elevation
-              shadowColor: Colors.black, // Shadow color
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20), // Border radius
-              ),
-            ),
-            child: const Text(
-              'Signup',
-              style: TextStyle(
-                fontSize: 18, // Text size
-                fontWeight: FontWeight.bold, // Bold text
-                color: Colors.white, // Text color
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+******signupform.dart
