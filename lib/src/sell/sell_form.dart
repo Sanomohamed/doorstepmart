@@ -9,6 +9,7 @@ class SellForm extends StatefulWidget {
   const SellForm({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SellFormState createState() => _SellFormState();
 }
 
@@ -16,9 +17,9 @@ class _SellFormState extends State<SellForm> {
   final _formKey = GlobalKey<FormState>();
   List<XFile> _selectedImages = [];
   final ImagePicker _picker = ImagePicker();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _priceController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   String? _selectedCategory;
   bool _isUploading = false;
 
@@ -31,6 +32,7 @@ class _SellFormState extends State<SellForm> {
         _selectedImages = pickedFiles;
       });
     } else {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("You can select up to 5 images only")),
       );
