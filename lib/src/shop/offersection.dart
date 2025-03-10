@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class OfferSection extends StatelessWidget {
   const OfferSection({super.key});
@@ -6,28 +7,56 @@ class OfferSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10),
-      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 3,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          const Icon(Icons.local_offer, size: 40, color: Colors.red),
-          const SizedBox(width: 20),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.red.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(FontAwesomeIcons.tag, size: 30, color: Colors.red),
+          ),
+          const SizedBox(width: 15),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               Text(
-                '10% Discount',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                'Limited Time Offer!',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
               ),
+              SizedBox(height: 4),
               Text(
-                'Offer condition',
-                style: TextStyle(fontSize: 15, color: Colors.grey),
+                'Get 10% off on all products - Use code: SAVE10',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ],
+          ),
+          const Spacer(),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: const Text(
+              'Apply',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),

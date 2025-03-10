@@ -3,23 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:doorstepmart/src/shop/shop.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-      final List<String> categoryNames = [
-      'Fruits',
-      'Vegetables',
-      'Dairy',
-      'Meat',
-      'Fish',
-      'Frozen Foods',
-      'Drinks',
-      'Sauces',
-      'Condiments',
-      'Others'
+    final List<Map<String, dynamic>> categories = [
+      {'name': 'Fruits', 'icon': FontAwesomeIcons.appleAlt},
+      {'name': 'Vegetables', 'icon': FontAwesomeIcons.carrot},
+      {'name': 'Dairy', 'icon': FontAwesomeIcons.cheese},
+      {'name': 'Meat', 'icon': FontAwesomeIcons.drumstickBite},
+      {'name': 'Fish', 'icon': FontAwesomeIcons.fish},
+      {'name': 'Frozen Foods', 'icon': FontAwesomeIcons.snowflake},
+      {'name': 'Drinks', 'icon': FontAwesomeIcons.wineBottle},
+      {'name': 'Sauces', 'icon': FontAwesomeIcons.bottleDroplet},
+      {'name': 'Condiments', 'icon': FontAwesomeIcons.pepperHot},
+      {'name': 'Others', 'icon': Icons.category},
     ];
 
     return Column(
@@ -65,46 +64,12 @@ class CategoriesSection extends StatelessWidget {
           height: 120,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: 10, // Number of products
-            separatorBuilder: (_, __) => const SizedBox(width: 5),
+            itemCount: categories.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 10),
             itemBuilder: (context, index) {
-              // Use different icons for the ProductCard
-              IconData icon = Icons.category; // Default icon
-               switch (index) {
-                case 0:
-                  // ignore: deprecated_member_use
-                  icon = FontAwesomeIcons.appleAlt; // Fruits
-                  break;
-                case 1:
-                  icon = FontAwesomeIcons.carrot; // Vegetables
-                  break;
-                case 2:
-                  icon = FontAwesomeIcons.cheese; // Dairy
-                  break;
-                case 3:
-                  icon = FontAwesomeIcons.drumstickBite; // Meat
-                  break;
-                case 4:
-                  icon = FontAwesomeIcons.fish; // Fish
-                  break;
-                case 5:
-                  icon = FontAwesomeIcons.snowflake; // Frozen foods
-                  break;
-                case 6:
-                  icon = FontAwesomeIcons.wineBottle; // Drinks
-                  break;
-                case 7:
-                  icon = FontAwesomeIcons.bottleDroplet; // Sauces
-                  break;
-                case 8:
-                  icon = FontAwesomeIcons.pepperHot; // Condiments
-                  break;
-                default:
-                  icon = Icons.category; // Default icon
-              }
               return ProductCard(
-                icon: icon,
-                name:  categoryNames[index],
+                icon: categories[index]['icon'],
+                name: categories[index]['name'],
               );
             },
           ),

@@ -13,16 +13,14 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
-  int _selectedIndex = 0;
+   int _selectedIndex = 0;
   late PageController _pageController;
 
-  List<Widget> get _pages => [
-   Home(),
-   CartPage(),
-   NotificationPage(),
-   //Center(child: Text('Notifications')),
-   // Replace with your notifications page
-   AccountPage(),
+  final List<Widget> _pages = [
+    const Home(),
+    const CartPage(),
+    NotificationPage(),
+    const AccountPage(),
   ];
 
   @override
@@ -35,7 +33,11 @@ class _LandingState extends State<Landing> {
     setState(() {
       _selectedIndex = index;
     });
-    _pageController.jumpToPage(index);
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -47,8 +49,7 @@ class _LandingState extends State<Landing> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      body: PageView(
+            body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
@@ -57,45 +58,29 @@ class _LandingState extends State<Landing> {
         },
         children: _pages,
       ),
-
-        bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromARGB(255, 99, 245, 143),
-        unselectedItemColor: const Color.fromARGB(255, 8, 8, 8),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.black54,
+        backgroundColor: Colors.white,
+        elevation: 8,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
-            icon: SizedBox(
-              width: 50,
-              height: 50,
-              child: Icon(Icons.home),
-            ),
+            icon: Icon(Icons.home, size: 28),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: SizedBox(
-              width: 50,
-              height: 50,
-              child: Icon(Icons.shopping_cart),
-            ),
+            icon: Icon(Icons.shopping_cart, size: 28),
             label: 'Cart',
           ),
           BottomNavigationBarItem(
-            icon: SizedBox(
-              width: 50,
-              height: 50,
-              child: Icon(Icons.notifications),
-            ),
+            icon: Icon(Icons.notifications, size: 28),
             label: 'Notifications',
           ),
           BottomNavigationBarItem(
-            icon: SizedBox(
-              width: 50,
-              height: 50,
-              child: Icon(Icons.account_circle),
-            ),
+            icon: Icon(Icons.account_circle, size: 28),
             label: 'Account',
           ),
         ],
