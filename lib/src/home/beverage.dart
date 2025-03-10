@@ -2,6 +2,7 @@ import 'package:doorstepmart/services/product_service.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class BeverageSection extends StatelessWidget {
   const BeverageSection({super.key});
@@ -44,7 +45,7 @@ class BeverageSection extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Add action for "See More"
+                      // Action for "View More"
                     },
                     child: Row(
                       children: const [
@@ -65,7 +66,9 @@ class BeverageSection extends StatelessWidget {
                   ),
                 ],
               ),
+
               const SizedBox(height: 5),
+              
               SizedBox(
                 height: 270,
                 child: ListView.separated(
@@ -75,19 +78,49 @@ class BeverageSection extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final product = products[index];
 
+                    // Debugging: Print product details
+                  //  print("Product Name: ${product['name']}");
+                  //  print("Product Price: RM${product['price']}");
+                    print("Product Image URL: ${product['image']}");
+
                     return Column(
                       children: [
                         Container(
-                          width: 150,
+                         width: 150,
                           height: 160,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                spreadRadius: 2,
+                              ),
+                            ],
                           ),
-                          child: Image.network(
-                            product['image'], // Use Image.network for network images
-                            fit: BoxFit.cover,
-                          ),
+                          child: product['image'] != null &&
+                                  product['image'].isNotEmpty
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CachedNetworkImage(
+                                    imageUrl: product['image'],
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        const Center(
+                                            child:
+                                                CircularProgressIndicator()),
+                                   errorWidget: (context, url, error) {
+                                     print("Error loading image: $url - $error"); // Debugging print
+                                       return const Icon(Icons.broken_image, size: 50, color: Colors.grey);
+                                    },
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.broken_image,
+                                  size: 50,
+                                  color: Colors.grey,
+                                ),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -109,25 +142,26 @@ class BeverageSection extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         GestureDetector(
-                          onTap: () {
+                          onTap: () {                            
                             Provider.of<CartModel>(context, listen: false).add(
                               CartItem(
-                                name: product['name'],
-                                image: product['image'],
-                                price: product['price'],
+                                name: product['name']?? '',
+                                image: product['image']?? '',
+                                price: product['price']??'',
                                 quantity: 1,
                               ),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('${product['name']} added to cart'),
+                                content:
+                                    Text('${product['name']} added to cart'),
                                 duration: const Duration(milliseconds: 700),
                               ),
                             );
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.green,
                               shape: BoxShape.circle,
                             ),

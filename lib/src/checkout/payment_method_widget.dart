@@ -16,34 +16,45 @@ class PaymentMethodWidget extends StatelessWidget {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8.0),
-        ListTile(
-          title: const Text('Card'),
-          leading: Radio(
-            value: 'Card',
-            groupValue: paymentMethod,
-            activeColor: Colors.green,
-            onChanged: onChanged,
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ),
-        ListTile(
-          title: const Text('E-Wallet'),
-          leading: Radio(
-            value: 'E-Wallet',
-            groupValue: paymentMethod,
-            activeColor: Colors.green,
-            onChanged: onChanged,
-          ),
-        ),
-        ListTile(
-          title: const Text('Online Banking'),
-          leading: Radio(
-            value: 'Online Banking',
-            groupValue: paymentMethod,
-            activeColor: Colors.green,
-            onChanged: onChanged,
+          child: Column(
+            children: [
+              _buildPaymentOption('Card', Icons.credit_card, context),
+              _buildPaymentOption('E-Wallet', Icons.account_balance_wallet, context),
+              _buildPaymentOption('Online Banking', Icons.account_balance, context),
+            ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPaymentOption(String title, IconData icon, BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      leading: Icon(icon, color: Colors.green),
+      title: Text(
+        title,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+      trailing: Radio(
+        value: title,
+        groupValue: paymentMethod,
+        activeColor: Colors.green,
+        onChanged: onChanged,
+      ),
     );
   }
 }

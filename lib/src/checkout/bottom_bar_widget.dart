@@ -10,14 +10,13 @@ class BottomBarWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 189, 238, 190),
-        borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
             color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
+            spreadRadius: 3,
+            blurRadius: 6,
             offset: const Offset(0, 3),
           ),
         ],
@@ -25,24 +24,52 @@ class BottomBarWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Grand Total: RM${grandTotalWithDiscount.toStringAsFixed(2)}',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Total Payment:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black54,
+                ),
+              ),
+              Text(
+                'RM${grandTotalWithDiscount.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                  color: Colors.green,
+                ),
+              ),
+            ],
           ),
           ElevatedButton(
             onPressed: () {
               // Handle order action
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 75, 233, 81),
-            ),
-            child: const Text(
-              'Place Order',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 25,
+              backgroundColor: Colors.green,
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
+              elevation: 5,
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.shopping_cart_checkout, color: Colors.white),
+                SizedBox(width: 10),
+                Text(
+                  'Place Order',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

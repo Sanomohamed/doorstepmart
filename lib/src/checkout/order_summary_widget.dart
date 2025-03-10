@@ -1,5 +1,6 @@
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class OrderSummaryWidget extends StatelessWidget {
   final CartModel cart;
@@ -12,7 +13,7 @@ class OrderSummaryWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -38,21 +39,32 @@ class OrderSummaryWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               final item = cart.items[index];
               return ListTile(
-                leading: Image.asset(item.image, width: 100, height: 100),
-                title: Text(item.name),
-                subtitle: Text('RM${item.price} x ${item.quantity}'),
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: CachedNetworkImage(
+                    imageUrl: item.image,
+                    width: 70,
+                    height: 70,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                  ),
+                ),
+                title: Text(item.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                subtitle: Text('RM${item.price} x ${item.quantity}', style: const TextStyle(fontSize: 14, color: Colors.grey)),
               );
             },
           ),
           const Divider(),
-          Text('Total: RM${cart.totalPrice.toStringAsFixed(2)}'),
-          if (discount > 0) Text('Discount: -RM${discount.toStringAsFixed(2)}'),
-          Text('Tax: RM${cart.tax.toStringAsFixed(2)}'),
-          Text('Service Fee: RM${cart.serviceFee.toStringAsFixed(2)}'),
+          Text('Total: RM${cart.totalPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          if (discount > 0)
+            Text('Discount: -RM${discount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, color: Colors.red)),
+          Text('Tax: RM${cart.tax.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, color: Colors.grey)),
+          Text('Service Fee: RM${cart.serviceFee.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, color: Colors.grey)),
           const Divider(),
           Text(
             'Grand Total: RM${(cart.totalPrice - discount + cart.tax + cart.serviceFee).toStringAsFixed(2)}',
-            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:doorstepmart/src/checkout/checkout_page.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CartPage extends StatelessWidget {
   final bool showBackArrow;
@@ -12,141 +13,175 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Cart'),
-        backgroundColor: const Color.fromARGB(255, 254, 255, 254),
+        title: const Text('My Cart', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white,
+        elevation: 0,
         leading: showBackArrow
             ? IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               )
             : null,
       ),
-      backgroundColor: const Color.fromARGB(255, 252, 253, 252),
+      backgroundColor: const Color.fromARGB(255, 240, 240, 240),
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
           return Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: cart.items.length,
-                  itemBuilder: (context, index) {
-                    final item = cart.items[index];
-                    return Card(
-                      color: const Color.fromARGB(255, 236, 248, 233), // Set the background color of the card
-                      //margin: const EdgeInsets.symmetric(vertical: 15.0),
-                      child: ListTile(
-                        leading: Image.asset(item.image.toString(), width: 50, height: 50),
-                        title: Text(item.name,
-                            style: TextStyle(
-                              //fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.black,
-                            )),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('RM${item.price}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Colors.green,
-                                )),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.remove),
-                                  onPressed: () {
-                                    Provider.of<CartModel>(context, listen: false).decreaseQuantity(item);
-                                  },
-                                ),
-                                Text('${item.quantity}'),
-                                IconButton(
-                                  icon: Icon(Icons.add),
-                                  onPressed: () {
-                                    Provider.of<CartModel>(context, listen: false).increaseQuantity(item);
-                                  },
-                                ),
-                              ],
+                child: cart.items.isEmpty
+                    ? const Center(
+                        child: Text("Your cart is empty", style: TextStyle(fontSize: 18, color: Colors.black54)),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(8.0),
+                        itemCount: cart.items.length,
+                        itemBuilder: (context, index) {
+                          final item = cart.items[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            Provider.of<CartModel>(context, listen: false).remove(item);
-                          },
-                        ),
+                            elevation: 3,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: item.image,
+                                      width: 70,
+                                      height: 70,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 15),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          item.name,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          'RM${item.price}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.remove_circle, color: Colors.redAccent),
+                                              onPressed: () {
+                                                Provider.of<CartModel>(context, listen: false).decreaseQuantity(item);
+                                              },
+                                            ),
+                                            Text(
+                                              '${item.quantity}',
+                                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.add_circle, color: Colors.green),
+                                              onPressed: () {
+                                                Provider.of<CartModel>(context, listen: false).increaseQuantity(item);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete, color: Colors.redAccent),
+                                    onPressed: () {
+                                      Provider.of<CartModel>(context, listen: false).remove(item);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
-
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 255, 255, 255),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      // ignore: deprecated_member_use
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
-                      ElevatedButton(
-                  onPressed: cart.items.isEmpty
-                      ? () {
-                          Fluttertoast.showToast(
-                            msg: "Add items to the cart to checkout",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 18.0,
-                          );
-                        }
-                      : () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => CheckoutPage()),
-                          );
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 105, 216, 105),
-                  ),
-                  child: const Text(
-                    'Check Out',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 20),
-                  ),
-                 ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Subtotal: \RM${cart.totalPrice.toStringAsFixed(2)}'),
-                       // Text('Delivery: \$${cart.tax.toStringAsFixed(2)}'),
-                       // Text('Service Fee: \$${cart.serviceFee.toStringAsFixed(2)}'),
-                       // Divider(),
-                        //Text(
-                       //   'Grand Total: \$${cart.Total.toStringAsFixed(2)}',
-                      //    style: TextStyle(fontWeight: FontWeight.bold),
-                      //  ),
+                        const Text(
+                          'Subtotal:',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'RM${cart.totalPrice.toStringAsFixed(2)}',
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
+                        ),
                       ],
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: cart.items.isEmpty
+                          ? () {
+                              Fluttertoast.showToast(
+                                msg: "Add items to the cart to checkout",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              );
+                            }
+                          : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => CheckoutPage()),
+                              );
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 100),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'Check Out',
+                        style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
               ),
-              
             ],
           );
         },

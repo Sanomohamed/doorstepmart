@@ -10,7 +10,6 @@ class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _CheckoutPageState createState() => _CheckoutPageState();
 }
 
@@ -20,7 +19,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   String _paymentMethod = 'Card';
 
   void _applyPromoCode(CartModel cart) {
-    if (_promoCodeController.text == 'WELCOME' && cart.totalPrice > 20) {
+    if (_promoCodeController.text.trim().toUpperCase() == 'WELCOME' && cart.totalPrice > 20) {
       setState(() {
         _discount = 5.0;
       });
@@ -34,7 +33,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Consumer<CartModel>(
           builder: (context, cart, child) {
@@ -48,6 +47,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
             );
           },
         ),
+        backgroundColor: Colors.white,
+        elevation: 1,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
@@ -58,7 +60,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -81,7 +83,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                 ),
               ),
-              BottomBarWidget(grandTotalWithDiscount: grandTotalWithDiscount),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 6,
+                      spreadRadius: 2,
+                      offset: Offset(0, -1),
+                    ),
+                  ],
+                ),
+                child: BottomBarWidget(grandTotalWithDiscount: grandTotalWithDiscount),
+              ),
             ],
           );
         },
