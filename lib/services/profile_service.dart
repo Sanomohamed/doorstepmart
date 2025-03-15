@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 Future<Map<String, dynamic>> fetchUserData(String uid) async {
@@ -10,10 +9,9 @@ Future<Map<String, dynamic>> fetchUserData(String uid) async {
     if (userDoc.exists) {
       Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
 
-      if (userData['profileImageUrl'] != null) {
-        String profileImageUrl = userData['profileImageUrl'];
-        File profileImageFile = await _downloadProfileImage(profileImageUrl);
-        userData['profileImageFile'] = profileImageFile;
+      // Ensure the profile image URL is valid
+      if (userData['profileImageUrl'] == null || userData['profileImageUrl'].toString().isEmpty) {
+        userData['profileImageUrl'] = null; // Avoid setting an invalid placeholder
       }
 
       return userData;
@@ -24,19 +22,6 @@ Future<Map<String, dynamic>> fetchUserData(String uid) async {
   return {};
 }
 
-Future<File> _downloadProfileImage(String imageUrl) async {
-  try {
-    final ref = FirebaseStorage.instance.refFromURL(imageUrl);
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/profile_image.jpg');
-    await ref.writeToFile(file);
-    return file;
-  } catch (e) {
-    print('Error downloading profile image: $e');
-    rethrow;
-  }
-}
-
 Future<String?> uploadProfileImage(File imageFile) async {
   try {
     User? user = FirebaseAuth.instance.currentUser;
@@ -44,14 +29,13 @@ Future<String?> uploadProfileImage(File imageFile) async {
       Reference storageRef = FirebaseStorage.instance.ref().child('profile_images/${user.uid}.jpg');
       UploadTask uploadTask = storageRef.putFile(imageFile);
       TaskSnapshot snapshot = await uploadTask.whenComplete(() {});
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-      return downloadUrl;
+      return await snapshot.ref.getDownloadURL();
     } else {
       throw Exception('User not logged in');
     }
   } catch (e) {
     print('Error uploading profile image: $e');
-    rethrow;
+    return null;
   }
 }
 
@@ -61,6 +45,5 @@ Future<void> saveUserData(String uid, Map<String, dynamic> userData) async {
     await userRef.set(userData, SetOptions(merge: true));
   } catch (e) {
     print('Error saving user data: $e');
-    rethrow;
   }
 }

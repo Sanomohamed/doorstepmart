@@ -31,6 +31,9 @@ class _SignupFormState extends State<SignupForm> {
 
     if (userCredential != null) {
       if (mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration successful.')),
+        );
         Navigator.pushNamed(context, '/Landing');
       }
     } else {

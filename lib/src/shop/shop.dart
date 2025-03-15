@@ -1,27 +1,28 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doorstepmart/services/product.provider.dart';
 import 'package:doorstepmart/src/shop/headeersection.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:doorstepmart/src/shop/offersection.dart';
 import 'package:doorstepmart/src/shop/productgrid.dart';
-import 'package:flutter/material.dart';
 
 class MiniMartPage extends StatefulWidget {
   const MiniMartPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MiniMartPageState createState() => _MiniMartPageState();
 }
 
 class _MiniMartPageState extends State<MiniMartPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  Future<List<Map<String, dynamic>>> fetchProducts() async {
-    try {
-      QuerySnapshot querySnapshot = await _firestore.collection('products').get();
-      return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-    } catch (e) {
-      print("Error fetching products: $e");
-      return [];
-    }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final productProvider = Provider.of<ProductProvider>(context, listen: false);
+      if (productProvider.products.isEmpty) {
+        productProvider.fetchProducts();
+      }
+    });
   }
 
   @override
@@ -33,31 +34,27 @@ class _MiniMartPageState extends State<MiniMartPage> {
         children: [
           const HeaderSection(),
           Expanded(
-            child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: fetchProducts(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return const Center(child: Text("Error loading products"));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text("No products available"));
+            child: RefreshIndicator(
+              onRefresh: () async {
+                try {
+                  Provider.of<ProductProvider>(context, listen: false).refreshProducts();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Error refreshing products: $e")),
+                  );
                 }
-                
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const OfferSection(),
-                        const SizedBox(height: 10),
-                        ProductGrid(products: snapshot.data!),
-                      ],
-                    ),
-                  ),
-                );
               },
+              child: Consumer<ProductProvider>(
+                builder: (context, provider, child) {
+                  if (provider.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (provider.hasError) {
+                    return const Center(child: Text('Error fetching products'));
+                  }
+                  return const ProductGrid();
+                },
+              ),
             ),
           ),
         ],

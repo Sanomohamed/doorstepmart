@@ -10,6 +10,7 @@ class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CheckoutPageState createState() => _CheckoutPageState();
 }
 

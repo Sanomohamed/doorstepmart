@@ -5,7 +5,7 @@ import 'package:doorstepmart/src/notification/notification_page.dart';
 import 'package:flutter/material.dart';
 
 class Landing extends StatefulWidget {
- const Landing({super.key});
+  const Landing({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -13,8 +13,7 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
-   int _selectedIndex = 0;
-  late PageController _pageController;
+  int _selectedIndex = 0;
 
   final List<Widget> _pages = [
     const Home(),
@@ -23,39 +22,17 @@ class _LandingState extends State<Landing> {
     const AccountPage(),
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: _selectedIndex);
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+      body: IndexedStack(
+        index: _selectedIndex, // Keeps all pages in memory, only switching visibility
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(

@@ -44,6 +44,7 @@ class HeaderSection extends StatelessWidget {
                 },
               ),
               IconButton(
+                // ignore: deprecated_member_use
                 icon: const Icon(FontAwesomeIcons.shoppingCart, size: 30, color: Colors.white),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => const CartPage()));

@@ -27,6 +27,7 @@ class HomeHeader extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
                     color: Colors.white.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(25),
                   ),
@@ -54,6 +55,7 @@ class HomeHeader extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: Colors.white.withOpacity(0.7),
                   shape: BoxShape.circle,
                 ),

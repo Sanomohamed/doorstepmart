@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:doorstepmart/src/favorite/favoritemodel.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
@@ -8,18 +9,18 @@ class FavoritePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-       return Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text('Favorites'),
+        title: const Text('Favorites'),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       backgroundColor: const Color.fromARGB(255, 237, 252, 237),
       body: Consumer<FavoriteModel>(
         builder: (context, favoriteModel, child) {
-            return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-             child: GridView.builder(
-               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 1,
                 mainAxisSpacing: 0,
@@ -28,6 +29,7 @@ class FavoritePage extends StatelessWidget {
               itemCount: favoriteModel.favorites.length,
               itemBuilder: (context, index) {
                 final product = favoriteModel.favorites[index];
+
                 return Stack(
                   children: [
                     Container(
@@ -41,16 +43,14 @@ class FavoritePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(10),
-                                ),
-                                color: Colors.grey[300],
-                              ),
-                              child: Image.asset(
-                                product.image,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                              child: CachedNetworkImage(
+                                imageUrl: product.image,
                                 fit: BoxFit.cover,
+                                width: double.infinity,
+                                placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
                               ),
                             ),
                           ),
@@ -67,7 +67,7 @@ class FavoritePage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '\RM${product.price}',
+                                  'RM${product.price.toStringAsFixed(2)}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -85,26 +85,26 @@ class FavoritePage extends StatelessWidget {
                       right: 20,
                       child: CircleAvatar(
                         backgroundColor: Colors.green,
-                        child:Center(
-                        child: IconButton(
-                          icon: const Icon(Icons.add, size: 25, color: Color.fromARGB(255, 252, 252, 252)),
-                          onPressed: () {
-                            Provider.of<CartModel>(context, listen: false).add(
-                              CartItem(
-                                name: product.name,
-                                image: product.image,
-                                price: product.price,
-                                quantity: 1,
-                              ),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('${product.name} added to cart'),
-                                duration: const Duration(milliseconds: 100),
-                              ),
-                            );
-                          },
-                        ),
+                        child: Center(
+                          child: IconButton(
+                            icon: const Icon(Icons.add, size: 25, color: Colors.white),
+                            onPressed: () {
+                              Provider.of<CartModel>(context, listen: false).add(
+                                CartItem(
+                                  name: product.name,
+                                  image: product.image,
+                                  price: product.price,
+                                  quantity: 1,
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('${product.name} added to cart'),
+                                  duration: const Duration(milliseconds: 100),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),

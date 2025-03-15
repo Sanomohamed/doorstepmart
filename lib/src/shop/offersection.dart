@@ -1,62 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class OfferSection extends StatelessWidget {
   const OfferSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 3,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            width: 46,
+            height: 46,
             decoration: BoxDecoration(
+              // ignore: deprecated_member_use
               color: Colors.red.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
-            child: const Icon(FontAwesomeIcons.tag, size: 30, color: Colors.red),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.local_offer, color: Colors.red),
+            ),
           ),
           const SizedBox(width: 15),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Limited Time Offer!',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
-              ),
-              SizedBox(height: 4),
-              Text(
-                'Get 10% off on all products - Use code: SAVE10',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  'Limited Time Offer!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Get 10% off on all products - Use code: SAVE10',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
+          const SizedBox(width: 15),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              // Action for the button
+            },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              backgroundColor: const Color.fromARGB(255, 212, 95, 86),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            child: const Text(
-              'Apply',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+            child: const Text('Shop Now'),
           ),
         ],
       ),

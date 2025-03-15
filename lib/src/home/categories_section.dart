@@ -9,6 +9,7 @@ class CategoriesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> categories = [
+      // ignore: deprecated_member_use
       {'name': 'Fruits', 'icon': FontAwesomeIcons.appleAlt},
       {'name': 'Vegetables', 'icon': FontAwesomeIcons.carrot},
       {'name': 'Dairy', 'icon': FontAwesomeIcons.cheese},

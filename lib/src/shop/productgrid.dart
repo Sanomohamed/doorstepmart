@@ -1,16 +1,43 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:doorstepmart/services/product.provider.dart';
 import 'package:doorstepmart/src/favorite/favoritemodel.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
-class ProductGrid extends StatelessWidget {
-  final List<Map<String, dynamic>> products;
+class ProductGrid extends StatefulWidget {
+  const ProductGrid({super.key});
 
-  const ProductGrid({super.key, required this.products});
-  
+  @override
+  _ProductGridState createState() => _ProductGridState();
+}
+
+class _ProductGridState extends State<ProductGrid> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final productProvider = Provider.of<ProductProvider>(context, listen: false);
+      if (productProvider.products.isEmpty) {
+        productProvider.fetchProducts();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final productProvider = Provider.of<ProductProvider>(context);
+
+    if (productProvider.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (productProvider.hasError) {
+      return const Center(child: Text('Error fetching products'));
+    }
+    if (productProvider.products.isEmpty) {
+      return const Center(child: Text('No products available'));
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: GridView.builder(
@@ -22,17 +49,30 @@ class ProductGrid extends StatelessWidget {
           mainAxisSpacing: 20,
           childAspectRatio: 0.8,
         ),
-        itemCount: products.length,
+        itemCount: productProvider.products.length,
         itemBuilder: (context, index) {
-          final product = products[index];
+          final product = productProvider.products[index];
+
+          // ✅ Fetch product image correctly from imageUrls
+          final List<dynamic>? images = product['imageUrls'] as List<dynamic>?;
+          String imageUrl = images != null && images.isNotEmpty && images.first is String
+              ? images.first.toString()
+              : '';
+
+          // ✅ Check if image URL is valid
+          bool isValidImageUrl = imageUrl.startsWith('https://firebasestorage.googleapis.com/');
+          if (!isValidImageUrl) {
+            imageUrl = 'https://via.placeholder.com/150'; // Default placeholder
+          }
+
+          // ✅ Fetch product details safely
           final String name = product['name']?.toString() ?? 'Unknown Product';
-          final String imageUrl = product['image']?.toString() ?? 'https://via.placeholder.com/150';
-          final double price = (product['price'] is num) ? (product['price'] as num).toDouble() : 0.0;
-          
+          final double price = (product['price'] is num)
+              ? (product['price'] as num).toDouble()
+              : 0.0;
+
           return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             elevation: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,7 +85,14 @@ class ProductGrid extends StatelessWidget {
                       fit: BoxFit.cover,
                       width: double.infinity,
                       placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                      errorWidget: (context, url, error) {
+                        print('❌ Error loading image: $url, error: $error');
+                        return Image.network(
+                          'https://via.placeholder.com/150',
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -78,6 +125,7 @@ class ProductGrid extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // ✅ Add to Favorites Button
                       IconButton(
                         icon: const Icon(Icons.favorite_border, color: Colors.red),
                         onPressed: () {
@@ -107,6 +155,8 @@ class ProductGrid extends StatelessWidget {
                           }
                         },
                       ),
+
+                      // ✅ Add to Cart Button
                       ElevatedButton(
                         onPressed: () {
                           Provider.of<CartModel>(context, listen: false).add(

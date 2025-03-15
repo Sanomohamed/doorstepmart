@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
-import 'image_picker_widget.dart';
 
 class SellForm extends StatefulWidget {
   const SellForm({super.key});
@@ -23,7 +22,7 @@ class _SellFormState extends State<SellForm> {
   String? _selectedCategory;
   bool _isUploading = false;
 
-  final List<String> _categories = ['Electronics', 'Clothing', 'Home', 'Books'];
+  final List<String> _categories = ['Electronics', 'Clothing', 'Home', 'Books','Beverage'];
 
   Future<void> _pickImages() async {
     final pickedFiles = await _picker.pickMultiImage();
@@ -40,7 +39,9 @@ class _SellFormState extends State<SellForm> {
   }
 
   Future<void> _uploadProduct() async {
-    if (_formKey.currentState!.validate() && _selectedImages.isNotEmpty && _selectedCategory != null) {
+    if (_formKey.currentState!.validate() &&
+        _selectedImages.isNotEmpty &&
+        _selectedCategory != null) {
       setState(() {
         _isUploading = true;
       });
@@ -63,8 +64,7 @@ class _SellFormState extends State<SellForm> {
           'price': double.parse(_priceController.text),
           'description': _descriptionController.text,
           'category': _selectedCategory,
-          'quantity': 1,
-          'imageUrls': imageUrls,
+          'imageUrls': imageUrls, // ✅ Ensure images are stored as a list
           'timestamp': FieldValue.serverTimestamp(),
         });
 
@@ -121,9 +121,6 @@ class _SellFormState extends State<SellForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text("Select Images (Max: 5)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            ImagePickerWidget(selectedImages: _selectedImages),
-            const SizedBox(height: 8),
             ElevatedButton(onPressed: _pickImages, child: const Text("Pick Images")),
             TextFormField(
               controller: _nameController,
