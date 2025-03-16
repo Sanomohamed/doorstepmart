@@ -38,26 +38,26 @@ class _LandingState extends State<Landing> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.black54,
-        backgroundColor: Colors.white,
-        elevation: 8,
+        selectedItemColor: const Color.fromARGB(110, 55, 218, 63),
+        unselectedItemColor: const Color.fromARGB(206, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 253, 253, 253),
+        elevation: 25,
         onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 28),
+            icon: Icon(Icons.home, size: 30),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart, size: 28),
+            icon: Icon(Icons.shopping_cart, size: 30),
             label: 'Cart',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications, size: 28),
+            icon: Icon(Icons.notifications, size: 30),
             label: 'Notifications',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle, size: 28),
+            icon: Icon(Icons.account_circle, size: 30),
             label: 'Account',
           ),
         ],

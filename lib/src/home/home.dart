@@ -3,7 +3,7 @@ import 'package:doorstepmart/src/home/beverage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:doorstepmart/src/home/homeheader.dart';
-import 'package:doorstepmart/src/home/locationsection.dart';
+//import 'package:doorstepmart/src/home/locationsection.dart';
 import 'package:doorstepmart/src/home/categories_section.dart';
 import 'package:doorstepmart/src/home/promotionsection.dart';
 import 'package:doorstepmart/src/home/beveragesection.dart';
@@ -31,14 +31,14 @@ class _HomeState extends State<Home> {
               children: [
                 const SizedBox(height: 4.0),
                 const HomeHeader(),
-                const SizedBox(height: 8.0),
-                const LocationSection(),
+                //const SizedBox(height: 8.0),
+                //const LocationSection(),
                 const SizedBox(height: 8.0),
                 const CategoriesSection(),
-                const SizedBox(height: 8.0),
-                const PromotionSection(),
-                const SizedBox(height: 8.0),
-                const BeverageSection(),
+               // const SizedBox(height: 8.0),
+              //  const BeverageSection(),
+                //const PromotionSection(),
+                //const SizedBox(height: 8.0),
                 const SizedBox(height: 8.0),
 
                 // **Using Consumer for ProductGrid**

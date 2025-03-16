@@ -34,6 +34,7 @@
         "offersection",
         "orderbutton",
         "ordersumary",
+        "Overlayed",
         "paymentmethod",
         "pjynk",
         "pqtqt",
@@ -45,6 +46,7 @@
         "redbull",
         "Signup",
         "signupform",
+        "Snackbars",
         "subprojects"
     ],
     "java.compile.nullAnalysis.mode": "automatic",
