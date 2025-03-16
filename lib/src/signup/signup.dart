@@ -2,9 +2,6 @@ import 'package:doorstepmart/src/login/login.dart';
 import 'package:doorstepmart/src/login/login_image.dart';
 import 'package:doorstepmart/src/signup/signupform.dart';
 import 'package:flutter/material.dart';
-import 'package:doorstepmart/src/login/forgetpassword.dart';
-import 'package:doorstepmart/src/login/social_loginbuttons.dart';
-
 
 class Signup extends StatelessWidget {
   const Signup({super.key});
@@ -17,27 +14,23 @@ class Signup extends StatelessWidget {
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(2.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 const LoginImage(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 5),
                 const SignupForm(),
-                const SizedBox(height: 10),
-                const ForgotPassword(),
-                const Divider(
-                  color: Colors.white,
-                  thickness: 1,
-                ),
+                const SizedBox(height: 15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
                       "Already have an account?",
                       style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
+                        color: Color.fromARGB(255, 27, 27, 27),
+                        fontSize: 19,
+                        fontStyle: FontStyle.italic,
                       ),
                     ),
                     TextButton(
@@ -48,18 +41,16 @@ class Signup extends StatelessWidget {
                         );
                       },
                       child: const Text(
-                        "Sign in",
+                        "Sign In",
                         style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
+                          color: Color.fromARGB(230, 12, 12, 12),
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                const SocialLoginButtons(),
               ],
             ),
           ),

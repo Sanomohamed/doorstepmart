@@ -10,7 +10,7 @@ class ForgotPassword extends StatelessWidget {
       children: [
         IconButton(
           icon: const Icon(Icons.visibility),
-          color: Colors.white,
+          color: const Color.fromARGB(255, 46, 45, 45),
           onPressed: () {
             // Add your onPressed code here!
           },
@@ -18,8 +18,9 @@ class ForgotPassword extends StatelessWidget {
         const Text(
           'Forgot Password?',
           style: TextStyle(
-            color: Colors.white,
-            fontSize: 15,
+            color: Color.fromARGB(255, 54, 53, 53),
+            fontSize: 16,
+            fontWeight: FontWeight.bold
           ),
         ),
       ],

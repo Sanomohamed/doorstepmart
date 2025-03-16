@@ -1,5 +1,6 @@
 import 'package:doorstepmart/services/auth_service.dart';
 import 'package:doorstepmart/src/custom_widgets.dart';
+import 'package:doorstepmart/src/login/forgetpassword.dart';
 import 'package:flutter/material.dart';
 
 class SignupForm extends StatefulWidget {
@@ -47,50 +48,71 @@ class _SignupFormState extends State<SignupForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 500,
-      padding: const EdgeInsets.all(16.0),
+    return Center(
+       child: Container(
+      width: 400, // Adjusted width for better responsiveness
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF77AB8A),
-        borderRadius: BorderRadius.circular(20),
+        color: const Color.fromARGB(26, 145, 167, 145), // Soothing modern green
+        borderRadius: BorderRadius.circular(42),
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(19, 86, 90, 87),
+            blurRadius: 40,
+            offset: Offset(0, 5),
+          ),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center, // Center alignment for better balance
         children: [
+          /// Title
           const Text(
-            'Signup',
+            'Sign Up',
             style: TextStyle(
               fontSize: 35,
-              color: Colors.white,
+              color: Color.fromARGB(255, 41, 39, 39),
               fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+              letterSpacing: 4.2, // Slightly improved spacing for elegance
             ),
           ),
           const SizedBox(height: 15),
           CustomTextField(hintText: 'Name', controller: nameController),
+          const SizedBox(height: 29),
           CustomTextField(hintText: 'Email', controller: emailController),
+          const SizedBox(height: 28),
           CustomTextField(hintText: 'Password', obscureText: true, controller: passwordController),
+          const SizedBox(height: 29),
           CustomTextField(hintText: 'Confirm Password', obscureText: true, controller: confirmPasswordController),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _register,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 88, 187, 126),
-              elevation: 5, // Elevation
-              shadowColor: Colors.black, // Shadow color
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20), // Border radius
+          const SizedBox(height: 30),
+               SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _register,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(76, 160, 235, 157), // Vibrant green
+                padding: const EdgeInsets.symmetric(vertical: 14), // Improved padding
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(42), // More modern rounded corners
+                ),
+                elevation: 9,
               ),
-            ),
-            child: const Text(
-              'Signup',
-              style: TextStyle(
-                fontSize: 18, // Text size
-                fontWeight: FontWeight.bold, // Bold text
-                color: Colors.white, // Text color
+              child: const Text(
+                'Sign Up',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
+                  color: Color.fromARGB(197, 0, 0, 0),
+                ),
               ),
             ),
           ),
-        ],
+          const SizedBox(height: 5),
+          ], 
+          ),
       ),
     );
   }
