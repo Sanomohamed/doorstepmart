@@ -7,20 +7,20 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(35.0),
       width: double.infinity,
       height: 220,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: const Color(0xFFD2DBD6),
-        borderRadius: BorderRadius.circular(12),
         image: const DecorationImage(
-        image: AssetImage('assets/image.png'),
-        fit: BoxFit.cover,
+          image: AssetImage('assets/image.png'),
+          fit: BoxFit.cover,
         ),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             // ignore: deprecated_member_use
-            color: const Color.fromARGB(255, 139, 137, 137).withOpacity(0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -29,81 +29,73 @@ class HomeHeader extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          /// Search Bar
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  decoration: BoxDecoration(
-                    // ignore: deprecated_member_use
-                    color: Colors.white.withOpacity(1.0), // Increased visibility
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        // ignore: deprecated_member_use
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.search, size: 26, color: Colors.black54),
-                      const SizedBox(width: 10.0),
-                      Expanded(
-                        child: TextField(
-                          decoration: const InputDecoration(
-                            hintText: 'Search for products...',
-                            hintStyle: TextStyle(color: Colors.black45),
-                            border: InputBorder.none,
-                          ),
-                          textInputAction: TextInputAction.search,
-                          onSubmitted: (value) {
-                            // Implement search functionality
-                          },
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.mic, size: 24, color: Colors.black54),
-                        onPressed: () {
-                          // Implement voice search functionality
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          /// Favorite Icon (Bottom Right)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                decoration: BoxDecoration(
+          // ✅ Search Bar - Full Width, Fixed Padding
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            margin: const EdgeInsets.only(top: 5), // Adjust if needed
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
                   // ignore: deprecated_member_use
-                  color: Colors.white.withOpacity(0.9), // Improved contrast
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      // ignore: deprecated_member_use
-                      color: Colors.black.withOpacity(0.15),
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
                 ),
-                child: IconButton(
-                  icon: const Icon(FontAwesomeIcons.heart, size: 28, color: Colors.green),
+              ],
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.search, size: 24, color: Colors.black54),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Search for products...',
+                      hintStyle: TextStyle(color: Colors.black45),
+                      border: InputBorder.none,
+                    ),
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: (value) {
+                      // Implement search functionality
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.mic, size: 24, color: Colors.black54),
                   onPressed: () {
-                    // Implement favorite functionality
+                    // Implement voice search functionality
                   },
                 ),
+              ],
+            ),
+          ),
+
+          // ✅ Favorite Icon Positioned Correctly
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 8), // Ensures it is not touching the edge
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    // ignore: deprecated_member_use
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-            ],
+              child: IconButton(
+                icon: const Icon(FontAwesomeIcons.heart, size: 28, color: Color.fromARGB(179, 76, 175, 79)),
+                onPressed: () {
+                  // Implement favorite functionality
+                },
+              ),
+            ),
           ),
         ],
       ),
