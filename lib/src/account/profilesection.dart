@@ -1,4 +1,3 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:doorstepmart/src/profile/profile.dart';
@@ -7,7 +6,6 @@ class ProfileSection extends StatefulWidget {
   const ProfileSection({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _ProfileSectionState createState() => _ProfileSectionState();
 }
 
@@ -37,57 +35,86 @@ class _ProfileSectionState extends State<ProfileSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Stack(
+            Row(
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  child: const Icon(Icons.person, size: 40), // Icon used instead of image
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: CircleAvatar(
-                    radius: 15,
-                    backgroundColor: Colors.white,
-                    child: IconButton(
-                      icon: const Icon(Icons.edit, size: 15),
-                      onPressed: () {
-                         Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ProfilePage()),
-                        );
-                        // Handle edit profile action
-                      },
+                // ✅ Profile Avatar with Gradient Border
+                Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.green, width: 2),
+                      ),
+                      child: const CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.person, size: 40, color: Colors.black54), // Default icon
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        child: IconButton(
+                          icon: const Icon(Icons.edit, size: 15, color: Colors.green),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ProfilePage()),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(width: 16.0),
+
+                // ✅ User Details Section
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _usernameController.text,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _email ?? 'Email not available',
+                      style: const TextStyle(fontSize: 14, color: Colors.black54),
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(width: 16.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8.0),
-                Text(
-                  _email ?? 'Email not available',
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
+
+            // ✅ Settings Button
+            IconButton(
+              icon: const Icon(Icons.settings, size: 28, color: Colors.black54),
+              onPressed: () {
+                // Handle settings action
+              },
             ),
           ],
         ),
-        IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            // Handle settings action
-          },
-        ),
-      ],
+      ),
     );
   }
 

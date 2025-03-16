@@ -8,7 +8,6 @@ class SellForm extends StatefulWidget {
   const SellForm({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _SellFormState createState() => _SellFormState();
 }
 
@@ -22,7 +21,7 @@ class _SellFormState extends State<SellForm> {
   String? _selectedCategory;
   bool _isUploading = false;
 
-  final List<String> _categories = ['Electronics', 'Clothing', 'Home', 'Books','Beverage'];
+  final List<String> _categories = ['Electronics', 'Clothing', 'Home', 'Books', 'Beverage'];
 
   Future<void> _pickImages() async {
     final pickedFiles = await _picker.pickMultiImage();
@@ -31,7 +30,6 @@ class _SellFormState extends State<SellForm> {
         _selectedImages = pickedFiles;
       });
     } else {
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("You can select up to 5 images only")),
       );
@@ -64,7 +62,7 @@ class _SellFormState extends State<SellForm> {
           'price': double.parse(_priceController.text),
           'description': _descriptionController.text,
           'category': _selectedCategory,
-          'imageUrls': imageUrls, // ✅ Ensure images are stored as a list
+          'imageUrls': imageUrls,
           'timestamp': FieldValue.serverTimestamp(),
         });
 
@@ -117,49 +115,127 @@ class _SellFormState extends State<SellForm> {
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text("Select Images (Max: 5)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            ElevatedButton(onPressed: _pickImages, child: const Text("Pick Images")),
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: "Product Name"),
-              validator: (value) => value!.isEmpty ? "Enter product name" : null,
-            ),
-            TextFormField(
-              controller: _priceController,
-              decoration: const InputDecoration(labelText: "Price"),
-              keyboardType: TextInputType.number,
-              validator: (value) => value!.isEmpty ? "Enter price" : null,
-            ),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(labelText: "Description"),
-              validator: (value) => value!.isEmpty ? "Enter description" : null,
-              maxLines: 3,
-            ),
-            DropdownButtonFormField<String>(
-              value: _selectedCategory,
-              hint: const Text("Select Category"),
-              items: _categories.map((category) {
-                return DropdownMenuItem(value: category, child: Text(category));
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedCategory = value;
-                });
-              },
-              validator: (value) => value == null ? "Select a category" : null,
-            ),
-            const SizedBox(height: 20),
-            _isUploading
-                ? const Center(child: CircularProgressIndicator())
-                : ElevatedButton(
-                    onPressed: _uploadProduct,
-                    child: const Text("Upload Product"),
+        padding: const EdgeInsets.all(16),
+        child: Card(
+          elevation: 40,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ✅ Image Picker with GridView
+                const Text(
+                  "Select Images (Max: 5)",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                _selectedImages.isNotEmpty
+                    ? GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                        ),
+                        itemCount: _selectedImages.length,
+                        itemBuilder: (context, index) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.file(File(_selectedImages[index].path), fit: BoxFit.cover),
+                          );
+                        },
+                      )
+                    : ElevatedButton.icon(
+                        onPressed: _pickImages,
+                        icon: const Icon(Icons.image, color: Colors.white),
+                        label: const Text("Pick Images", style: TextStyle(color: Color.fromARGB(255, 29, 28, 28))),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+                          backgroundColor: const Color.fromARGB(255, 140, 209, 143),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
+                const SizedBox(height: 20),
+
+                // ✅ Product Name Field
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: "Product Name",
+                    prefixIcon: Icon(Icons.label),
+                    border: OutlineInputBorder(),
                   ),
-          ],
+                  validator: (value) => value!.isEmpty ? "Enter product name" : null,
+                ),
+
+                const SizedBox(height: 16),
+
+                // ✅ Price Field
+                TextFormField(
+                  controller: _priceController,
+                  decoration: const InputDecoration(
+                    labelText: "Price",
+                    prefixIcon: Icon(Icons.attach_money),
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) => value!.isEmpty ? "Enter price" : null,
+                ),
+
+                const SizedBox(height: 16),
+
+                // ✅ Description Field
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: "Description",
+                    prefixIcon: Icon(Icons.description),
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) => value!.isEmpty ? "Enter description" : null,
+                  maxLines: 3,
+                ),
+
+                const SizedBox(height: 16),
+
+                // ✅ Category Dropdown
+                DropdownButtonFormField<String>(
+                  value: _selectedCategory,
+                  decoration: const InputDecoration(
+                    labelText: "Select Category",
+                    border: OutlineInputBorder(),
+                  ),
+                  items: _categories.map((category) {
+                    return DropdownMenuItem(value: category, child: Text(category));
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                  },
+                  validator: (value) => value == null ? "Select a category" : null,
+                ),
+
+                const SizedBox(height: 20),
+
+                // ✅ Upload Button with Loading Indicator
+                _isUploading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ElevatedButton.icon(
+                        onPressed: _uploadProduct,
+                        icon: const Icon(Icons.upload, color: Colors.white),
+                        label: const Text("Upload Product"),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
+              ],
+            ),
+          ),
         ),
       ),
     );

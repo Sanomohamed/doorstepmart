@@ -11,7 +11,6 @@ class ProfileForm extends StatefulWidget {
   const ProfileForm({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _ProfileFormState createState() => _ProfileFormState();
 }
 
@@ -123,67 +122,138 @@ class _ProfileFormState extends State<ProfileForm> {
   Widget build(BuildContext context) {
     return _isLoading
         ? const Center(child: CircularProgressIndicator()) // Show loading indicator
-        : Form(
-            key: _formKey,
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: _pickedImage != null
-                        ? FileImage(_pickedImage!)
-                        : (_profileImageUrl != null
-                            ? CachedNetworkImageProvider(_profileImageUrl!)
-                            : const AssetImage('assets/default_avatar.png') as ImageProvider),
-                    child: _pickedImage == null && _profileImageUrl == null
-                        ? const Icon(Icons.add_a_photo, size: 50)
-                        : null,
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                  validator: validateName,
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: validateEmail,
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _phoneController,
-                  decoration: const InputDecoration(labelText: 'Phone'),
-                  validator: validatePhone,
-                ),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: _saveUserProfile,
-                  style: ElevatedButton.styleFrom(
+        : Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Card(
+              elevation: 50,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+              child: Padding(
+                padding: const EdgeInsets.all(45),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // ✅ Profile Picture Section with Overlay
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 99,
+                            backgroundImage: _pickedImage != null
+                                ? FileImage(_pickedImage!)
+                                : (_profileImageUrl != null
+                                    ? CachedNetworkImageProvider(_profileImageUrl!)
+                                    : const AssetImage('assets/default_avatar.png') as ImageProvider),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: CircleAvatar(
+                              radius: 28,
+                              backgroundColor: const Color.fromARGB(249, 111, 212, 114),
+                              child: IconButton(
+                                icon: const Icon(Icons.edit, size: 24, color: Colors.white),
+                                onPressed: _pickImage,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 35),
+
+                      // ✅ Name Field
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Name',
+                          prefixIcon: const Icon(Icons.person),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                        ),
+                        validator: validateName,
+                      ),
+
+                      const SizedBox(height: 35),
+
+                      // ✅ Email Field
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: const Icon(Icons.email),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                        ),
+                        validator: validateEmail,
+                      ),
+
+                      const SizedBox(height: 35),
+
+                      // ✅ Phone Field
+                      TextFormField(
+                        controller: _phoneController,
+                        decoration: InputDecoration(
+                          labelText: 'Phone',
+                          prefixIcon: const Icon(Icons.phone),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                        ),
+                        validator: validatePhone,
+                      ),
+
+                      const SizedBox(height: 30),
+
+                      // ✅ Save Button
+          ElevatedButton(
+                   onPressed: _isLoading ? null : _saveUserProfile, // Disable button when loading
+               style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.black,
-                  ),
-                  child: const Text('Save'),
+                    backgroundColor: const Color.fromARGB(115, 76, 175, 79),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 90), // ✅ Increased size
+                    shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18), // ✅ More rounded corners
+                   ),
+                         elevation: 25, // ✅ Soft shadow for a modern touch
                 ),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SellPage()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.black,
+                      child: _isLoading
+               ? const SizedBox(
+                      width: 24,
+                     height: 24,
+                  child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+          ),
+        )
+               : const Text(
+                          'Save',
+                  style: TextStyle(
+                          fontSize: 26, // ✅ Bigger font size
+                         fontWeight: FontWeight.bold,
+                         letterSpacing: 1.2, // ✅ Spaced-out text for readability
+                            ),
+                            ),
+                          ),
+
+                      const SizedBox(height: 20),
+
+                      // ✅ Sell Button
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const SellPage()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: const Text('Sell', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ),
+                    ],
                   ),
-                  child: const Text('Sell'),
                 ),
-              ],
+              ),
             ),
           );
   }

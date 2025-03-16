@@ -5,73 +5,83 @@ class PurchaseSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'My Purchase',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-        ListTile(
-          leading: const Icon(Icons.history),
-          title: const Text('View Purchase History'),
-          trailing: const Icon(Icons.arrow_forward_ios),
-          onTap: () {
-            // Handle view purchase history action
-          },
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Card(
+      elevation: 40,
+      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.shopping_cart),
-                  iconSize: 50.0,
-                  onPressed: () {
-                    // Handle orders action
-                  },
+            // ✅ Section Title
+            const Padding(
+              padding: EdgeInsets.only(left: 8, bottom: 10),
+              child: Text(
+                'My Purchase',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic,
                 ),
-                const Text('Orders'),
-              ],
+              ),
             ),
-            Column(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.local_shipping),
-                  iconSize: 50.0,
-                  onPressed: () {
-                    // Handle received action
-                  },
-                ),
-                const Text('Received'),
-              ],
+
+            // ✅ Purchase History Option
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              leading: CircleAvatar(
+                radius: 28,
+                backgroundColor: Colors.blueAccent.withOpacity(0.2),
+                child: const Icon(Icons.history, color: Colors.blueAccent, size: 28),
+              ),
+              title: const Text(
+                'View Purchase History',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Color.fromARGB(158, 0, 0, 0)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              tileColor: Colors.white,
+              onTap: () {
+                // Handle view purchase history action
+              },
             ),
-            Column(
+
+            const SizedBox(height: 12),
+
+            // ✅ Purchase Status Grid
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.check_circle),
-                  iconSize: 50.0,
-                  onPressed: () {
-                    // Handle completed action
-                  },
-                ),
-                const Text('Completed'),
-              ],
-            ),
-            Column(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.cancel),
-                  iconSize: 50.0,
-                  onPressed: () {
-                    // Handle canceled action
-                  },
-                ),
-                const Text('Canceled'),
+                _buildPurchaseItem(Icons.shopping_cart, "Orders", Colors.green),
+                _buildPurchaseItem(Icons.local_shipping, "Received", Colors.orange),
+                _buildPurchaseItem(Icons.check_circle, "Completed", Colors.blue),
+                _buildPurchaseItem(Icons.cancel, "Canceled", Colors.red),
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // ✅ Modernized Button with Uniform Design
+  Widget _buildPurchaseItem(IconData icon, String label, Color color) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundColor: color.withOpacity(0.2),
+          child: Icon(icon, size: 30, color: color),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ],
     );

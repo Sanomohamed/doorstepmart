@@ -8,21 +8,25 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        iconTheme: IconThemeData(color: Colors.black),
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 252, 252, 252),
+        elevation: 3, // ✅ Soft shadow for better visibility
+        iconTheme: const IconThemeData(color: Colors.black87),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, size: 28),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
       ),
-       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ProfileForm(),
-      ),
+      body: const ProfileForm(),
     );
   }
 }
