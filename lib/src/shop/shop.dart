@@ -37,7 +37,7 @@ class _MiniMartPageState extends State<MiniMartPage> {
             child: RefreshIndicator(
               onRefresh: () async {
                 try {
-                  Provider.of<ProductProvider>(context, listen: false).refreshProducts();
+                //  Provider.of<ProductProvider>(context, listen: false).refreshProducts();
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Error refreshing products: $e")),
