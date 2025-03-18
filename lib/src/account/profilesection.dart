@@ -6,6 +6,7 @@ class ProfileSection extends StatefulWidget {
   const ProfileSection({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProfileSectionState createState() => _ProfileSectionState();
 }
 

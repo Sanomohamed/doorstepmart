@@ -8,6 +8,7 @@ class MiniMartPage extends StatefulWidget {
   const MiniMartPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MiniMartPageState createState() => _MiniMartPageState();
 }
 
@@ -31,6 +32,7 @@ class _MiniMartPageState extends State<MiniMartPage> with AutomaticKeepAliveClie
                 try {
                   await Provider.of<ProductProvider>(context, listen: false).fetchProducts(forceRefresh: true);
                 } catch (e) {
+                  // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Error refreshing products: $e")),
                   );

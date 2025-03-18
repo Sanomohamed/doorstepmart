@@ -3,30 +3,48 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProductService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// ✅ Fetch Products with Pagination & Caching
+  /// ✅ Fetch Products (Server First, Fixes Cache Issues)
   Future<List<Map<String, dynamic>>> fetchProducts({DocumentSnapshot? lastDoc, int limit = 10}) async {
     try {
-      Query query = _firestore.collection('products').orderBy('timestamp', descending: true).limit(limit);
+      print("🔍 Fetching products from Firestore...");
+      
+      Query query = _firestore.collection('products')
+          .orderBy('timestamp', descending: true)
+          .limit(limit);
 
-      // ✅ Use last fetched document for pagination
       if (lastDoc != null) {
         query = query.startAfterDocument(lastDoc);
+        print("📌 Using pagination: fetching after document ID: ${lastDoc.id}");
       }
 
-      // ✅ Fetch from cache first, then fallback to Firestore
-      final snapshot = await query
-          .get(const GetOptions(source: Source.cache))
-          .catchError((_) => query.get());
+      // ✅ Always fetch from Firestore server (avoid cache inconsistencies)
+      final snapshot = await query.get(const GetOptions(source: Source.server));
 
       if (snapshot.docs.isEmpty) {
+        print("⚠️ No products found in Firestore.");
         return [];
       }
 
-      return snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>, // ✅ Ensure valid data structure
+      print("✅ Firestore returned ${snapshot.docs.length} products.");
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+
+        // ✅ Ensure imageUrls is a valid list
+        List<String> imageUrls = [];
+        if (data.containsKey('imageUrls') && data['imageUrls'] is List) {
+          imageUrls = List<String>.from(data['imageUrls']);
+        }
+
+        return {
+          'id': doc.id,
+          ...data,
+          'imageUrls': imageUrls.isNotEmpty ? imageUrls : ["https://via.placeholder.com/150"], // ✅ Placeholder for missing images
+        };
       }).toList();
+
     } catch (e) {
+      print("❌ Error fetching products: $e");
       throw Exception("❌ Error fetching products: $e");
     }
   }

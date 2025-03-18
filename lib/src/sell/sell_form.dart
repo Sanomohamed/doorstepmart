@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:doorstepmart/src/setup/createshoppage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +10,7 @@ class SellForm extends StatefulWidget {
   const SellForm({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SellFormState createState() => _SellFormState();
 }
 
@@ -30,55 +33,80 @@ class _SellFormState extends State<SellForm> {
         _selectedImages = pickedFiles;
       });
     } else {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("You can select up to 5 images only")),
       );
     }
   }
 
-  Future<void> _uploadProduct() async {
-    if (_formKey.currentState!.validate() &&
-        _selectedImages.isNotEmpty &&
-        _selectedCategory != null) {
-      setState(() {
-        _isUploading = true;
-      });
-
-      try {
-        List<String> imageUrls = [];
-
-        for (var image in _selectedImages) {
-          File file = File(image.path);
-          String fileName = "products/${DateTime.now().millisecondsSinceEpoch}.jpg";
-
-          UploadTask uploadTask = FirebaseStorage.instance.ref(fileName).putFile(file);
-          TaskSnapshot snapshot = await uploadTask;
-          String downloadUrl = await snapshot.ref.getDownloadURL();
-          imageUrls.add(downloadUrl);
-        }
-
-        await FirebaseFirestore.instance.collection('products').add({
-          'name': _nameController.text,
-          'price': double.parse(_priceController.text),
-          'description': _descriptionController.text,
-          'category': _selectedCategory,
-          'imageUrls': imageUrls,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
-
-        _showDialog('Success', 'Product uploaded successfully!');
-        _resetForm();
-      } catch (e) {
-        _showDialog('Error', 'Error uploading product: $e');
-      }
-
-      setState(() {
-        _isUploading = false;
-      });
-    } else {
-      _showDialog('Error', 'Please fill all fields and select images.');
-    }
+Future<void> _uploadProduct() async {
+  if (!_formKey.currentState!.validate() ||
+      _selectedImages.isEmpty ||
+      _selectedCategory == null) {
+    _showDialog('Error', 'Please fill all fields and select images.');
+    return;
   }
+
+  setState(() {
+    _isUploading = true;
+  });
+
+  try {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) throw Exception("User not logged in");
+
+    // ✅ CHECK IF USER HAS A SHOP
+    QuerySnapshot shopSnapshot = await FirebaseFirestore.instance
+        .collection("shops")
+        .where("userId", isEqualTo: user.uid)
+        .get();
+
+    if (shopSnapshot.docs.isEmpty) {
+      // ❌ User doesn't have a shop
+      setState(() => _isUploading = false);
+      _showDialog('Error', 'You need to create a shop before uploading products.');
+      return;
+    }
+
+    // ✅ User has a shop, get the shop ID
+    String shopId = shopSnapshot.docs.first.id;
+
+    // ✅ Upload Images to Firebase Storage
+    List<String> imageUrls = [];
+    for (var image in _selectedImages) {
+      File file = File(image.path);
+      String fileName = "products/${DateTime.now().millisecondsSinceEpoch}.jpg";
+
+      UploadTask uploadTask = FirebaseStorage.instance.ref(fileName).putFile(file);
+      TaskSnapshot snapshot = await uploadTask;
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+      imageUrls.add(downloadUrl);
+    }
+
+    // ✅ Upload Product to Firestore
+    await FirebaseFirestore.instance.collection('products').add({
+      'name': _nameController.text.trim(),
+      'price': double.parse(_priceController.text.trim()),
+      'description': _descriptionController.text.trim(),
+      'category': _selectedCategory,
+      'imageUrls': imageUrls,
+      'shopId': shopId, // ✅ Associate product with the shop
+      'userId': user.uid, // ✅ Include user ID for reference
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    _showDialog('Success', 'Product uploaded successfully!');
+    _resetForm();
+  } catch (e) {
+    _showDialog('Error', 'Error uploading product: $e');
+  }
+
+  setState(() {
+    _isUploading = false;
+  });
+}
+
 
   void _resetForm() {
     setState(() {
@@ -91,24 +119,33 @@ class _SellFormState extends State<SellForm> {
   }
 
   void _showDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              
+              // ✅ Redirect to CreateShopPage if the user needs a shop
+              if (message == 'You need to create a shop before uploading products.') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CreateShopPage()),
+                );
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {

@@ -11,6 +11,7 @@ class ProfileForm extends StatefulWidget {
   const ProfileForm({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProfileFormState createState() => _ProfileFormState();
 }
 
@@ -20,7 +21,7 @@ class _ProfileFormState extends State<ProfileForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   String? _profileImageUrl;
-  bool _isLoading = true; // Show loading indicator when fetching data
+  bool _isLoading = true;
   File? _pickedImage;
 
   @override
@@ -39,11 +40,9 @@ class _ProfileFormState extends State<ProfileForm> {
           _emailController.text = userData['email'] ?? '';
           _phoneController.text = userData['phoneNumber'] ?? '';
 
-          // Ensure a valid profile image URL is used
+          // Ensure a valid profile image URL
           String? fetchedImageUrl = userData['profileImageUrl'];
-          if (fetchedImageUrl != null &&
-              fetchedImageUrl.isNotEmpty &&
-              !fetchedImageUrl.contains("via.placeholder.com")) {
+          if (fetchedImageUrl != null && fetchedImageUrl.isNotEmpty) {
             _profileImageUrl = fetchedImageUrl;
           } else {
             _profileImageUrl = null; // Use a local placeholder instead
@@ -80,14 +79,10 @@ class _ProfileFormState extends State<ProfileForm> {
 
       if (_pickedImage != null) {
         newProfileImageUrl = await uploadProfileImage(_pickedImage!);
-        print('New Profile Image URL: $newProfileImageUrl');
       }
 
       User? user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        print('Error: User is not logged in.');
-        return;
-      }
+      if (user == null) return;
 
       Map<String, dynamic> userData = {
         'email': _emailController.text.trim(),
@@ -97,20 +92,15 @@ class _ProfileFormState extends State<ProfileForm> {
       };
 
       await saveUserData(user.uid, userData);
-      print('User profile updated successfully!');
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully')),
-        );
-      }
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully')),
+      );
     } catch (e) {
-      print('Error saving user profile: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error saving profile')),
-        );
-      }
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error saving profile')),
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -125,116 +115,95 @@ class _ProfileFormState extends State<ProfileForm> {
         : Padding(
             padding: const EdgeInsets.all(16.0),
             child: Card(
-              elevation: 50,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+              elevation: 10,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               child: Padding(
-                padding: const EdgeInsets.all(45),
+                padding: const EdgeInsets.all(24),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // ✅ Profile Picture Section with Overlay
+                      // ✅ Profile Picture with Floating Edit Button
                       Stack(
+                        alignment: Alignment.bottomRight,
                         children: [
-                          CircleAvatar(
-                            radius: 99,
-                            backgroundImage: _pickedImage != null
-                                ? FileImage(_pickedImage!)
-                                : (_profileImageUrl != null
-                                    ? CachedNetworkImageProvider(_profileImageUrl!)
-                                    : const AssetImage('assets/default_avatar.png') as ImageProvider),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: CircleAvatar(
-                              radius: 28,
-                              backgroundColor: const Color.fromARGB(249, 111, 212, 114),
-                              child: IconButton(
-                                icon: const Icon(Icons.edit, size: 24, color: Colors.white),
-                                onPressed: _pickImage,
-                              ),
+                          Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  // ignore: deprecated_member_use
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
+                            child: CircleAvatar(
+                              radius: 55,
+                              backgroundImage: _pickedImage != null
+                                  ? FileImage(_pickedImage!)
+                                  : (_profileImageUrl != null
+                                      ? CachedNetworkImageProvider(_profileImageUrl!)
+                                      : const AssetImage('assets/default_avatar.png') as ImageProvider),
+                            ),
+                          ),
+                          FloatingActionButton(
+                            mini: true,
+                            backgroundColor: Colors.green,
+                            // ignore: sort_child_properties_last
+                            child: const Icon(Icons.edit, size: 20, color: Colors.white),
+                            onPressed: _pickImage,
                           ),
                         ],
                       ),
 
-                      const SizedBox(height: 35),
+                      const SizedBox(height: 25),
 
                       // ✅ Name Field
                       TextFormField(
                         controller: _nameController,
-                        decoration: InputDecoration(
-                          labelText: 'Name',
-                          prefixIcon: const Icon(Icons.person),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                        ),
+                        decoration: _inputDecoration("Name", Icons.person),
                         validator: validateName,
                       ),
 
-                      const SizedBox(height: 35),
+                      const SizedBox(height: 20),
 
                       // ✅ Email Field
                       TextFormField(
                         controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: const Icon(Icons.email),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                        ),
+                        decoration: _inputDecoration("Email", Icons.email),
                         validator: validateEmail,
                       ),
 
-                      const SizedBox(height: 35),
+                      const SizedBox(height: 20),
 
                       // ✅ Phone Field
                       TextFormField(
                         controller: _phoneController,
-                        decoration: InputDecoration(
-                          labelText: 'Phone',
-                          prefixIcon: const Icon(Icons.phone),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                        ),
+                        decoration: _inputDecoration("Phone", Icons.phone),
                         validator: validatePhone,
                       ),
 
                       const SizedBox(height: 30),
 
-                      // ✅ Save Button
-          ElevatedButton(
-                   onPressed: _isLoading ? null : _saveUserProfile, // Disable button when loading
-               style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color.fromARGB(115, 76, 175, 79),
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 90), // ✅ Increased size
-                    shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18), // ✅ More rounded corners
-                   ),
-                         elevation: 25, // ✅ Soft shadow for a modern touch
-                ),
-                      child: _isLoading
-               ? const SizedBox(
-                      width: 24,
-                     height: 24,
-                  child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-          ),
-        )
-               : const Text(
-                          'Save',
-                  style: TextStyle(
-                          fontSize: 26, // ✅ Bigger font size
-                         fontWeight: FontWeight.bold,
-                         letterSpacing: 1.2, // ✅ Spaced-out text for readability
-                            ),
-                            ),
-                          ),
+                      // ✅ Save Button (Improved)
+                      ElevatedButton(
+                        onPressed: _isLoading ? null : _saveUserProfile,
+                        style: _buttonStyle(Colors.green),
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                              )
+                            : const Text('Save', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 15),
 
-                      // ✅ Sell Button
+                      // ✅ Sell Button (Improved)
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -242,12 +211,7 @@ class _ProfileFormState extends State<ProfileForm> {
                             MaterialPageRoute(builder: (context) => const SellPage()),
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
+                        style: _buttonStyle(Colors.black),
                         child: const Text('Sell', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       ),
                     ],
@@ -256,5 +220,29 @@ class _ProfileFormState extends State<ProfileForm> {
               ),
             ),
           );
+  }
+
+  // ✅ Modern Input Field Styling
+  InputDecoration _inputDecoration(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.green, width: 2),
+        borderRadius: BorderRadius.circular(15),
+      ),
+    );
+  }
+
+  // ✅ Modern Button Style
+  ButtonStyle _buttonStyle(Color color) {
+    return ElevatedButton.styleFrom(
+      foregroundColor: Colors.white,
+      backgroundColor: color,
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 90),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 5,
+    );
   }
 }

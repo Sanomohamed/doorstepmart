@@ -1,3 +1,4 @@
+import 'package:doorstepmart/src/favorite/favorite_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -92,7 +93,10 @@ class HomeHeader extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(FontAwesomeIcons.heart, size: 28, color: Color.fromARGB(179, 76, 175, 79)),
                 onPressed: () {
-                  // Implement favorite functionality
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FavoritePage()),
+                  );
                 },
               ),
             ),

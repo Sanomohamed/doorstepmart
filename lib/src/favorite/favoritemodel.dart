@@ -13,8 +13,20 @@ class FavoriteModel extends ChangeNotifier {
 
   List<FavoriteItem> get favorites => _favorites;
 
+  // ✅ Add to favorites
   void add(FavoriteItem item) {
     _favorites.add(item);
     notifyListeners();
+  }
+
+  // ✅ Remove from favorites
+  void remove(String name) {
+    _favorites.removeWhere((item) => item.name == name);
+    notifyListeners();
+  }
+
+  // ✅ Check if item is in favorites
+  bool isFavorite(String name) {
+    return _favorites.any((item) => item.name == name);
   }
 }

@@ -4,27 +4,35 @@ import 'package:doorstepmart/services/product_service.dart';
 
 class ProductProvider extends ChangeNotifier {
   final ProductService _productService = ProductService();
+  // ignore: prefer_final_fields
   List<Map<String, dynamic>> _products = [];
-  DocumentSnapshot? _lastDoc; // ✅ Keeps track of last document for pagination
+  DocumentSnapshot? _lastDoc; // ✅ Track last document for pagination
   bool _isLoading = false;
   bool _hasError = false;
   bool _hasMore = true; // ✅ Indicates if there are more products to fetch
-  static const int _limit = 10; // ✅ Controls how many products are loaded at once
+  static const int _limit = 10; // ✅ Controls batch size of products loaded
 
   List<Map<String, dynamic>> get products => _products;
   bool get isLoading => _isLoading;
   bool get hasError => _hasError;
-  bool get hasMore => _hasMore; // ✅ Expose pagination status
+  bool get hasMore => _hasMore;
 
-  /// ✅ Fetch Products with Caching & Pagination
+  /// ✅ Fetch Products (Server First, Fixes Cache Issues)
   Future<void> fetchProducts({bool forceRefresh = false}) async {
-    if (_isLoading) return; // Prevents multiple fetch calls
+    print("🔍 fetchProducts() was called...");
+
+    if (_isLoading) {
+      print("⚠️ Already loading products. Skipping fetch.");
+      return;
+    }
 
     if (!forceRefresh && _products.isNotEmpty) {
+      print("✅ Using cached products. Skipping fetch.");
       notifyListeners();
       return;
     }
 
+    print("⏳ Fetching products from Firestore...");
     _isLoading = true;
     _hasError = false;
     notifyListeners();
@@ -33,11 +41,16 @@ class ProductProvider extends ChangeNotifier {
       final fetchedProducts = await _productService.fetchProducts(limit: _limit);
 
       if (fetchedProducts.isEmpty) {
-        _hasMore = false; // ✅ No more products to fetch
+        print("⚠️ No products found in Firestore.");
+        _hasMore = false;
+      } else {
+        print("✅ Loaded ${fetchedProducts.length} products.");
       }
 
-      _products = fetchedProducts;
-      _lastDoc = null; // ✅ Reset pagination for a fresh fetch
+      _products.clear(); // ✅ Prevent duplicates
+      _products.addAll(fetchedProducts);
+      _lastDoc = null; // ✅ Reset pagination
+
     } catch (e) {
       _hasError = true;
       print('❌ Error fetching products: $e');
@@ -47,10 +60,11 @@ class ProductProvider extends ChangeNotifier {
     }
   }
 
-  /// ✅ Fetch Next Page (Lazy Load)
+  /// ✅ Fetch Next Page (Pagination)
   Future<void> fetchNextPage() async {
     if (_isLoading || !_hasMore) return;
 
+    print("🔄 Fetching next page of products...");
     _isLoading = true;
     notifyListeners();
 
@@ -58,10 +72,14 @@ class ProductProvider extends ChangeNotifier {
       final fetchedProducts = await _productService.fetchProducts(lastDoc: _lastDoc, limit: _limit);
 
       if (fetchedProducts.isEmpty) {
+        print("⚠️ No more products available.");
         _hasMore = false;
       } else {
+        print("✅ Loaded ${fetchedProducts.length} more products.");
+        
+        // ✅ Append new products instead of overwriting
         _products.addAll(fetchedProducts);
-        _lastDoc = fetchedProducts.last['id'] as DocumentSnapshot?;
+        _lastDoc = fetchedProducts.isNotEmpty ? fetchedProducts.last['id'] as DocumentSnapshot? : null;
       }
     } catch (e) {
       _hasError = true;

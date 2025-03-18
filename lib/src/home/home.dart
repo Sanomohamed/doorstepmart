@@ -14,34 +14,77 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
+  void initState() {
+    super.initState();
+    // ✅ Only fetch products when Home is opened the first time
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          const HomeHeader(), // ✅ Now correctly positioned at the top
+          const HomeHeader(),
 
           Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8.0),
-                    const CategoriesSection(),
-                    const SizedBox(height: 8.0),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                // ✅ Pull to refresh
+                await Provider.of<ProductProvider>(context, listen: false)
+                    .fetchProducts(forceRefresh: true);
+              },
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8.0),
+                      const CategoriesSection(),
+                      const SizedBox(height: 8.0),
 
-                    // ✅ Uses Consumer to Properly Load Products
-                    Consumer<ProductProvider>(
-                      builder: (context, productProvider, _) {
-                        return productProvider.isLoading
-                            ? const Center(child: CircularProgressIndicator())
-                            : const ProductGrid();
-                      },
-                    ),
-                  ],
+                      Consumer<ProductProvider>(
+                        builder: (context, productProvider, _) {
+                          if (productProvider.isLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          if (productProvider.hasError) {
+                            return Center(
+                              child: Column(
+                                children: [
+                                  const Icon(Icons.error, size: 50, color: Colors.red),
+                                  const SizedBox(height: 10),
+                                  const Text("Failed to load products"),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      productProvider.fetchProducts(forceRefresh: true);
+                                    },
+                                    child: const Text("Retry"),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
+
+                          if (productProvider.products.isEmpty) {
+                            return const Center(
+                              child: Text("No products available."),
+                            );
+                          }
+
+                          return const ProductGrid();
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

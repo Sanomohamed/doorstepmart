@@ -1,4 +1,5 @@
 import 'package:doorstepmart/src/cart/shop_cart.dart';
+import 'package:doorstepmart/src/setup/createshoppage.dart';
 import 'package:flutter/material.dart';
 import 'package:doorstepmart/src/shop/shop.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -43,7 +44,7 @@ class CategoriesSection extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const MiniMartPage()),
+                    MaterialPageRoute(builder: (context) => const CreateShopPage()),
                   );
                 },
                 style: TextButton.styleFrom(
@@ -106,6 +107,7 @@ class CategoriesSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
             blurRadius: 48,
             offset: const Offset(0, 4),

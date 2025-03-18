@@ -14,12 +14,16 @@ class ProductGrid extends StatelessWidget {
     final favoriteModel = Provider.of<FavoriteModel>(context);
     final cartModel = Provider.of<CartModel>(context);
 
-    // ✅ Handle loading, errors, and empty state
-    if (productProvider.isLoading) return const Center(child: CircularProgressIndicator());
-    if (productProvider.hasError) return const Center(child: Text('Error fetching products'));
-    if (productProvider.products.isEmpty) return const Center(child: Text('No products available'));
+    if (productProvider.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (productProvider.hasError) {
+      return const Center(child: Text('Error fetching products'));
+    }
+    if (productProvider.products.isEmpty) {
+      return const Center(child: Text('No products available'));
+    }
 
-    // ✅ Responsive grid column count
     int columnCount = MediaQuery.of(context).size.width > 600 ? 3 : 2;
 
     return Padding(
@@ -37,12 +41,12 @@ class ProductGrid extends StatelessWidget {
         itemBuilder: (context, index) {
           final product = productProvider.products[index];
 
-          // ✅ Fetch product details safely
           final String imageUrl = (product['imageUrls'] as List<dynamic>?)?.firstOrNull ?? 'https://via.placeholder.com/150';
           final String name = product['name']?.toString() ?? 'Unknown Product';
           final double price = (product['price'] as num?)?.toDouble() ?? 0.0;
 
-          final bool isFavorite = favoriteModel.favorites.any((item) => item.name == name);
+          final bool isFavorite = favoriteModel.isFavorite(name);
+          final bool isInCart = cartModel.items.any((item) => item.name == name);
 
           return Card(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -51,37 +55,20 @@ class ProductGrid extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Image.network(
-                        'https://via.placeholder.com/150',
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    ),
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => Image.network('https://via.placeholder.com/150', fit: BoxFit.cover),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(1.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      Text(
-                        name,
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'RM${price.toStringAsFixed(2)}',
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color.fromARGB(214, 118, 190, 121)),
-                      ),
+                      Text(name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text('RM${price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)),
                     ],
                   ),
                 ),
@@ -90,36 +77,40 @@ class ProductGrid extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // ✅ Add to Favorites Button with animation
+                      // ✅ Like (Favorite) Button
                       IconButton(
                         icon: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: const Color.fromARGB(206, 219, 70, 60),
-                          size: 30,
+                          color: isFavorite ? Colors.red : Colors.grey,
+                          size: 28,
                         ),
                         onPressed: () {
                           if (!isFavorite) {
                             favoriteModel.add(FavoriteItem(name: name, image: imageUrl, price: price));
                             _showSnackbar(context, '$name added to favorites');
                           } else {
-                            _showSnackbar(context, '$name is already in favorites');
+                            favoriteModel.remove(name); // ✅ Now works correctly
+                            _showSnackbar(context, '$name removed from favorites');
                           }
                         },
                       ),
 
-                      // ✅ Add to Cart Button with animation
+                      // ✅ Add to Cart Button
                       ElevatedButton(
                         onPressed: () {
-                          cartModel.add(CartItem(name: name, image: imageUrl, price: price, quantity: 1));
-                          _showSnackbar(context, '$name added to cart');
+                          if (!isInCart) {
+                            cartModel.add(CartItem(name: name, image: imageUrl, price: price, quantity: 1));
+                            _showSnackbar(context, '$name added to cart');
+                          } else {
+                            _showSnackbar(context, '$name is already in cart');
+                          }
                         },
                         style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          backgroundColor: const Color.fromARGB(193, 76, 175, 79),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          backgroundColor: isInCart ? Colors.grey : Colors.green,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         ),
-                        child: const Icon(Icons.add, 
-                        color: Colors.white,
-                        size: 30,),
+                        child: const Icon(Icons.add_shopping_cart, color: Colors.white, size: 28),
                       ),
                     ],
                   ),
@@ -132,7 +123,6 @@ class ProductGrid extends StatelessWidget {
     );
   }
 
-  // ✅ Helper function for Snackbars
   void _showSnackbar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message), duration: const Duration(milliseconds: 800)),

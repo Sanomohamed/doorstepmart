@@ -69,6 +69,7 @@ class ActivitySection extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       leading: CircleAvatar(
         radius: 22,
+        // ignore: deprecated_member_use
         backgroundColor: color.withOpacity(0.2),
         child: Icon(icon, color: color, size: 24),
       ),
