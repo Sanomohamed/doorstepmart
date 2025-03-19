@@ -4,8 +4,14 @@ class FavoriteItem {
   final String name;
   final String image;
   final double price;
+  final String shopId; // ✅ Added shopId field
 
-  FavoriteItem({required this.name, required this.image, required this.price});
+  FavoriteItem({
+    required this.name,
+    required this.image,
+    required this.price,
+    required this.shopId, // ✅ Ensure this is required
+  });
 }
 
 class FavoriteModel extends ChangeNotifier {
@@ -13,19 +19,18 @@ class FavoriteModel extends ChangeNotifier {
 
   List<FavoriteItem> get favorites => _favorites;
 
-  // ✅ Add to favorites
   void add(FavoriteItem item) {
-    _favorites.add(item);
-    notifyListeners();
+    if (!_favorites.any((fav) => fav.name == item.name)) {
+      _favorites.add(item);
+      notifyListeners();
+    }
   }
 
-  // ✅ Remove from favorites
   void remove(String name) {
     _favorites.removeWhere((item) => item.name == name);
     notifyListeners();
   }
 
-  // ✅ Check if item is in favorites
   bool isFavorite(String name) {
     return _favorites.any((item) => item.name == name);
   }

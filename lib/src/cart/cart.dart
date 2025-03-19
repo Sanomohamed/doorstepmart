@@ -83,6 +83,11 @@ class CartPage extends StatelessWidget {
                                             color: Colors.green,
                                           ),
                                         ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          'Shop ID: ${item.shopId}', // ✅ Display Shop ID
+                                          style: const TextStyle(fontSize: 14, color: Colors.blue),
+                                        ),
                                         Row(
                                           children: [
                                             IconButton(

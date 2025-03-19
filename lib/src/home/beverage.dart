@@ -21,7 +21,7 @@ class BeverageSection extends StatelessWidget {
           return const Center(child: Text('No beverages available'));
         }
 
-        // ✅ Ensure category name is lowercase
+        // ✅ Ensure category name is lowercase for case-insensitive matching
         final beverageProducts = provider.products
             .where((product) =>
                 product['category']?.toString().toLowerCase() == 'beverage')
@@ -47,6 +47,9 @@ class BeverageSection extends StatelessWidget {
                   ? images.first.toString()
                   : 'https://via.placeholder.com/150';
 
+              // ✅ Ensure `shopId` is fetched correctly
+              final String shopId = product['shopId'] ?? 'unknown_shop';
+
               return Column(
                 children: [
                   CachedNetworkImage(
@@ -65,7 +68,7 @@ class BeverageSection extends StatelessWidget {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'RM${product['price'] ?? '0.00'}',
+                    'RM${(product['price'] is num) ? product['price'].toStringAsFixed(2) : '0.00'}',
                     style: const TextStyle(color: Colors.green),
                   ),
                   IconButton(
@@ -79,6 +82,7 @@ class BeverageSection extends StatelessWidget {
                               ? product['price'].toDouble()
                               : 0.0,
                           quantity: 1,
+                          shopId: shopId, // ✅ Include shopId
                         ),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -97,4 +101,4 @@ class BeverageSection extends StatelessWidget {
       },
     );
   }
-} 
+}

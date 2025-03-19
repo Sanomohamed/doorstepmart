@@ -17,7 +17,6 @@ class OrderSummaryWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
             color: const Color.fromARGB(143, 207, 209, 206).withOpacity(0.5),
             spreadRadius: 5,
             blurRadius: 7,
@@ -33,30 +32,52 @@ class OrderSummaryWidget extends StatelessWidget {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8.0),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: cart.items.length,
-            itemBuilder: (context, index) {
-              final item = cart.items[index];
-              return ListTile(
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: item.image,
-                    width: 70,
-                    height: 70,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
-                  ),
+
+          // ✅ Grouping items by Shop ID
+          ..._groupItemsByShop(cart).entries.map((entry) {
+            String shopId = entry.key;
+            List<CartItem> shopItems = entry.value;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Shop ID: $shopId", // ✅ Display Shop ID
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
                 ),
-                title: Text(item.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                subtitle: Text('RM${item.price} x ${item.quantity}', style: const TextStyle(fontSize: 14, color: Colors.grey)),
-              );
-            },
-          ),
-          const Divider(),
+                const SizedBox(height: 5),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: shopItems.length,
+                  itemBuilder: (context, index) {
+                    final item = shopItems[index];
+                    return ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: CachedNetworkImage(
+                          imageUrl: item.image,
+                          width: 70,
+                          height: 70,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                        ),
+                      ),
+                      title: Text(item.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      subtitle: Text(
+                        'RM${item.price} x ${item.quantity}',
+                        style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
+              ],
+            );
+          }).toList(),
+
+          // ✅ Summary Section
           Text('Total: RM${cart.totalPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           if (discount > 0)
             Text('Discount: -RM${discount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, color: Colors.red)),
@@ -70,5 +91,19 @@ class OrderSummaryWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// ✅ Helper function to group cart items by shop ID
+  Map<String, List<CartItem>> _groupItemsByShop(CartModel cart) {
+    Map<String, List<CartItem>> groupedItems = {};
+
+    for (var item in cart.items) {
+      if (!groupedItems.containsKey(item.shopId)) {
+        groupedItems[item.shopId] = [];
+      }
+      groupedItems[item.shopId]!.add(item);
+    }
+
+    return groupedItems;
   }
 }

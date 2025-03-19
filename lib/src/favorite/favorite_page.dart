@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoritePage extends StatelessWidget {
-
   const FavoritePage({super.key});
 
   @override
@@ -40,6 +39,9 @@ class FavoritePage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final product = favoriteModel.favorites[index];
 
+                // ✅ Ensure `shopId` is present
+                final String shopId = product.shopId ?? 'unknown_shop';
+
                 return Stack(
                   children: [
                     Container(
@@ -48,7 +50,6 @@ class FavoritePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(0.1),
                             blurRadius: 6,
                             spreadRadius: 2,
@@ -121,7 +122,7 @@ class FavoritePage extends StatelessWidget {
                       ),
                     ),
 
-                    // ✅ ADD TO CART BUTTON
+                    // ✅ ADD TO CART BUTTON (WITH SHOP ID)
                     Positioned(
                       bottom: 15,
                       right: 15,
@@ -137,6 +138,7 @@ class FavoritePage extends StatelessWidget {
                                 image: product.image,
                                 price: product.price,
                                 quantity: 1,
+                                shopId: shopId, // ✅ Include `shopId`
                               ),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -158,4 +160,4 @@ class FavoritePage extends StatelessWidget {
       ),
     );
   }
-} 
+}
