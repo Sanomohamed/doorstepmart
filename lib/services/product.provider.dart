@@ -4,30 +4,30 @@ import 'package:doorstepmart/services/product_service.dart';
 
 class ProductProvider extends ChangeNotifier {
   final ProductService _productService = ProductService();
-  // ignore: prefer_final_fields
   List<Map<String, dynamic>> _products = [];
-  DocumentSnapshot? _lastDoc; // ✅ Track last document for pagination
+  DocumentSnapshot? _lastDoc;
   bool _isLoading = false;
   bool _hasError = false;
-  bool _hasMore = true; // ✅ Indicates if there are more products to fetch
-  static const int _limit = 10; // ✅ Controls batch size of products loaded
+  bool _hasMore = true;
+  bool _isFetchedOnce = false; // ✅ Ensures fetch only happens once
+  static const int _limit = 10;
 
   List<Map<String, dynamic>> get products => _products;
   bool get isLoading => _isLoading;
   bool get hasError => _hasError;
   bool get hasMore => _hasMore;
 
-  /// ✅ Fetch Products (Server First, Fixes Cache Issues)
+  /// ✅ Fetch Products (Only Fetch if Necessary)
   Future<void> fetchProducts({bool forceRefresh = false}) async {
-    print("🔍 fetchProducts() was called...");
+    print("🔍 fetchProducts() called...");
 
     if (_isLoading) {
       print("⚠️ Already loading products. Skipping fetch.");
       return;
     }
 
-    if (!forceRefresh && _products.isNotEmpty) {
-      print("✅ Using cached products. Skipping fetch.");
+    if (!forceRefresh && _isFetchedOnce) {
+      print("✅ Using cached products. No need to refetch.");
       notifyListeners();
       return;
     }
@@ -47,9 +47,15 @@ class ProductProvider extends ChangeNotifier {
         print("✅ Loaded ${fetchedProducts.length} products.");
       }
 
-      _products.clear(); // ✅ Prevent duplicates
-      _products.addAll(fetchedProducts);
-      _lastDoc = null; // ✅ Reset pagination
+      _products = fetchedProducts;
+
+      if (fetchedProducts.isNotEmpty) {
+        _lastDoc = fetchedProducts.last['documentSnapshot'] as DocumentSnapshot;
+      } else {
+        _lastDoc = null;
+      }
+
+      _isFetchedOnce = true; // ✅ Mark as fetched once
 
     } catch (e) {
       _hasError = true;
@@ -76,10 +82,11 @@ class ProductProvider extends ChangeNotifier {
         _hasMore = false;
       } else {
         print("✅ Loaded ${fetchedProducts.length} more products.");
-        
-        // ✅ Append new products instead of overwriting
         _products.addAll(fetchedProducts);
-        _lastDoc = fetchedProducts.isNotEmpty ? fetchedProducts.last['id'] as DocumentSnapshot? : null;
+
+        if (fetchedProducts.isNotEmpty) {
+          _lastDoc = fetchedProducts.last['documentSnapshot'] as DocumentSnapshot;
+        }
       }
     } catch (e) {
       _hasError = true;

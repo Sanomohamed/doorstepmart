@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoritePage extends StatelessWidget {
+
   const FavoritePage({super.key});
 
   @override

@@ -13,12 +13,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool _hasLoadedOnce = false;
+
   @override
   void initState() {
     super.initState();
-    // ✅ Only fetch products when Home is opened the first time
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+      if (!_hasLoadedOnce) {
+        Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+        _hasLoadedOnce = true; // ✅ Ensures Home fetches only once
+      }
     });
   }
 
@@ -33,7 +37,6 @@ class _HomeState extends State<Home> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                // ✅ Pull to refresh
                 await Provider.of<ProductProvider>(context, listen: false)
                     .fetchProducts(forceRefresh: true);
               },
@@ -51,33 +54,15 @@ class _HomeState extends State<Home> {
                       Consumer<ProductProvider>(
                         builder: (context, productProvider, _) {
                           if (productProvider.isLoading) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
+                            return const Center(child: CircularProgressIndicator());
                           }
 
                           if (productProvider.hasError) {
-                            return Center(
-                              child: Column(
-                                children: [
-                                  const Icon(Icons.error, size: 50, color: Colors.red),
-                                  const SizedBox(height: 10),
-                                  const Text("Failed to load products"),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      productProvider.fetchProducts(forceRefresh: true);
-                                    },
-                                    child: const Text("Retry"),
-                                  )
-                                ],
-                              ),
-                            );
+                            return Center(child: Text("Failed to load products"));
                           }
 
                           if (productProvider.products.isEmpty) {
-                            return const Center(
-                              child: Text("No products available."),
-                            );
+                            return const Center(child: Text("No products available."));
                           }
 
                           return const ProductGrid();
