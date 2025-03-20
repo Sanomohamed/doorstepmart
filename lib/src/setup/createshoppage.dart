@@ -199,7 +199,7 @@ Future<void> _createShop() async {
                   radius: 60,
                   backgroundImage: _pickedImage != null
                       ? FileImage(_pickedImage!)
-                      : const AssetImage('assets/default_shop.png') as ImageProvider,
+                      : const AssetImage('assets/profile.png') as ImageProvider,
                   child: _pickedImage == null
                       ? const Icon(Icons.camera_alt, size: 40, color: Colors.white)
                       : null,

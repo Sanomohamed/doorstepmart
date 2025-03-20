@@ -4,6 +4,7 @@ import 'package:doorstepmart/src/account/ActivitySection.dart';
 import 'package:doorstepmart/src/account/ProfileSection.dart';
 import 'package:doorstepmart/src/account/PurchaseSection.dart';
 import 'package:doorstepmart/src/account/SupportSection.dart';
+import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:doorstepmart/src/shop/productgrid.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,12 +30,21 @@ class _AccountPageState extends State<AccountPage> {
     });
 
     try {
+      // ✅ Clear cart before logout
+      Provider.of<CartModel>(context, listen: false).clearCart();
+
+      // ✅ Logout from Firebase
       await authService.signOut();
+
       if (mounted) {
         Navigator.pushNamedAndRemoveUntil(context, '/Login', (route) => false);
       }
     } catch (e) {
-      print('Error during logout: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Logout failed: $e"), backgroundColor: Colors.red),
+        );
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -89,7 +99,7 @@ class _AccountPageState extends State<AccountPage> {
               } else if (productProvider.products.isEmpty) {
                 return const Center(child: Text('No products available'));
               }
-              return const ProductGrid(); // Displays the dynamic product grid
+              return const ProductGrid();
             },
           ),
 
@@ -104,7 +114,9 @@ class _AccountPageState extends State<AccountPage> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
             icon: _isLoggingOut
-                ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                ? const SizedBox(
+                    height: 20, width: 20,
+                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                 : const Icon(Icons.logout, color: Colors.white),
             label: Text(
               _isLoggingOut ? 'Logging out...' : 'Logout',

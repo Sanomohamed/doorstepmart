@@ -10,6 +10,7 @@ class SellForm extends StatefulWidget {
   const SellForm({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SellFormState createState() => _SellFormState();
 }
 
@@ -32,6 +33,7 @@ class _SellFormState extends State<SellForm> {
         _selectedImages = pickedFiles;
       });
     } else {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("You can select up to 5 images only")),
       );
@@ -52,7 +54,7 @@ class _SellFormState extends State<SellForm> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) throw Exception("User not logged in");
 
-      // ✅ Fetch User's Shop Information (Ensuring shopName is retrieved)
+      // ✅ Fetch User's Shop Information Safely
       QuerySnapshot shopSnapshot = await FirebaseFirestore.instance
           .collection("shops")
           .where("userId", isEqualTo: user.uid)
@@ -65,10 +67,11 @@ class _SellFormState extends State<SellForm> {
         return;
       }
 
+      // ✅ Extract Shop Data Safely
       var shopDoc = shopSnapshot.docs.first;
-      var shopData = shopDoc.data() as Map<String, dynamic>;
+      var shopData = shopDoc.data() as Map<String, dynamic>? ?? {};
       String shopId = shopDoc.id;
-      String shopName = shopData['shopName']?.toString().trim() ?? "No Shop Name"; // 🔹 Ensuring shop name is properly fetched
+      String shopName = shopData['shopName']?.toString().trim() ?? "No Shop Name"; 
 
       debugPrint("✅ Shop ID: $shopId | ✅ Shop Name: $shopName");
 
@@ -91,9 +94,9 @@ class _SellFormState extends State<SellForm> {
         'description': _descriptionController.text.trim(),
         'category': _selectedCategory,
         'imageUrls': imageUrls,
-        'shopId': shopId, // ✅ Associate product with the shop
-        'shopName': shopName, // ✅ Ensure correct shop name is saved
-        'userId': user.uid, // ✅ Include user ID for reference
+        'shopId': shopId,
+        'shopName': shopName,
+        'userId': user.uid,
         'timestamp': FieldValue.serverTimestamp(),
       });
 

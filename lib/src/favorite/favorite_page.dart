@@ -40,7 +40,7 @@ class FavoritePage extends StatelessWidget {
                 final product = favoriteModel.favorites[index];
 
                 // ✅ Ensure `shopId` is present
-                final String shopId = product.shopId ?? 'unknown_shop';
+                final String shopId = product.shopId;
 
                 return Stack(
                   children: [
@@ -50,6 +50,7 @@ class FavoritePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
+                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(0.1),
                             blurRadius: 6,
                             spreadRadius: 2,

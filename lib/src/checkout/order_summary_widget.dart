@@ -17,6 +17,7 @@ class OrderSummaryWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: const Color.fromARGB(143, 207, 209, 206).withOpacity(0.5),
             spreadRadius: 5,
             blurRadius: 7,
@@ -75,7 +76,7 @@ class OrderSummaryWidget extends StatelessWidget {
                 const Divider(),
               ],
             );
-          }).toList(),
+          }),
 
           // ✅ Summary Section
           Text('Total: RM${cart.totalPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

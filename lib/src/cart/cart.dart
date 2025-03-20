@@ -1,5 +1,6 @@
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:doorstepmart/src/checkout/checkout_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 class CartPage extends StatelessWidget {
   final bool showBackArrow;
   const CartPage({super.key, this.showBackArrow = false});
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +34,10 @@ class CartPage extends StatelessWidget {
               Expanded(
                 child: cart.items.isEmpty
                     ? const Center(
-                        child: Text("Your cart is empty", style: TextStyle(fontSize: 18, color: Colors.black54)),
+                        child: Text(
+                          "Your cart is empty",
+                          style: TextStyle(fontSize: 18, color: Colors.black54),
+                        ),
                       )
                     : ListView.builder(
                         padding: const EdgeInsets.all(8.0),
@@ -50,6 +54,7 @@ class CartPage extends StatelessWidget {
                               padding: const EdgeInsets.all(12.0),
                               child: Row(
                                 children: [
+                                  // ✅ Product Image
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: CachedNetworkImage(
@@ -57,11 +62,18 @@ class CartPage extends StatelessWidget {
                                       width: 70,
                                       height: 70,
                                       fit: BoxFit.cover,
-                                      placeholder: (context, url) => const CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) => const Icon(
+                                        Icons.broken_image,
+                                        size: 50,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 15),
+
+                                  // ✅ Product Info
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +88,7 @@ class CartPage extends StatelessWidget {
                                         ),
                                         const SizedBox(height: 5),
                                         Text(
-                                          'RM${item.price}',
+                                          'RM${item.price.toStringAsFixed(2)}',
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16,
@@ -91,19 +103,24 @@ class CartPage extends StatelessWidget {
                                         Row(
                                           children: [
                                             IconButton(
-                                              icon: const Icon(Icons.remove_circle, color: Colors.redAccent),
+                                              icon: const Icon(Icons.remove_circle,
+                                                  color: Colors.redAccent),
                                               onPressed: () {
-                                                Provider.of<CartModel>(context, listen: false).decreaseQuantity(item);
+                                                Provider.of<CartModel>(context, listen: false)
+                                                    .decreaseQuantity(item);
                                               },
                                             ),
                                             Text(
                                               '${item.quantity}',
-                                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                              style: const TextStyle(
+                                                  fontSize: 18, fontWeight: FontWeight.bold),
                                             ),
                                             IconButton(
-                                              icon: const Icon(Icons.add_circle, color: Colors.green),
+                                              icon: const Icon(Icons.add_circle,
+                                                  color: Colors.green),
                                               onPressed: () {
-                                                Provider.of<CartModel>(context, listen: false).increaseQuantity(item);
+                                                Provider.of<CartModel>(context, listen: false)
+                                                    .increaseQuantity(item);
                                               },
                                             ),
                                           ],
@@ -111,6 +128,8 @@ class CartPage extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+
+                                  // ✅ Remove Item Button
                                   IconButton(
                                     icon: const Icon(Icons.delete, color: Colors.redAccent),
                                     onPressed: () {
@@ -124,6 +143,8 @@ class CartPage extends StatelessWidget {
                         },
                       ),
               ),
+
+              // ✅ Bottom Cart Summary
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
@@ -150,7 +171,8 @@ class CartPage extends StatelessWidget {
                         ),
                         Text(
                           'RM${cart.totalPrice.toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
                         ),
                       ],
                     ),
@@ -175,14 +197,16 @@ class CartPage extends StatelessWidget {
                             },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 100),
+                        padding:
+                            const EdgeInsets.symmetric(vertical: 15, horizontal: 100),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                       child: const Text(
                         'Check Out',
-                        style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
