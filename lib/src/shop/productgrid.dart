@@ -1,12 +1,38 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:doorstepmart/services/product.provider.dart';
 import 'package:doorstepmart/src/favorite/favoritemodel.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 
-class ProductGrid extends StatelessWidget {
+class ProductGrid extends StatefulWidget {
   const ProductGrid({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _ProductGridState createState() => _ProductGridState();
+}
+
+class _ProductGridState extends State<ProductGrid> {
+  // ignore: unused_field
+  final Map<String, String> _shopNamesCache = {}; // ✅ Cache shop names
+
+  /// ✅ Fetch shop name from Firestore
+  Future<String> fetchShopName(String shopId) async {
+  try {
+    DocumentSnapshot shopDoc =
+        await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
+    
+    if (shopDoc.exists) {
+      var shopData = shopDoc.data() as Map<String, dynamic>?; // ✅ Ensure proper casting
+      return shopData?['shopName'] ?? "Unknown Shop"; // ✅ Fetch correct shop name field
+    }
+  } catch (e) {
+    debugPrint("🔥 Error fetching shop name: $e");
+  }
+  return "Unknown Shop"; // ✅ Return default if shop name not found
+}
 
   @override
   Widget build(BuildContext context) {
@@ -54,119 +80,127 @@ class ProductGrid extends StatelessWidget {
               ? cartModel.items.firstWhere((item) => item.name == name && item.shopId == shopId)
               : null;
 
-          return Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            elevation: 4,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // ✅ Image Section
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) =>
-                          Image.network('https://via.placeholder.com/150', fit: BoxFit.cover),
+          return FutureBuilder<String>(
+            future: fetchShopName(shopId),
+            builder: (context, snapshot) {
+              final shopName = snapshot.data ?? "Fetching...";
+
+              return Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                elevation: 4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // ✅ Image Section
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                        child: CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                              Image.network('https://via.placeholder.com/150', fit: BoxFit.cover),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
 
-                // ✅ Product Details
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        'RM${price.toStringAsFixed(2)}',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
-                      ),
-                      Text(
-                        'Shop ID: $shopId',
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // ✅ Buttons Section (Favorite & Add to Cart)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // ✅ Favorite Button
-                      IconButton(
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.red : Colors.grey,
-                          size: 26,
-                        ),
-                        onPressed: () {
-                          if (!isFavorite) {
-                            favoriteModel.add(
-                              FavoriteItem(name: name, image: imageUrl, price: price, shopId: shopId),
-                            );
-                            _showSnackbar(context, '$name added to favorites');
-                          } else {
-                            favoriteModel.remove(name);
-                            _showSnackbar(context, '$name removed from favorites');
-                          }
-                        },
-                      ),
-
-                      // ✅ Add to Cart Button (Now allows multiple additions)
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (existingCartItem == null) {
-                              cartModel.add(
-                                CartItem(
-                                  name: name,
-                                  image: imageUrl,
-                                  price: price,
-                                  shopId: shopId,
-                                  quantity: 1,
-                                ),
-                              );
-                              _showSnackbar(context, '$name added to cart');
-                            } else {
-                              cartModel.increaseQuantity(existingCartItem);
-                              _showSnackbar(context, 'Increased quantity for $name');
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: Colors.green,
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    // ✅ Product Details
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          child: existingCartItem != null
-                              ? Text(
-                                  'Qty: ${existingCartItem.quantity}',
-                                  style: const TextStyle(color: Colors.white, fontSize: 14),
-                                )
-                              : const Text(
-                                  'Add to Cart',
-                                  style: TextStyle(color: Colors.white, fontSize: 14),
-                                ),
-                        ),
+                          Text(
+                            'RM${price.toStringAsFixed(2)}',
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
+                          ),
+                          Text(
+                            shopName, // ✅ Display shop name instead of ID
+                            style: const TextStyle(fontSize: 14, color: Colors.blue),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+
+                    // ✅ Buttons Section (Favorite & Add to Cart)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // ✅ Favorite Button
+                          IconButton(
+                            icon: Icon(
+                              isFavorite ? Icons.favorite : Icons.favorite_border,
+                              color: isFavorite ? Colors.red : Colors.grey,
+                              size: 26,
+                            ),
+                            onPressed: () {
+                              if (!isFavorite) {
+                                favoriteModel.add(
+                                  FavoriteItem(name: name, image: imageUrl, price: price, shopId: shopId, shopName: shopName),
+                                );
+                                _showSnackbar(context, '$name added to favorites');
+                              } else {
+                                favoriteModel.remove(name);
+                                _showSnackbar(context, '$name removed from favorites');
+                              }
+                            },
+                          ),
+
+                          // ✅ Add to Cart Button (Now allows multiple additions)
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (existingCartItem == null) {
+                                  cartModel.add(
+                                    CartItem(
+                                      name: name,
+                                      image: imageUrl,
+                                      price: price,
+                                      shopId: shopId,
+                                      quantity: 1,
+                                      shopName: shopName, // ✅ Store shop name
+                                    ),
+                                  );
+                                  _showSnackbar(context, '$name added to cart');
+                                } else {
+                                  cartModel.increaseQuantity(existingCartItem);
+                                  _showSnackbar(context, 'Increased quantity for $name');
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                backgroundColor: Colors.green,
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                              ),
+                              child: existingCartItem != null
+                                  ? Text(
+                                      'Qty: ${existingCartItem.quantity}',
+                                      style: const TextStyle(color: Colors.white, fontSize: 14),
+                                    )
+                                  : const Text(
+                                      'Add to Cart',
+                                      style: TextStyle(color: Colors.white, fontSize: 14),
+                                    ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           );
         },
       ),

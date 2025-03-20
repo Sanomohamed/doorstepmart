@@ -7,7 +7,8 @@ class CartItem {
   final String image;
   final double price;
   int quantity;
-  final String shopId; // ✅ Keep shopId for grouping
+  final String shopId; // ✅ Keep shopId for database reference
+  String shopName; // ✅ Store shop name for display
 
   CartItem({
     required this.name,
@@ -15,9 +16,10 @@ class CartItem {
     required this.price,
     required this.quantity,
     required this.shopId,
+    required this.shopName, // ✅ Store shop name
   });
 
-  /// ✅ Convert `CartItem` to Firestore-friendly format
+  /// ✅ Convert CartItem to Firestore-friendly format
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -25,10 +27,11 @@ class CartItem {
       'price': price,
       'quantity': quantity,
       'shopId': shopId,
+      'shopName': shopName, // ✅ Ensure shop name is stored
     };
   }
 
-  /// ✅ Create `CartItem` from Firestore document
+  /// ✅ Create CartItem from Firestore document
   factory CartItem.fromMap(Map<String, dynamic> data) {
     return CartItem(
       name: data['name'],
@@ -36,12 +39,14 @@ class CartItem {
       price: (data['price'] as num).toDouble(),
       quantity: data['quantity'],
       shopId: data['shopId'],
+      shopName: data['shopName'] ?? "Unknown Shop", // ✅ Fetch stored shop name
     );
   }
 }
 
 class CartModel extends ChangeNotifier {
   final List<CartItem> _items = [];
+  final Map<String, String> _shopNamesCache = {}; // ✅ Cache shop names
 
   List<CartItem> get items => _items;
 
@@ -65,12 +70,47 @@ class CartModel extends ChangeNotifier {
           _items.addAll(
             (cartData['items'] as List<dynamic>).map((item) => CartItem.fromMap(item)),
           );
+          await _fetchShopNames(); // ✅ Ensure shop names are up-to-date
         }
       }
       notifyListeners();
     } catch (e) {
       debugPrint("🔥 Error fetching cart: $e");
     }
+  }
+
+  /// ✅ Fetch shop names for all cart items
+  Future<void> _fetchShopNames() async {
+    for (var item in _items) {
+      if (!_shopNamesCache.containsKey(item.shopId)) {
+        String shopName = await _fetchShopName(item.shopId);
+        _shopNamesCache[item.shopId] = shopName;
+        item.shopName = shopName;
+      }
+    }
+    notifyListeners();
+  }
+
+  /// ✅ Fetch shop name from Firestore
+  Future<String> _fetchShopName(String shopId) async {
+    if (_shopNamesCache.containsKey(shopId)) {
+      return _shopNamesCache[shopId]!;
+    }
+
+    try {
+      DocumentSnapshot shopDoc =
+          await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
+
+      if (shopDoc.exists) {
+        String shopName = shopDoc['name'] ?? "Unknown Shop";
+        _shopNamesCache[shopId] = shopName;
+        return shopName;
+      }
+    } catch (e) {
+      debugPrint("🔥 Error fetching shop name: $e");
+    }
+
+    return "Unknown Shop";
   }
 
   /// ✅ Save cart to Firestore
@@ -85,33 +125,36 @@ class CartModel extends ChangeNotifier {
   }
 
   /// ✅ Add item to cart
-  void add(CartItem item) {
-    for (var cartItem in _items) {
-      if (cartItem.name == item.name && cartItem.shopId == item.shopId) {
-        cartItem.quantity += 1;
-        notifyListeners();
-        saveCart(); // ✅ Save to Firestore
-        return;
-      }
-    }
+void add(CartItem item) async {
+  String shopName = await _fetchShopName(item.shopId); // ✅ Fetch correct shop name
+  item.shopName = shopName;
 
-    _items.add(item);
-    notifyListeners();
-    saveCart(); // ✅ Save to Firestore
+  for (var cartItem in _items) {
+    if (cartItem.name == item.name && cartItem.shopId == item.shopId) {
+      cartItem.quantity += 1;
+      notifyListeners();
+      saveCart();
+      return;
+    }
   }
+
+  _items.add(item);
+  notifyListeners();
+  saveCart();
+}
 
   /// ✅ Remove item from cart
   void remove(CartItem item) {
     _items.remove(item);
     notifyListeners();
-    saveCart(); // ✅ Save to Firestore
+    saveCart();
   }
 
   /// ✅ Increase item quantity
   void increaseQuantity(CartItem item) {
     item.quantity += 1;
     notifyListeners();
-    saveCart(); // ✅ Save to Firestore
+    saveCart();
   }
 
   /// ✅ Decrease item quantity
@@ -121,18 +164,17 @@ class CartModel extends ChangeNotifier {
       remove(item);
     }
     notifyListeners();
-    saveCart(); // ✅ Save to Firestore
+    saveCart();
   }
 
   /// ✅ Clear cart (useful on logout)
   void clearCart() {
     _items.clear();
     notifyListeners();
-    saveCart(); // ✅ Save to Firestore
+    saveCart();
   }
 
   /// ✅ Get total price of cart items
-  // ignore: avoid_types_as_parameter_names
   double get totalPrice => _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
   /// ✅ Calculate tax
@@ -144,14 +186,14 @@ class CartModel extends ChangeNotifier {
   /// ✅ Get total amount including tax and service fee
   double get total => totalPrice + tax + serviceFee;
 
-  /// ✅ Group items by shopId for checkout
+  /// ✅ Group items by shopName for checkout
   Map<String, List<CartItem>> getGroupedByShop() {
     Map<String, List<CartItem>> groupedItems = {};
     for (var item in _items) {
-      if (!groupedItems.containsKey(item.shopId)) {
-        groupedItems[item.shopId] = [];
+      if (!groupedItems.containsKey(item.shopName)) {
+        groupedItems[item.shopName] = [];
       }
-      groupedItems[item.shopId]!.add(item);
+      groupedItems[item.shopName]!.add(item);
     }
     return groupedItems;
   }
