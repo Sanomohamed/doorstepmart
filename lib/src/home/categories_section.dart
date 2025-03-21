@@ -1,5 +1,5 @@
 import 'package:doorstepmart/src/cart/shop_cart.dart';
-import 'package:doorstepmart/src/setup/createshoppage.dart';
+import 'package:doorstepmart/src/setup/create_shop_page.dart';
 import 'package:flutter/material.dart';
 import 'package:doorstepmart/src/shop/shop.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

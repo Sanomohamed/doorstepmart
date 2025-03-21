@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:doorstepmart/src/setup/createshoppage.dart';
+import 'package:doorstepmart/src/setup/create_shop_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';

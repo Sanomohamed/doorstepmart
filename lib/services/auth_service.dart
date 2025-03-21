@@ -70,6 +70,7 @@ class AuthService {
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       print('User signed in with Google successfully: ${userCredential.user?.uid}');
       return userCredential;
+      
     } on FirebaseAuthException catch (e) {
       print('FirebaseAuthException: ${e.message}');
     } catch (e) {
