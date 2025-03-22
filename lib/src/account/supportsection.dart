@@ -1,3 +1,4 @@
+import 'package:doorstepmart/src/help/help_page.dart';
 import 'package:flutter/material.dart';
 
 class SupportSection extends StatelessWidget {
@@ -38,7 +39,10 @@ class SupportSection extends StatelessWidget {
                   text: 'Help Center',
                   color: Colors.blue,
                   onTap: () {
-                    // Handle Help Center action
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HelpPage()),
+                    );
                   },
                 ),
                  SizedBox(height: 20),

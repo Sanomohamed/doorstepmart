@@ -1,4 +1,5 @@
 import 'package:doorstepmart/src/favorite/favorite_page.dart';
+import 'package:doorstepmart/src/shop/shop.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -95,7 +96,7 @@ class HomeHeader extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const FavoritePage()),
+                    MaterialPageRoute(builder: (context) => const MiniMartPage()),
                   );
                 },
               ),

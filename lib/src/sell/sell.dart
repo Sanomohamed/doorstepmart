@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'sell_form.dart';
 
 class SellPage extends StatefulWidget {
-  const SellPage({super.key});
+  const SellPage({super.key, required Map<String, dynamic> editProduct, required productData, required productId});
 
   @override
   // ignore: library_private_types_in_public_api

@@ -1,8 +1,6 @@
-import 'package:doorstepmart/services/product.provider.dart';
-import 'package:doorstepmart/src/shop/headeersection.dart';
+import 'package:doorstepmart/src/setup/shop_productgrid.dart';
+import 'package:doorstepmart/src/shop/headeersection.dart'; // ✅ Import your ShopProductGrid
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:doorstepmart/src/shop/productgrid.dart';
 
 class MiniMartPage extends StatefulWidget {
   const MiniMartPage({super.key});
@@ -14,11 +12,14 @@ class MiniMartPage extends StatefulWidget {
 
 class _MiniMartPageState extends State<MiniMartPage> with AutomaticKeepAliveClientMixin {
   @override
-  bool get wantKeepAlive => true; // ✅ Keeps MiniMart state when navigating back
+  bool get wantKeepAlive => true; // ✅ Keeps state
+
+  // Optional: manually refresh ShopProductGrid if needed
+  final GlobalKey<ShopProductGridState> _gridKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // ✅ Ensures state persistence
+    super.build(context);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
@@ -29,22 +30,9 @@ class _MiniMartPageState extends State<MiniMartPage> with AutomaticKeepAliveClie
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                try {
-                  await Provider.of<ProductProvider>(context, listen: false).fetchProducts(forceRefresh: true);
-                } catch (e) {
-                  // ignore: use_build_context_synchronously
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Error refreshing products: $e")),
-                  );
-                }
+                _gridKey.currentState?.refresh(); // ✅ call manual refresh method if needed
               },
-              child: Consumer<ProductProvider>(
-                builder: (context, provider, child) {
-                  return provider.isLoading
-                      ? const Center(child: CircularProgressIndicator()) // ✅ Handles Loading State
-                      : const ProductGrid(); // ✅ Uses Cached Products If Available
-                },
-              ),
+              child: ShopProductGrid(key: _gridKey), // ✅ ShopProductGrid replaces ProductGrid
             ),
           ),
         ],

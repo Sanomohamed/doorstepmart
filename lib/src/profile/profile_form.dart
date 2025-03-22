@@ -1,4 +1,5 @@
 import 'package:doorstepmart/services/profile_service.dart';
+import 'package:doorstepmart/src/home/home.dart';
 import 'package:doorstepmart/src/sell/sell.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -208,7 +209,7 @@ class _ProfileFormState extends State<ProfileForm> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const SellPage()),
+                            MaterialPageRoute(builder: (context) =>  Home()),
                           );
                         },
                         style: _buttonStyle(Colors.black),
