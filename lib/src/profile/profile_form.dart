@@ -209,7 +209,7 @@ class _ProfileFormState extends State<ProfileForm> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) =>  Home()),
+                            MaterialPageRoute(builder: (context) => SellPage(editProduct: {}, productData: null, productId: null,)),
                           );
                         },
                         style: _buttonStyle(Colors.black),

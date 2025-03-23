@@ -10,6 +10,7 @@ class ShopForm extends StatefulWidget {
   const ShopForm({super.key, required this.onSubmit, required this.isLoading});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ShopFormState createState() => _ShopFormState();
 }
 

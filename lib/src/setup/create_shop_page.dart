@@ -7,6 +7,7 @@ class CreateShopPage extends StatefulWidget {
   const CreateShopPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _CreateShopPageState createState() => _CreateShopPageState();
 }
 
@@ -26,9 +27,12 @@ class _CreateShopPageState extends State<CreateShopPage> {
 
   try {
     await ShopServices.createShop(context, name, state, city, image, days, opening, closing); // 🔹 Pass context
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Shop created successfully')));
+    // ignore: use_build_context_synchronously
     Navigator.pop(context);
   } catch (e) {
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
   } finally {
     setState(() => _isLoading = false);

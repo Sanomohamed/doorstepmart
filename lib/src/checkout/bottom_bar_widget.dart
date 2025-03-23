@@ -1,4 +1,7 @@
+import 'package:doorstepmart/src/order/order.dart';
+import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BottomBarWidget extends StatelessWidget {
   final double grandTotalWithDiscount;
@@ -47,9 +50,24 @@ class BottomBarWidget extends StatelessWidget {
             ],
           ),
           ElevatedButton(
-            onPressed: () {
-              // Handle order action
-            },
+            onPressed: () async {
+               final cartModel = Provider.of<CartModel>(context, listen: false);
+                if (cartModel.items.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Cart is empty")));
+                   return;
+          }
+
+                    // Optional: open a dialog to pick payment method
+                     String paymentMethod = "Cash on Delivery"; // Or use a dropdown selection
+
+                   await placeOrder(
+                    context: context,
+                    cartItems: cartModel.items,
+                    total: grandTotalWithDiscount,
+                    paymentMethod: paymentMethod,
+      );
+                cartModel.clearCart(); // 🧹 Clear cart after order placed
+},
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),

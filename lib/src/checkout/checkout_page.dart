@@ -76,7 +76,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         paymentMethod: _paymentMethod,
                         onChanged: (value) {
                           setState(() {
-                            _paymentMethod = value.toString();
+                            _paymentMethod = value!;
                           });
                         },
                       ),

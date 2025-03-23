@@ -9,6 +9,7 @@ class BeverageSection extends StatefulWidget {
   const BeverageSection({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _BeverageSectionState createState() => _BeverageSectionState();
 }
 

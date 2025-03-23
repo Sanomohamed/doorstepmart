@@ -46,7 +46,9 @@ class ShopServices {
       },
       "operatingDays": days,
       "operatingHours": {
+        // ignore: use_build_context_synchronously
         "opening": opening != null ? opening.format(context) : "Not set",
+        // ignore: use_build_context_synchronously
         "closing": closing != null ? closing.format(context) : "Not set",
       },
       "shopImageUrl": imageUrl,

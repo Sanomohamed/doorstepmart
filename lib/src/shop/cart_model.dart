@@ -175,6 +175,7 @@ void add(CartItem item) async {
   }
 
   /// ✅ Get total price of cart items
+  // ignore: avoid_types_as_parameter_names
   double get totalPrice => _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
   /// ✅ Calculate tax

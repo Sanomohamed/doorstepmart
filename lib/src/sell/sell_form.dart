@@ -83,11 +83,12 @@ class _SellFormState extends State<SellForm> {
 
       if (shopSnapshot.docs.isEmpty) {
         Fluttertoast.showToast(msg: "You need to create a shop first.");
+        // ignore: use_build_context_synchronously
         Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateShopPage()));
         return;
       }
 
-      final shopData = shopSnapshot.docs.first.data() as Map<String, dynamic>;
+      final shopData = shopSnapshot.docs.first.data();
       final shopId = shopSnapshot.docs.first.id;
       final shopName = shopData['shopName'] ?? 'Shop';
 
@@ -121,6 +122,7 @@ class _SellFormState extends State<SellForm> {
         Fluttertoast.showToast(msg: "Product uploaded successfully");
       }
 
+      // ignore: use_build_context_synchronously
       Navigator.pop(context, true); // 🔄 Refresh grid
     } catch (e) {
       Fluttertoast.showToast(msg: "Error: $e");
@@ -133,6 +135,7 @@ class _SellFormState extends State<SellForm> {
     if (widget.productId != null) {
       await FirebaseFirestore.instance.collection('products').doc(widget.productId).delete();
       Fluttertoast.showToast(msg: "Product deleted successfully");
+      // ignore: use_build_context_synchronously
       Navigator.pop(context, true); // 🔄 Refresh grid
     }
   }

@@ -35,6 +35,7 @@ class PaymentMethodWidget extends StatelessWidget {
               _buildPaymentOption('Card', Icons.credit_card, context),
               _buildPaymentOption('E-Wallet', Icons.account_balance_wallet, context),
               _buildPaymentOption('Online Banking', Icons.account_balance, context),
+              _buildPaymentOption('Cash on Delivery', Icons.money, context),
             ],
           ),
         ),
