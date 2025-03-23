@@ -30,9 +30,9 @@ class _MiniMartPageState extends State<MiniMartPage> with AutomaticKeepAliveClie
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                _gridKey.currentState?.refresh(); // ✅ call manual refresh method if needed
+                _gridKey.currentState?.refresh(); 
               },
-              child: ShopProductGrid(key: _gridKey), // ✅ ShopProductGrid replaces ProductGrid
+              child: ShopProductGrid(key: _gridKey), 
             ),
           ),
         ],
