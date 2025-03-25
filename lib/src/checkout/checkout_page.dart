@@ -97,7 +97,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   ],
                 ),
-                child: BottomBarWidget(grandTotalWithDiscount: grandTotalWithDiscount),
+                child: BottomBarWidget(grandTotalWithDiscount: grandTotalWithDiscount,paymentMethod: _paymentMethod,),
               ),
             ],
           );

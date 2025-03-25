@@ -5,8 +5,13 @@ import 'package:provider/provider.dart';
 
 class BottomBarWidget extends StatelessWidget {
   final double grandTotalWithDiscount;
+  final String paymentMethod; // ✅ added
 
-  const BottomBarWidget({super.key, required this.grandTotalWithDiscount});
+  const BottomBarWidget({
+    super.key,
+    required this.grandTotalWithDiscount,
+    required this.paymentMethod, // ✅ added
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,6 @@ class BottomBarWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 3,
             blurRadius: 6,
@@ -51,23 +55,23 @@ class BottomBarWidget extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-               final cartModel = Provider.of<CartModel>(context, listen: false);
-                if (cartModel.items.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Cart is empty")));
-                   return;
-          }
+              final cartModel = Provider.of<CartModel>(context, listen: false);
+              if (cartModel.items.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Cart is empty")),
+                );
+                return;
+              }
 
-                    // Optional: open a dialog to pick payment method
-                     String paymentMethod = "Cash on Delivery"; // Or use a dropdown selection
+              await placeOrder(
+                context: context,
+                cartItems: cartModel.items,
+                total: grandTotalWithDiscount,
+                paymentMethod: paymentMethod, // ✅ use passed method
+              );
 
-                   await placeOrder(
-                    context: context,
-                    cartItems: cartModel.items,
-                    total: grandTotalWithDiscount,
-                    paymentMethod: paymentMethod,
-      );
-                cartModel.clearCart(); // 🧹 Clear cart after order placed
-},
+              cartModel.clearCart(); // 🧹 Clear after placing order
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),

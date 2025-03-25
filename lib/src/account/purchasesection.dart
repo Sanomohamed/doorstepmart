@@ -1,3 +1,4 @@
+import 'package:doorstepmart/src/account/purchase_history.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseSection extends StatelessWidget {
@@ -48,7 +49,10 @@ class PurchaseSection extends StatelessWidget {
               ),
               tileColor: Colors.white,
               onTap: () {
-                // Handle view purchase history action
+                Navigator.push(
+                             context,
+                         MaterialPageRoute(builder: (context) => const PurchaseHistoryPage()),
+             );
               },
             ),
 
