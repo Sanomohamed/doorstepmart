@@ -22,6 +22,7 @@ class BottomBarWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 3,
             blurRadius: 6,

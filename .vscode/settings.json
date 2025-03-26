@@ -49,6 +49,7 @@
         "Signup",
         "signupform",
         "Snackbars",
+        "subcollections",
         "subprojects"
     ],
     "java.compile.nullAnalysis.mode": "automatic",

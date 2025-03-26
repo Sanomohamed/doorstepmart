@@ -84,6 +84,7 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
                           borderRadius: BorderRadius.circular(14),
                           boxShadow: [
                             BoxShadow(
+                              // ignore: deprecated_member_use
                               color: Colors.black.withOpacity(0.05),
                               blurRadius: 5,
                               offset: const Offset(0, 2),
@@ -152,6 +153,7 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
                 CircleAvatar(
                   radius: 28,
                   backgroundColor:
+                      // ignore: deprecated_member_use
                       isActive ? Colors.green.withOpacity(0.2) : Colors.grey.withOpacity(0.1),
                   child: Icon(icon, color: isActive ? Colors.green : Colors.grey),
                 ),

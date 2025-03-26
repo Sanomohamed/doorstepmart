@@ -1,23 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-// ignore: use_key_in_widget_constructors
-class NotificationPage extends StatelessWidget {
-  final List<Map<String, dynamic>> notifications = [
-    {
-      'image': 'assets/image.png', // Replace with your image path
-      'title': 'New Offer!',
-      'description': 'Get 20% off on your next purchase.',
-      'date': 'March 17, 2025',
-      'time': '10:00 AM'
-    },
-    {
-      'image': 'assets/image.png', // Replace with your image path
-      'title': 'Order Shipped',
-      'description': 'Your order #12345 has been shipped.',
-      'date': 'March 18, 2025',
-      'time': '2:00 PM'
-    },
-  ];
+class NotificationPage extends StatefulWidget {
+  const NotificationPage({super.key});
+
+  @override
+  State<NotificationPage> createState() => _NotificationPageState();
+}
+
+class _NotificationPageState extends State<NotificationPage> {
+  final user = FirebaseAuth.instance.currentUser;
+
+  Stream<QuerySnapshot> _notificationsStream() {
+    if (user == null) return const Stream.empty();
+
+    final uid = user!.uid;
+
+    // ✅ Using 'shopId' instead of 'userId' for clarity
+    return FirebaseFirestore.instance
+        .collection('notifications')
+        .where('shopId', isEqualTo: uid)
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
+
+  Future<void> _markAsRead(String docId) async {
+    await FirebaseFirestore.instance
+        .collection('notifications')
+        .doc(docId)
+        .update({'read': true});
+  }
+
+  Future<void> _deleteNotification(String docId) async {
+    await FirebaseFirestore.instance
+        .collection('notifications')
+        .doc(docId)
+        .delete();
+  }
+
+  void _handleNotificationTap(Map<String, dynamic> notification) {
+    final String? orderId = notification['orderId'];
+    if (orderId != null) {
+      Navigator.pushNamed(context, '/orderDetails', arguments: orderId);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,100 +60,120 @@ class NotificationPage extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.white,
-        elevation: 0, // Remove shadow for modern look
+        elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black87),
       ),
-      backgroundColor: const Color(0xFFF8F8F8), // Light gray background
+      backgroundColor: const Color(0xFFF8F8F8),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _notificationsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('No notifications found'));
+          }
 
-      body: ListView.builder(
-        padding: const EdgeInsets.all(12),
-        itemCount: notifications.length,
-        itemBuilder: (context, index) {
-          final notification = notifications[index];
+          final notifications = snapshot.data!.docs;
 
-          return Dismissible(
-            key: Key(notification['title']), // Allow swipe-to-delete
-            direction: DismissDirection.endToStart,
-            background: Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              color: Colors.red,
-              child: const Icon(Icons.delete, color: Colors.white, size: 28),
-            ),
-            onDismissed: (direction) {
-              // Handle delete action
-            },
-            child: Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              margin: const EdgeInsets.only(bottom: 12),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        notification['image'],
-                        width: 60,
-                        height: 60,
-                        fit: BoxFit.cover,
-                      ),
+          return ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: notifications.length,
+            itemBuilder: (context, index) {
+              final doc = notifications[index];
+              final data = doc.data() as Map<String, dynamic>;
+              final isRead = data['read'] == true;
+              final timestamp = data['timestamp'] as Timestamp?;
+              final dateTime = timestamp?.toDate();
+              final formattedTime = dateTime != null
+                  ? DateFormat('MMM dd, yyyy | hh:mm a').format(dateTime)
+                  : '';
+
+              return Dismissible(
+                key: Key(doc.id),
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  color: Colors.red,
+                  child: const Icon(Icons.delete, color: Colors.white, size: 28),
+                ),
+                onDismissed: (_) => _deleteNotification(doc.id),
+                child: GestureDetector(
+                  onTap: () {
+                    _markAsRead(doc.id);
+                    _handleNotificationTap(data);
+                  },
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
                         children: [
-                          Text(
-                            notification['title'],
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
+                          Icon(
+                            isRead ? Icons.notifications : Icons.notifications_active,
+                            size: 28,
+                            color: isRead ? Colors.grey : Colors.green,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            notification['description'],
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black54,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                              const SizedBox(width: 5),
-                              Text(
-                                '${notification['date']}  |  ${notification['time']}',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  data['title'] ?? 'No Title',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 4),
+                                Text(
+                                  data['message'] ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      formattedTime,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            icon: const Icon(Icons.more_vert, color: Colors.grey),
+                            onPressed: () {
+                              // Future menu options can go here
+                            },
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.more_vert, color: Colors.grey),
-                      onPressed: () {
-                        // Handle options (e.g., mark as read, delete)
-                      },
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         },
       ),
