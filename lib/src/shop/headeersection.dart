@@ -1,12 +1,57 @@
-import 'package:doorstepmart/src/shop/shop_manage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:doorstepmart/src/favorite/favorite_page.dart';
 import 'package:doorstepmart/src/landing.dart';
-import 'package:doorstepmart/src/cart/cart.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class HeaderSection extends StatelessWidget {
+class HeaderSection extends StatefulWidget {
   const HeaderSection({super.key});
+
+  @override
+  _HeaderSectionState createState() => _HeaderSectionState();
+}
+
+class _HeaderSectionState extends State<HeaderSection> {
+  String shopName = "Loading...";
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchShopName();
+  }
+
+  // ✅ Fetch Shop Name from Firestore based on Logged-in User
+Future<void> _fetchShopName() async {
+  try {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    // ✅ Fetch shop where userId matches logged-in user
+    QuerySnapshot shopQuery = await FirebaseFirestore.instance
+        .collection('shops')
+        .where('userId', isEqualTo: user.uid) // Match logged-in user
+        .limit(1)
+        .get();
+
+    if (shopQuery.docs.isNotEmpty) {
+      DocumentSnapshot shopDoc = shopQuery.docs.first;
+      setState(() {
+        shopName = shopDoc['shopName'] ?? "Unknown Shop";
+      });
+    } else {
+      setState(() {
+        shopName = "No Shop Found";
+      });
+    }
+  } catch (e) {
+    print("Error fetching shop name: $e");
+    setState(() {
+      shopName = "Error Loading Shop";
+    });
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +75,8 @@ class HeaderSection extends StatelessWidget {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  // ignore: deprecated_member_use
-                  Colors.black.withOpacity(0.6), // Darker at the bottom for better contrast
-                  Colors.transparent, // Fades into the image
+                  Colors.black.withOpacity(0.6),
+                  Colors.transparent,
                 ],
               ),
             ),
@@ -46,10 +90,7 @@ class HeaderSection extends StatelessWidget {
           child: _buildCircleIconButton(
             icon: Icons.arrow_back,
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Landing()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const Landing()));
             },
           ),
         ),
@@ -68,26 +109,22 @@ class HeaderSection extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               _buildCircleIconButton(
-                // ignore: deprecated_member_use
                 icon: FontAwesomeIcons.shoppingCart,
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ShopOrderManagementPage()),
-                  );
+                  // Navigate to cart/shop management
                 },
               ),
             ],
           ),
         ),
 
-        // ✅ Store Name Text
+        // ✅ Dynamically Display the Shop Name
         Positioned(
           bottom: 20,
           left: 15,
-          child: const Text(
-            'MINI Mart',
-            style: TextStyle(
+          child: Text(
+            shopName, // Display fetched shop name here
+            style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -96,7 +133,7 @@ class HeaderSection extends StatelessWidget {
           ),
         ),
 
-        // ✅ Favorite Button (Floating Circle)
+        // ✅ Favorite Button
         Positioned(
           bottom: 10,
           right: 10,
@@ -105,10 +142,7 @@ class HeaderSection extends StatelessWidget {
             iconColor: Colors.red,
             backgroundColor: Colors.white,
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const FavoritePage()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritePage()));
             },
           ),
         ),
@@ -116,7 +150,7 @@ class HeaderSection extends StatelessWidget {
     );
   }
 
-  // ✅ Helper Widget for Modern Circle Buttons
+  // ✅ Helper Widget for Circle Buttons
   Widget _buildCircleIconButton({
     required IconData icon,
     required VoidCallback onPressed,
@@ -134,7 +168,6 @@ class HeaderSection extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.2),
               blurRadius: 6,
               offset: const Offset(2, 3),

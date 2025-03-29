@@ -1,9 +1,3 @@
-// Enhanced SellForm with:
-// ✅ Show existing images in edit mode
-// ✅ Delete button
-// ✅ Toast/Snackbar feedback
-// ✅ Refresh grid via Navigator.pop with true result
-
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doorstepmart/src/setup/create_shop_page.dart';
@@ -35,7 +29,7 @@ class _SellFormState extends State<SellForm> {
   String? _selectedCategory;
   bool _isUploading = false;
 
-  final List<String> _categories = ['Electronics', 'Clothing', 'Home', 'Books', 'Beverage'];
+  final List<String> _categories = ['Drinks', 'Fruits', 'Poultry', 'Vegetable', 'Rice'];
 
   @override
   void initState() {

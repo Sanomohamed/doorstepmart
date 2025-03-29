@@ -18,52 +18,65 @@ Future<void> placeOrder({
     final userData = userSnapshot.data() ?? {};
     final userName = userData['displayName'] ?? 'Unknown User';
 
-    // ✅ Get shopId from first item (assuming one shop per order)
-    final shopId = cartItems.first.shopId;
-
-    // ✅ Fetch shop name from Firestore
-    String shopName = 'Unknown Shop';
-    final shopSnapshot = await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
-    if (shopSnapshot.exists) {
-      final shopData = shopSnapshot.data();
-      shopName = shopData?['shopName'] ?? shopName;
+    // ✅ Group items by shopId
+    Map<String, List<CartItem>> shopOrders = {};
+    for (var item in cartItems) {
+      shopOrders.putIfAbsent(item.shopId, () => []).add(item);
     }
 
-    // ✅ Format order items
-    final orderItems = cartItems.map((item) => {
-      "name": item.name,
-      "price": item.price,
-      "quantity": item.quantity,
-      "image": item.image,
-    }).toList();
+    // ✅ Loop through each shop and create an order
+    for (var entry in shopOrders.entries) {
+      String shopId = entry.key;
+      List<CartItem> items = entry.value;
 
-    final orderData = {
-      "userId": user.uid,
-      "userName": userName,
-      "shopId": shopId,
-      "shopName": shopName,
-      "orderItems": orderItems,
-      "totalAmount": total,
-      "paymentMethod": paymentMethod,
-      "status": "Pending", // ✅ New order status
-      "timestamp": FieldValue.serverTimestamp(),
-    };
+      // ✅ Fetch shop name from Firestore
+      String shopName = 'Unknown Shop';
+      final shopSnapshot = await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
+      if (shopSnapshot.exists) {
+        final shopData = shopSnapshot.data();
+        shopName = shopData?['shopName'] ?? shopName;
+      }
 
-    // ✅ Save order globally
-    final orderRef = await FirebaseFirestore.instance.collection('orders').add(orderData);
+      // ✅ Format order items
+      final orderItems = items.map((item) => {
+        "name": item.name,
+        "price": item.price,
+        "quantity": item.quantity,
+        "image": item.image,
+      }).toList();
 
-    // ✅ Save order under user's personal order history
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .collection('orders')
-        .doc(orderRef.id)
-        .set(orderData);
+      // ✅ Calculate total for this shop
+      double shopTotal = items.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
-    // ✅ Feedback
+      // ✅ Create order data
+      final orderData = {
+        "userId": user.uid,
+        "userName": userName,
+        "shopId": shopId,
+        "shopName": shopName,
+        "orderItems": orderItems,
+        "totalAmount": shopTotal,
+        "paymentMethod": paymentMethod,
+        "status": "Pending",
+        "timestamp": FieldValue.serverTimestamp(),
+      };
+
+      // ✅ Save order globally
+      final orderRef = await FirebaseFirestore.instance.collection('orders').add(orderData);
+
+      // ✅ Save order under user's personal order history
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('orders')
+          .doc(orderRef.id)
+          .set(orderData);
+    }
+
+    // ✅ Show success message
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("✅ Order placed successfully")),
+      const SnackBar(content: Text("✅ Orders placed successfully")),
     );
   } catch (e) {
     print("❌ Order error: $e");

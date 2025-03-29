@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doorstepmart/src/shop/shop_order_detail.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -69,29 +70,17 @@ class ShopOrderManagementPage extends StatelessWidget {
                     margin: const EdgeInsets.all(10),
                     child: ListTile(
                       title: Text('Customer: ${order['userName'] ?? 'N/A'}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Total: RM${order['totalAmount'] ?? 0}'),
-                          Text('Payment: ${order['paymentMethod'] ?? ''}'),
-                          Text('Status: $status'),
-                          const SizedBox(height: 10),
-                          DropdownButton<String>(
-                            value: status,
-                            items: const [
-                              DropdownMenuItem(value: 'Pending', child: Text('Pending')),
-                              DropdownMenuItem(value: 'Processing', child: Text('Processing')),
-                              DropdownMenuItem(value: 'Confirmed', child: Text('Confirmed')),
-                              DropdownMenuItem(value: 'Cancelled', child: Text('Cancelled')),
-                            ],
-                            onChanged: (value) {
-                              if (value != null) {
-                                updateOrderStatus(docId, value);
-                              }
-                            },
-                          )
-                        ],
-                      ),
+                      subtitle: Text('Total: RM${order['totalAmount'] ?? 0}'),
+                      trailing: Text('Status: $status'),
+                      onTap: () {
+                        // Navigate to Order Details Page
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderPage(orderId: docId),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },

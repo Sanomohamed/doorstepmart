@@ -40,5 +40,6 @@ flutter:
     - assets/image.png
     - assets/google.png
     - assets/profile.png
+    - assets/auth_background.png
 
 

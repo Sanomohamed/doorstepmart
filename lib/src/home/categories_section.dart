@@ -13,14 +13,9 @@ class CategoriesSection extends StatelessWidget {
       // ignore: deprecated_member_use
       {'name': 'Fruits', 'icon': FontAwesomeIcons.appleAlt},
       {'name': 'Vegetables', 'icon': FontAwesomeIcons.carrot},
-      {'name': 'Dairy', 'icon': FontAwesomeIcons.cheese},
-      {'name': 'Meat', 'icon': FontAwesomeIcons.drumstickBite},
-      {'name': 'Fish', 'icon': FontAwesomeIcons.fish},
-      {'name': 'Frozen Foods', 'icon': FontAwesomeIcons.snowflake},
-      {'name': 'Drinks', 'icon': FontAwesomeIcons.wineBottle},
-      {'name': 'Sauces', 'icon': FontAwesomeIcons.bottleDroplet},
-      {'name': 'Condiments', 'icon': FontAwesomeIcons.pepperHot},
-      {'name': 'Others', 'icon': Icons.category},
+      {'name': 'Poultry', 'icon': FontAwesomeIcons.egg},
+      {'name': 'Drink', 'icon': FontAwesomeIcons.water},
+      {'name': 'Others', 'icon': FontAwesomeIcons.otter},
     ];
 
      return Column(
