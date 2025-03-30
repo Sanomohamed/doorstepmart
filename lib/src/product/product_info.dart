@@ -13,7 +13,7 @@ class ProductInfo extends StatelessWidget {
         Text(product['name'] ?? 'Unnamed Product',
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        Text('RM${(product['price'] as num?)?.toDouble()?.toStringAsFixed(2) ?? '0.00'}',
+        Text('RM${(product['price'] as num?)?.toDouble().toStringAsFixed(2) ?? '0.00'}',
             style: const TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),
         const Text("Product Description", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),

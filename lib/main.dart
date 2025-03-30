@@ -18,7 +18,7 @@ void main() async {
      options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // ✅ Enable Offline Mode for Firestore
+  // Enable Offline Mode for Firestore
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
