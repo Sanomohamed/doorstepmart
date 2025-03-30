@@ -33,7 +33,7 @@ class SupportSection extends StatelessWidget {
                   ),
                 ),
 
-                // ✅ Help Center Option
+                // Help Center Option
                 _buildSupportItem(
                   icon: Icons.help_center,
                   text: 'Help Center',
@@ -45,16 +45,6 @@ class SupportSection extends StatelessWidget {
                     );
                   },
                 ),
-                 SizedBox(height: 20),
-                // ✅ Chat with AI Option
-                _buildSupportItem(
-                  icon: Icons.chat,
-                  text: 'Chat with AI',
-                  color: Colors.green,
-                  onTap: () {
-                    // Handle Chat with AI action
-                  },
-                ),
               ],
             ),
           ),
@@ -63,7 +53,7 @@ class SupportSection extends StatelessWidget {
     );
   }
 
-  // ✅ Custom ListTile with better design
+  // Custom ListTile with better design
   Widget _buildSupportItem({
     required IconData icon,
     required String text,

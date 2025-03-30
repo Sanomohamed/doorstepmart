@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doorstepmart/src/account/purchase_history.dart';
+import 'package:doorstepmart/src/account/purchase_history/order_detail_page.dart' as order_detail_page;
 import 'package:doorstepmart/src/order/widget/order_cart.dart';
 import 'package:doorstepmart/src/order/widget/order_status_toggle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,7 +73,7 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => OrderDetailsPage(orderData: order),
+                          builder: (_) => order_detail_page.OrderDetailsPage(orderData: order),
                         ),
                       ),
                     );

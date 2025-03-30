@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doorstepmart/src/shop/shop_manage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,13 +22,13 @@ class _HeaderSectionState extends State<HeaderSection> {
     _fetchShopName();
   }
 
-  // ✅ Fetch Shop Name from Firestore based on Logged-in User
+  // Fetch Shop Name from Firestore based on Logged-in User
 Future<void> _fetchShopName() async {
   try {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    // ✅ Fetch shop where userId matches logged-in user
+    //Fetch shop where userId matches logged-in user
     QuerySnapshot shopQuery = await FirebaseFirestore.instance
         .collection('shops')
         .where('userId', isEqualTo: user.uid) // Match logged-in user
@@ -57,7 +58,7 @@ Future<void> _fetchShopName() async {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // ✅ Background Image with Gradient Overlay
+        //Background Image with Gradient Overlay
         Container(
           width: double.infinity,
           height: 220,
@@ -83,7 +84,7 @@ Future<void> _fetchShopName() async {
           ),
         ),
 
-        // ✅ Back Button
+        //Back Button
         Positioned(
           top: 30,
           left: 10,
@@ -95,7 +96,7 @@ Future<void> _fetchShopName() async {
           ),
         ),
 
-        // ✅ Right-side Action Buttons (Search & Cart)
+        //Right-side Action Buttons (Search & Cart)
         Positioned(
           top: 40,
           right: 10,
@@ -111,14 +112,14 @@ Future<void> _fetchShopName() async {
               _buildCircleIconButton(
                 icon: FontAwesomeIcons.shoppingCart,
                 onPressed: () {
-                  // Navigate to cart/shop management
+                 Navigator.push(context, MaterialPageRoute(builder: (context) => const ShopOrderManagementPage()));
                 },
               ),
             ],
           ),
         ),
 
-        // ✅ Dynamically Display the Shop Name
+        //Dynamically Display the Shop Name
         Positioned(
           bottom: 20,
           left: 15,
@@ -133,7 +134,7 @@ Future<void> _fetchShopName() async {
           ),
         ),
 
-        // ✅ Favorite Button
+        // Favorite Button
         Positioned(
           bottom: 10,
           right: 10,
@@ -150,7 +151,7 @@ Future<void> _fetchShopName() async {
     );
   }
 
-  // ✅ Helper Widget for Circle Buttons
+  //Helper Widget for Circle Buttons
   Widget _buildCircleIconButton({
     required IconData icon,
     required VoidCallback onPressed,

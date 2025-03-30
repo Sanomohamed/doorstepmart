@@ -1,3 +1,4 @@
+import 'package:doorstepmart/category_filter_page.dart';
 import 'package:doorstepmart/src/cart/shop_cart.dart';
 import 'package:doorstepmart/src/setup/create_shop_page.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class CategoriesSection extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CreateShopPage()),
+                    MaterialPageRoute(builder: (context) => const CategoryFilterPage()),
                   );
                 },
                 style: TextButton.styleFrom(

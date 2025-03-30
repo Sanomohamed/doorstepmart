@@ -9,7 +9,7 @@ class ProductProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool _hasError = false;
   bool _hasMore = true;
-  bool _isFetchedOnce = false; // ✅ Ensures fetch only happens once
+  bool _isFetchedOnce = false; // neEnsures fetch only happens once
   static const int _limit = 10;
 
   List<Map<String, dynamic>> get products => _products;
@@ -17,7 +17,7 @@ class ProductProvider extends ChangeNotifier {
   bool get hasError => _hasError;
   bool get hasMore => _hasMore;
 
-  /// ✅ Fetch Products (Only Fetch if Necessary)
+  //Fetch Products (Only Fetch if Necessary)
   Future<void> fetchProducts({bool forceRefresh = false}) async {
     print("🔍 fetchProducts() called...");
 
@@ -46,7 +46,6 @@ class ProductProvider extends ChangeNotifier {
       } else {
         print("✅ Loaded ${fetchedProducts.length} products.");
       }
-
       _products = fetchedProducts;
 
       if (fetchedProducts.isNotEmpty) {
@@ -55,7 +54,7 @@ class ProductProvider extends ChangeNotifier {
         _lastDoc = null;
       }
 
-      _isFetchedOnce = true; // ✅ Mark as fetched once
+      _isFetchedOnce = true; // Mark as fetched once
 
     } catch (e) {
       _hasError = true;
@@ -66,7 +65,7 @@ class ProductProvider extends ChangeNotifier {
     }
   }
 
-  /// ✅ Fetch Next Page (Pagination)
+  //Fetch Next Page (Pagination)
   Future<void> fetchNextPage() async {
     if (_isLoading || !_hasMore) return;
 
@@ -76,7 +75,6 @@ class ProductProvider extends ChangeNotifier {
 
     try {
       final fetchedProducts = await _productService.fetchProducts(lastDoc: _lastDoc, limit: _limit);
-
       if (fetchedProducts.isEmpty) {
         print("⚠️ No more products available.");
         _hasMore = false;

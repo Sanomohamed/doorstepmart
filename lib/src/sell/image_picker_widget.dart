@@ -1,21 +1,66 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class ImagePickerWidget extends StatelessWidget {
-  final List<XFile> selectedImages;
+class ImagePickerWidget extends StatefulWidget {
+  final List<String> existingImageUrls;
+  final Function(List<String>) onImageSelected;
 
-  const ImagePickerWidget({super.key, required this.selectedImages});
+  const ImagePickerWidget({super.key, required this.existingImageUrls, required this.onImageSelected});
+
+  @override
+  _ImagePickerWidgetState createState() => _ImagePickerWidgetState();
+}
+
+class _ImagePickerWidgetState extends State<ImagePickerWidget> {
+  final ImagePicker _picker = ImagePicker();
+  List<String> _selectedImagePaths = [];
+
+  Future<void> _pickImages() async {
+    final pickedFiles = await _picker.pickMultiImage();
+    if (pickedFiles != null && pickedFiles.length <= 5) {
+      setState(() {
+        _selectedImagePaths = pickedFiles.map((file) => file.path).toList();
+        widget.onImageSelected(_selectedImagePaths);
+      });
+    } else {
+      Fluttertoast.showToast(msg: "You can select up to 5 images only");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return selectedImages.isEmpty
-        ? const Text("No images selected")
-        : Wrap(
-            spacing: 8,
-            children: selectedImages
-                .map((image) => Image.file(File(image.path), width: 100, height: 100, fit: BoxFit.cover))
-                .toList(),
-          );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Select Images (Max: 5)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: widget.existingImageUrls.length + _selectedImagePaths.length,
+          itemBuilder: (context, index) {
+            if (index < widget.existingImageUrls.length) {
+              return Image.network(widget.existingImageUrls[index], fit: BoxFit.cover);
+            } else {
+              return Image.file(File(_selectedImagePaths[index - widget.existingImageUrls.length]), fit: BoxFit.cover);
+            }
+          },
+        ),
+        const SizedBox(height: 12),
+        ElevatedButton.icon(
+          onPressed: _pickImages,
+          icon: const Icon(Icons.image, color: Colors.white),
+          label: const Text("Pick Images"),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+        ),
+      ],
+    );
   }
 }

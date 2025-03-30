@@ -1,57 +1,27 @@
-import 'package:doorstepmart/services/auth_service.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:doorstepmart/services/product.provider.dart';
+import 'package:doorstepmart/src/account/account_page_controller.dart';
 import 'package:doorstepmart/src/account/ActivitySection.dart';
 import 'package:doorstepmart/src/account/ProfileSection.dart';
 import 'package:doorstepmart/src/account/PurchaseSection.dart';
 import 'package:doorstepmart/src/account/SupportSection.dart';
-import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:doorstepmart/src/shop/productgrid.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _AccountPageState createState() => _AccountPageState();
 }
 
 class _AccountPageState extends State<AccountPage> {
-  final AuthService authService = AuthService();
-  bool _isLoggingOut = false;
+  late AccountPageController _controller;
 
-  // ✅ Logout Function
-  void _logout() async {
-    if (_isLoggingOut) return;
-
-    setState(() {
-      _isLoggingOut = true;
-    });
-
-    try {
-      // ✅ Clear cart before logout
-      Provider.of<CartModel>(context, listen: false).clearCart();
-
-      // ✅ Logout from Firebase
-      await authService.signOut();
-
-      if (mounted) {
-        Navigator.pushNamedAndRemoveUntil(context, '/Login', (route) => false);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Logout failed: $e"), backgroundColor: Colors.red),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoggingOut = false;
-        });
-      }
-    }
+  @override
+  void initState() {
+    super.initState();
+    _controller = AccountPageController(context);
   }
 
   @override
@@ -61,26 +31,17 @@ class _AccountPageState extends State<AccountPage> {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          // ✅ Profile Section
           const ProfileSection(),
           const SizedBox(height: 16.0),
-
-          // ✅ Purchase Section
           const PurchaseSection(),
           const SizedBox(height: 16.0),
-
-          // ✅ Activity Section
           const ActivitySection(),
           const SizedBox(height: 16.0),
-
-          // ✅ Support Section
           const SupportSection(),
           const SizedBox(height: 16.0),
-
-          // ✅ Divider for Separation
           const Divider(thickness: 4),
 
-          // ✅ More Products Section Title
+          // More Products Section
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Text(
@@ -88,8 +49,6 @@ class _AccountPageState extends State<AccountPage> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-
-          // ✅ Product Grid Section (Dynamic Fetching)
           Consumer<ProductProvider>(
             builder: (context, productProvider, _) {
               if (productProvider.isLoading) {
@@ -102,24 +61,23 @@ class _AccountPageState extends State<AccountPage> {
               return const ProductGrid();
             },
           ),
-
           const SizedBox(height: 20),
 
-          // ✅ Logout Button
+          // Logout Button
           ElevatedButton.icon(
-            onPressed: _logout,
+            onPressed: _controller.logout,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
               backgroundColor: Colors.redAccent,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
-            icon: _isLoggingOut
+            icon: _controller.isLoggingOut
                 ? const SizedBox(
                     height: 20, width: 20,
                     child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                 : const Icon(Icons.logout, color: Colors.white),
             label: Text(
-              _isLoggingOut ? 'Logging out...' : 'Logout',
+              _controller.isLoggingOut ? 'Logging out...' : 'Logout',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
             ),
           ),

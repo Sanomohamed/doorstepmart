@@ -33,7 +33,6 @@ class _HomeState extends State<Home> {
       body: Column(
         children: [
           const HomeHeader(),
-
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {

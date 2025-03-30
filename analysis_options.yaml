@@ -2,6 +2,7 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
     avoid_print: ignore
+    library_private_types_in_public_api: ignore
     unnecessary_null_comparison: ignore
     unused_import: ignore
     unused_local_variable: ignore

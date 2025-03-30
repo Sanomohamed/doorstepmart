@@ -7,8 +7,8 @@ class CartItem {
   final String image;
   final double price;
   int quantity;
-  final String shopId; // ✅ Keep shopId for database reference
-  String shopName; // ✅ Store shop name for display
+  final String shopId; 
+  String shopName; 
 
   CartItem({
     required this.name,
@@ -16,10 +16,10 @@ class CartItem {
     required this.price,
     required this.quantity,
     required this.shopId,
-    required this.shopName, // ✅ Store shop name
+    required this.shopName,
   });
 
-  /// ✅ Convert CartItem to Firestore-friendly format
+  //Convert CartItem to Firestore-friendly format
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -27,11 +27,11 @@ class CartItem {
       'price': price,
       'quantity': quantity,
       'shopId': shopId,
-      'shopName': shopName, // ✅ Ensure shop name is stored
+      'shopName': shopName,
     };
   }
 
-  /// ✅ Create CartItem from Firestore document
+  //Create CartItem from Firestore document
   factory CartItem.fromMap(Map<String, dynamic> data) {
     return CartItem(
       name: data['name'],
@@ -39,18 +39,18 @@ class CartItem {
       price: (data['price'] as num).toDouble(),
       quantity: data['quantity'],
       shopId: data['shopId'],
-      shopName: data['shopName'] ?? "Unknown Shop", // ✅ Fetch stored shop name
+      shopName: data['shopName'] ?? "Unknown Shop", //Fetch stored shop name
     );
   }
 }
 
 class CartModel extends ChangeNotifier {
   final List<CartItem> _items = [];
-  final Map<String, String> _shopNamesCache = {}; // ✅ Cache shop names
+  final Map<String, String> _shopNamesCache = {}; //Cache shop names
 
   List<CartItem> get items => _items;
 
-  /// ✅ Firestore reference for the cart
+  //Firestore reference for the cart
   DocumentReference<Map<String, dynamic>> get cartRef {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -59,7 +59,7 @@ class CartModel extends ChangeNotifier {
     return FirebaseFirestore.instance.collection('carts').doc(user.uid);
   }
 
-  /// ✅ Fetch cart from Firestore when user logs in
+  //Fetch cart from Firestore when user logs in
   Future<void> fetchCart() async {
     try {
       var cartDoc = await cartRef.get();
@@ -79,7 +79,7 @@ class CartModel extends ChangeNotifier {
     }
   }
 
-  /// ✅ Fetch shop names for all cart items
+  //Fetch shop names for all cart items
   Future<void> _fetchShopNames() async {
     for (var item in _items) {
       if (!_shopNamesCache.containsKey(item.shopId)) {
@@ -91,7 +91,7 @@ class CartModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// ✅ Fetch shop name from Firestore
+  //Fetch shop name from Firestore
   Future<String> _fetchShopName(String shopId) async {
     if (_shopNamesCache.containsKey(shopId)) {
       return _shopNamesCache[shopId]!;
@@ -113,7 +113,7 @@ class CartModel extends ChangeNotifier {
     return "Unknown Shop";
   }
 
-  /// ✅ Save cart to Firestore
+  //Save cart to Firestore
   Future<void> saveCart() async {
     try {
       await cartRef.set({
@@ -124,9 +124,9 @@ class CartModel extends ChangeNotifier {
     }
   }
 
-  /// ✅ Add item to cart
+  //Add item to cart
 void add(CartItem item) async {
-  String shopName = await _fetchShopName(item.shopId); // ✅ Fetch correct shop name
+  String shopName = await _fetchShopName(item.shopId); //Fetch correct shop name
   item.shopName = shopName;
 
   for (var cartItem in _items) {
@@ -143,22 +143,19 @@ void add(CartItem item) async {
   saveCart();
 }
 
-  /// ✅ Remove item from cart
-  void remove(CartItem item) {
+  void remove(CartItem item) {//Remove item from cart
     _items.remove(item);
     notifyListeners();
     saveCart();
   }
 
-  /// ✅ Increase item quantity
-  void increaseQuantity(CartItem item) {
+  void increaseQuantity(CartItem item) {  //Increase item quantity
     item.quantity += 1;
     notifyListeners();
     saveCart();
   }
 
-  /// ✅ Decrease item quantity
-  void decreaseQuantity(CartItem item) {
+  void decreaseQuantity(CartItem item) {  //Decrease item quantity
     item.quantity -= 1;
     if (item.quantity == 0) {
       remove(item);
@@ -167,27 +164,23 @@ void add(CartItem item) async {
     saveCart();
   }
 
-  /// ✅ Clear cart (useful on logout)
+  //Clear cart (useful on logout)
   void clearCart() {
     _items.clear();
     notifyListeners();
     saveCart();
   }
 
-  /// ✅ Get total price of cart items
+  //Get total price of cart items
   // ignore: avoid_types_as_parameter_names
   double get totalPrice => _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
-
-  /// ✅ Calculate tax
+  //Calculate tax
   double get tax => totalPrice * 0.05;
-
-  /// ✅ Service fee
+  //Service fee
   double get serviceFee => 2.0;
-
-  /// ✅ Get total amount including tax and service fee
+  // Get total amount including tax and service fee
   double get total => totalPrice + tax + serviceFee;
-
-  /// ✅ Group items by shopName for checkout
+  //Group items by shopName for checkout
   Map<String, List<CartItem>> getGroupedByShop() {
     Map<String, List<CartItem>> groupedItems = {};
     for (var item in _items) {

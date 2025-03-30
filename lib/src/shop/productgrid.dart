@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doorstepmart/services/product.provider.dart';
 import 'package:doorstepmart/src/product/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:doorstepmart/services/product.provider.dart';
 import 'package:doorstepmart/src/favorite/favoritemodel.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 
@@ -16,7 +16,7 @@ class ProductGrid extends StatefulWidget {
 }
 
 class _ProductGridState extends State<ProductGrid> {
- // final Map<String, String> _shopNamesCache = {};
+   //final Map<String, String> _shopNamesCache = {};
 
   Future<String> fetchShopName(String shopId) async {
     try {
@@ -97,7 +97,7 @@ class _ProductGridState extends State<ProductGrid> {
                 },
                 child: Card(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12)),
                   elevation: 4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -120,7 +120,7 @@ class _ProductGridState extends State<ProductGrid> {
                         ),
                       ),
 
-                      // ✅ Product Details
+                      //Product Details
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -149,7 +149,7 @@ class _ProductGridState extends State<ProductGrid> {
                         ),
                       ),
 
-                      // ✅ Buttons Section (Favorite & Add to Cart)
+                      // Buttons Section (Favorite & Add to Cart)
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8.0, vertical: 5),
@@ -186,7 +186,7 @@ class _ProductGridState extends State<ProductGrid> {
                               },
                             ),
 
-                            // ✅ Add to Cart Button
+                            //Add to Cart Button
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
@@ -227,7 +227,7 @@ class _ProductGridState extends State<ProductGrid> {
                                         'Add to Cart',
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 14),
-                                      ),
+                                ),
                               ),
                             ),
                           ],

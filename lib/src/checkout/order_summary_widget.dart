@@ -9,18 +9,18 @@ class OrderSummaryWidget extends StatelessWidget {
 
   const OrderSummaryWidget({super.key, required this.cart, required this.discount});
 
-  /// ✅ Fetch shop name based on shopId
+  //Fetch shop name based on shopId
   Future<String> fetchShopName(String shopId) async {
     try {
       DocumentSnapshot shopDoc = await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
       if (shopDoc.exists) {
-        var shopData = shopDoc.data() as Map<String, dynamic>?; // ✅ Ensure proper casting
-        return shopData?['shopName'] ?? "Unknown Shop"; // ✅ Use correct shop name field
+        var shopData = shopDoc.data() as Map<String, dynamic>?; // Ensure proper casting
+        return shopData?['shopName'] ?? "Unknown Shop"; // Use correct shop name field
       }
     } catch (e) {
       debugPrint("🔥 Error fetching shop name: $e");
     }
-    return "Unknown Shop"; // ✅ Default fallback
+    return "Unknown Shop"; // Default fallback
   }
 
   @override
@@ -49,7 +49,7 @@ class OrderSummaryWidget extends StatelessWidget {
           ),
           const SizedBox(height: 8.0),
 
-          // ✅ Grouping items by Shop and displaying shop name
+          //Grouping items by Shop and displaying shop name
           ..._groupItemsByShop(cart).entries.map((entry) {
             String shopId = entry.key;
             List<CartItem> shopItems = entry.value;
@@ -63,7 +63,7 @@ class OrderSummaryWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      shopName, // ✅ Display Shop Name instead of Shop ID
+                      shopName, // Display Shop Name instead of Shop ID
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue),
                     ),
                     const SizedBox(height: 5),
@@ -101,7 +101,7 @@ class OrderSummaryWidget extends StatelessWidget {
             );
           }),
 
-          // ✅ Summary Section
+          //Summary Section
           Text(
             'Total: RM${cart.totalPrice.toStringAsFixed(2)}',
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -129,7 +129,7 @@ class OrderSummaryWidget extends StatelessWidget {
     );
   }
 
-  /// ✅ Helper function to group cart items by shop ID
+  //Helper function to group cart items by shop ID
   Map<String, List<CartItem>> _groupItemsByShop(CartModel cart) {
     Map<String, List<CartItem>> groupedItems = {};
 

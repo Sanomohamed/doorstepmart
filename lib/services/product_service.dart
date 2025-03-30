@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProductService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// ✅ Enable Firestore Offline Persistence
+  //Enable Firestore Offline Persistence
   ProductService() {
     _firestore.settings = const Settings(persistenceEnabled: true);
   }
 
-  /// ✅ Optimized Firestore Query
+  //Optimized Firestore Query
   Future<List<Map<String, dynamic>>> fetchProducts({DocumentSnapshot? lastDoc, int limit = 10}) async {
     try {
       print("🔍 Fetching products from Firestore...");
@@ -43,7 +43,7 @@ class ProductService {
           'id': doc.id,
           ...data,
           'imageUrls': imageUrls.isNotEmpty ? imageUrls : ["https://via.placeholder.com/150"],
-          'documentSnapshot': doc, // ✅ Store snapshot for pagination
+          'documentSnapshot': doc, // Store snapshot for pagination
         };
       }).toList();
 
