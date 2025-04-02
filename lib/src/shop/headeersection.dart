@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doorstepmart/src/setup/create_shop_page.dart';
 import 'package:doorstepmart/src/shop/shop_manage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +144,7 @@ Future<void> _fetchShopName() async {
             iconColor: Colors.red,
             backgroundColor: Colors.white,
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritePage()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const CreateShopPage()));
             },
           ),
         ),

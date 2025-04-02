@@ -68,6 +68,7 @@ class HomeHeader extends StatelessWidget {
                   icon: const Icon(Icons.mic, size: 24, color: Colors.black54),
                   onPressed: () {
                     // Implement voice search functionality
+                    //now just for the ui design
                   },
                 ),
               ],

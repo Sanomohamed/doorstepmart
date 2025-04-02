@@ -45,7 +45,6 @@ class CategoriesSection extends StatelessWidget {
                 },
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                 
                 ),
                 child: Row(
                   children: const [
@@ -72,9 +71,9 @@ class CategoriesSection extends StatelessWidget {
 
         const SizedBox(height: 5),
 
-        // ✅ Category List with Modern UI
+        //Category List with Modern UI
         SizedBox(
-          height: 120, // Slightly increased height for better touch area
+          height: 120, 
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 1),
@@ -92,7 +91,7 @@ class CategoriesSection extends StatelessWidget {
     );
   }
 
-  // ✅ Category Card UI
+  //Category Card UI
   Widget _buildCategoryCard({required IconData icon, required String name}) {
     return Container(
       width: 110,

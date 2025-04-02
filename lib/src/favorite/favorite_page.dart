@@ -21,7 +21,7 @@ class _FavoritePageState extends State<FavoritePage> {
     Provider.of<FavoriteModel>(context, listen: false).loadFavorites();
   }
 
-  /// ✅ Fetch shop name from Firestore
+  // Fetch shop name from Firestore
   Future<String> _fetchShopName(String shopId) async {
     if (_shopNamesCache.containsKey(shopId)) return _shopNamesCache[shopId]!;
 

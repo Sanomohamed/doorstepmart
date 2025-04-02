@@ -10,7 +10,7 @@ import 'package:doorstepmart/src/login/login.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:doorstepmart/src/signup/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,8 +37,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final Position? position;
-  const MyApp({super.key, this.position});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +53,7 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthWrapper extends StatelessWidget {
-  final Position? position;
-  const AuthWrapper({super.key, this.position});
+  const AuthWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
