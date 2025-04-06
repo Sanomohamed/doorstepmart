@@ -1,30 +1,34 @@
-import 'package:doorstepmart/category_filter_page.dart';
-import 'package:doorstepmart/src/cart/shop_cart.dart';
-import 'package:doorstepmart/src/setup/create_shop_page.dart';
+import 'package:doorstepmart/src/category/category_filter_page.dart';
 import 'package:flutter/material.dart';
-import 'package:doorstepmart/src/shop/shop.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({super.key});
 
+  static final List<Map<String, dynamic>> categories = [
+    {'name': 'Fruits', 'icon': FontAwesomeIcons.appleAlt},
+    {'name': 'Vegetables', 'icon': FontAwesomeIcons.carrot},
+    {'name': 'Poultry', 'icon': FontAwesomeIcons.egg},
+    {'name': 'Drinks', 'icon': FontAwesomeIcons.wineBottle},
+    {'name': 'Others', 'icon': FontAwesomeIcons.otter},
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> categories = [
-      // ignore: deprecated_member_use
-      {'name': 'Fruits', 'icon': FontAwesomeIcons.appleAlt},
-      {'name': 'Vegetables', 'icon': FontAwesomeIcons.carrot},
-      {'name': 'Poultry', 'icon': FontAwesomeIcons.egg},
-      {'name': 'Drink', 'icon': FontAwesomeIcons.water},
-      {'name': 'Others', 'icon': FontAwesomeIcons.otter},
-    ];
+    final screenWidth = MediaQuery.of(context).size.width;
 
-     return Column(
+    final double iconSize = screenWidth > 1000
+        ? 28.0
+        : screenWidth > 600
+            ? 24.0
+            : 20.0;
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ✅ Category Title & "View More" Button
+        // Title + View More
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -40,12 +44,11 @@ class CategoriesSection extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CategoryFilterPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const CategoryFilterPage(initialCategory: 'Fruits'),
+                    ),
                   );
                 },
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                ),
                 child: Row(
                   children: const [
                     Text(
@@ -57,11 +60,7 @@ class CategoriesSection extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 20,
-                      color: Colors.black,
-                    ),
+                    Icon(Icons.arrow_forward_ios, size: 16, color: Colors.black),
                   ],
                 ),
               ),
@@ -69,62 +68,59 @@ class CategoriesSection extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 5),
+        // ✅ Centered Pill-Style Scrollable Categories
+        Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1200),
+            child: SizedBox(
+              height: 80,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
 
-        //Category List with Modern UI
-        SizedBox(
-          height: 120, 
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 1),
-            itemCount: categories.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, index) {
-              return _buildCategoryCard(
-                icon: categories[index]['icon'],
-                name: categories[index]['name'],
-              );
-            },
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CategoryFilterPage(
+                            initialCategory: category['name'],
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 207, 234, 209),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(category['icon'], size: iconSize, color: Colors.black),
+                          const SizedBox(width: 8),
+                          Text(
+                            category['name'],
+                            style: TextStyle(
+                              fontSize: screenWidth > 600 ? 18.0 : 16.0,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
         ),
       ],
-    );
-  }
-
-  //Category Card UI
-  Widget _buildCategoryCard({required IconData icon, required String name}) {
-    return Container(
-      width: 110,
-      height: 110,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(166, 119, 171, 138), // Fresh modern green shade
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 48,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 40, color: const Color.fromARGB(211, 29, 29, 29)),
-          const SizedBox(height: 8),
-          Text(
-            name,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
     );
   }
 }
