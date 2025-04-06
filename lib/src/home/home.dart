@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(192, 210, 219, 214),
       body: Column(
         children: [
           const HomeHeader(),

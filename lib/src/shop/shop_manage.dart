@@ -34,7 +34,9 @@ class ShopOrderManagementPage extends StatelessWidget {
       future: getShopId(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
         final shopId = snapshot.data!;
@@ -59,31 +61,47 @@ class ShopOrderManagementPage extends StatelessWidget {
                 return const Center(child: Text('No orders yet.'));
               }
 
-              return ListView.builder(
-                itemCount: orders.length,
-                itemBuilder: (context, index) {
-                  final order = orders[index].data() as Map<String, dynamic>;
-                  final docId = orders[index].id;
-                  final status = order['status'] ?? 'Pending';
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(12),
+                    itemCount: orders.length,
+                    itemBuilder: (context, index) {
+                      final order = orders[index].data() as Map<String, dynamic>;
+                      final docId = orders[index].id;
+                      final status = order['status'] ?? 'Pending';
 
-                  return Card(
-                    margin: const EdgeInsets.all(10),
-                    child: ListTile(
-                      title: Text('Customer: ${order['userName'] ?? 'N/A'}'),
-                      subtitle: Text('Total: RM${order['totalAmount'] ?? 0}'),
-                      trailing: Text('Status: $status'),
-                      onTap: () {
-                        // Navigate to Order Details Page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OrderPage(orderId: docId),
+                      return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 3,
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          title: Text(
+                            'Customer: ${order['userName'] ?? 'N/A'}',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                        );
-                      },
-                    ),
-                  );
-                },
+                          subtitle: Text('Total: RM${order['totalAmount'] ?? 0}'),
+                          trailing: Text(
+                            'Status: $status',
+                            style: const TextStyle(color: Colors.blueGrey),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OrderPage(orderId: docId),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
               );
             },
           ),

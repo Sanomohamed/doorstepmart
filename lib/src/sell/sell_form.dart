@@ -46,53 +46,65 @@ class _SellFormState extends State<SellForm> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Card(
-          elevation: 10,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ImagePickerWidget(
-                  existingImageUrls: _existingImageUrls,
-                  onImageSelected: (paths) => setState(() => _selectedImagePaths = paths),
-                ),
-                const SizedBox(height: 20),
-                ProductFormFields(
-                  nameController: _nameController,
-                  priceController: _priceController,
-                  descriptionController: _descriptionController,
-                  selectedCategory: _selectedCategory,
-                  categories: _categories,
-                  onCategoryChanged: (value) => setState(() => _selectedCategory = value),
-                ),
-                const SizedBox(height: 20),
-                ProductActions(
-                  formKey: _formKey,
-                  isUploading: _isUploading,
-                  productId: widget.productId,
-                  productData: {
-                    'name': _nameController.text.trim(),
-                    'price': _priceController.text.trim(),
-                    'description': _descriptionController.text.trim(),
-                    'category': _selectedCategory,
-                    'imagePaths': _selectedImagePaths,
-                    'existingImages': _existingImageUrls,
-                  },
-                  onUploadStart: () => setState(() => _isUploading = true),
-                  onUploadEnd: () => setState(() => _isUploading = false),
-                ),
-              ],
+@override
+Widget build(BuildContext context) {
+  return Center(
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 600),
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            elevation: 10,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ✅ Image Picker
+                  ImagePickerWidget(
+                    existingImageUrls: _existingImageUrls,
+                    onImageSelected: (paths) => setState(() => _selectedImagePaths = paths),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // ✅ Form Fields
+                  ProductFormFields(
+                    nameController: _nameController,
+                    priceController: _priceController,
+                    descriptionController: _descriptionController,
+                    selectedCategory: _selectedCategory,
+                    categories: _categories,
+                    onCategoryChanged: (value) => setState(() => _selectedCategory = value),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // ✅ Save/Upload Buttons
+                  ProductActions(
+                    formKey: _formKey,
+                    isUploading: _isUploading,
+                    productId: widget.productId,
+                    productData: {
+                      'name': _nameController.text.trim(),
+                      'price': _priceController.text.trim(),
+                      'description': _descriptionController.text.trim(),
+                      'category': _selectedCategory,
+                      'imagePaths': _selectedImagePaths,
+                      'existingImages': _existingImageUrls,
+                    },
+                    onUploadStart: () => setState(() => _isUploading = true),
+                    onUploadEnd: () => setState(() => _isUploading = false),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

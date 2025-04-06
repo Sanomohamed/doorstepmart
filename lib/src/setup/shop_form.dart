@@ -93,88 +93,105 @@ class _ShopFormState extends State<ShopForm> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: _pickImage,
-            child: CircleAvatar(
-              radius: 60,
-              backgroundImage: _pickedImage != null
-                  ? FileImage(_pickedImage!)
-                  : const AssetImage('assets/profile.png') as ImageProvider,
-              child: _pickedImage == null ? const Icon(Icons.camera_alt, size: 40, color: Colors.white) : null,
+@override
+Widget build(BuildContext context) {
+  return Center(
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 600), // Max width for desktop/tablet
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            // ✅ Profile Image
+            GestureDetector(
+              onTap: _pickImage,
+              child: CircleAvatar(
+                radius: 60,
+                backgroundImage: _pickedImage != null
+                    ? FileImage(_pickedImage!)
+                    : const AssetImage('assets/profile.png') as ImageProvider,
+                child: _pickedImage == null
+                    ? const Icon(Icons.camera_alt, size: 40, color: Colors.white)
+                    : null,
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          TextFormField(
-            controller: _shopNameController,
-            decoration: InputDecoration(
-              labelText: 'Shop Name',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            // ✅ Shop Name
+            TextFormField(
+              controller: _shopNameController,
+              decoration: InputDecoration(
+                labelText: 'Shop Name',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              validator: (value) => value!.isEmpty ? "Enter shop name" : null,
             ),
-            validator: (value) => value!.isEmpty ? "Enter shop name" : null,
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          DropdownButtonFormField<String>(
-            value: _selectedState,
-            decoration: InputDecoration(
-              labelText: 'State',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            // ✅ State Dropdown
+            DropdownButtonFormField<String>(
+              value: _selectedState,
+              decoration: InputDecoration(
+                labelText: 'State',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              items: states.map((String state) {
+                return DropdownMenuItem<String>(
+                  value: state,
+                  child: Text(state),
+                );
+              }).toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedState = value;
+                  _selectedCity = null;
+                });
+              },
             ),
-            items: states.map((String state) {
-              return DropdownMenuItem<String>(
-                value: state,
-                child: Text(state),
-              );
-            }).toList(),
-            onChanged: (String? value) {
-              setState(() {
-                _selectedState = value;
-                _selectedCity = null;
-              });
-            },
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          DropdownButtonFormField<String>(
-            value: _selectedCity,
-            decoration: InputDecoration(
-              labelText: 'City',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            // ✅ City Dropdown
+            DropdownButtonFormField<String>(
+              value: _selectedCity,
+              decoration: InputDecoration(
+                labelText: 'City',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              items: (_selectedState != null && cities.containsKey(_selectedState!))
+                  ? cities[_selectedState!]!
+                      .map((String city) => DropdownMenuItem<String>(
+                            value: city,
+                            child: Text(city),
+                          ))
+                      .toList()
+                  : [],
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedCity = value;
+                });
+              },
             ),
-            items: (_selectedState != null && cities.containsKey(_selectedState!))
-                ? cities[_selectedState!]!
-                    .map<DropdownMenuItem<String>>((String city) => DropdownMenuItem<String>(
-                          value: city,
-                          child: Text(city),
-                        ))
-                    .toList()
-                : <DropdownMenuItem<String>>[],
-            onChanged: (String? value) {
-              setState(() {
-                _selectedCity = value;
-              });
-            },
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          _buildTimePicker("Opening Time", openingTime, true),
-          const SizedBox(height: 20),
-          _buildTimePicker("Closing Time", closingTime, false),
+            // ✅ Time Pickers
+            _buildTimePicker("Opening Time", openingTime, true),
+            const SizedBox(height: 20),
+            _buildTimePicker("Closing Time", closingTime, false),
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          ElevatedButton(
-            onPressed: widget.isLoading ? null : _submitForm,
-            child: widget.isLoading ? const CircularProgressIndicator() : const Text('Create Shop'),
-          ),
-        ],
+            // ✅ Submit Button
+            ElevatedButton(
+              onPressed: widget.isLoading ? null : _submitForm,
+              child: widget.isLoading
+                  ? const CircularProgressIndicator()
+                  : const Text('Create Shop'),
+            ),
+          ],
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

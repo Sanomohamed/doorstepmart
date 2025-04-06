@@ -47,150 +47,156 @@ class ShopPage extends StatelessWidget {
           }
 
           final products = snapshot.data!.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-          int columnCount = MediaQuery.of(context).size.width > 600 ? 3 : 2;
+          final screenWidth = MediaQuery.of(context).size.width;
+          final columnCount = screenWidth > 1000 ? 4 : screenWidth > 600 ? 3 : 2;
 
-          return GridView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: products.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: columnCount,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 0.75,
-            ),
-            itemBuilder: (context, index) {
-              final product = products[index];
-              final String imageUrl = (product['imageUrls'] as List<dynamic>?)?.firstOrNull ?? 'https://via.placeholder.com/150';
-              final String name = product['name'] ?? 'Product';
-              final double price = (product['price'] as num?)?.toDouble() ?? 0.0;
-              final String shopName = product['shopName'] ?? 'Shop';
-              final String shopId = product['shopId'] ?? '';
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              child: GridView.builder(
+                padding: const EdgeInsets.all(12),
+                itemCount: products.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columnCount,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.75,
+                ),
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  final String imageUrl = (product['imageUrls'] as List<dynamic>?)?.firstOrNull ?? 'https://via.placeholder.com/150';
+                  final String name = product['name'] ?? 'Product';
+                  final double price = (product['price'] as num?)?.toDouble() ?? 0.0;
+                  final String shopName = product['shopName'] ?? 'Shop';
+                  final String shopId = product['shopId'] ?? '';
 
-              final bool isFavorite = favoriteModel.isFavorite(name);
-              final CartItem? existingCartItem = cartModel.items
-                  .where((item) => item.name == name && item.shopId == shopId)
-                  .isNotEmpty
-                  ? cartModel.items.firstWhere((item) => item.name == name && item.shopId == shopId)
-                  : null;
+                  final bool isFavorite = favoriteModel.isFavorite(name);
+                  final CartItem? existingCartItem = cartModel.items
+                      .where((item) => item.name == name && item.shopId == shopId)
+                      .isNotEmpty
+                      ? cartModel.items.firstWhere((item) => item.name == name && item.shopId == shopId)
+                      : null;
 
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductDetailPage(product: product),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ProductDetailPage(product: product),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      elevation: 4,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Image
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) => Image.network('https://via.placeholder.com/150'),
+                              ),
+                            ),
+                          ),
+
+                          // Product Info
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  name,
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  'RM${price.toStringAsFixed(2)}',
+                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.green),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Buttons
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Favorite
+                                IconButton(
+                                  icon: Icon(
+                                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: isFavorite ? Colors.red : Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    if (isFavorite) {
+                                      favoriteModel.remove(name);
+                                      _showSnackbar(context, '$name removed from favorites');
+                                    } else {
+                                      favoriteModel.add(FavoriteItem(
+                                        name: name,
+                                        image: imageUrl,
+                                        price: price,
+                                        shopId: shopId,
+                                        shopName: shopName,
+                                      ));
+                                      _showSnackbar(context, '$name added to favorites');
+                                    }
+                                  },
+                                ),
+
+                                // Add to Cart
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (existingCartItem == null) {
+                                        cartModel.add(CartItem(
+                                          name: name,
+                                          image: imageUrl,
+                                          price: price,
+                                          shopId: shopId,
+                                          shopName: shopName,
+                                          quantity: 1,
+                                        ));
+                                        _showSnackbar(context, '$name added to cart');
+                                      } else {
+                                        cartModel.increaseQuantity(existingCartItem);
+                                        _showSnackbar(context, 'Increased quantity for $name');
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                    ),
+                                    child: Text(
+                                      existingCartItem != null
+                                          ? 'Qty: ${existingCartItem.quantity}'
+                                          : 'Add to Cart',
+                                      style: const TextStyle(fontSize: 14, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 },
-                child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Image
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                          child: CachedNetworkImage(
-                            imageUrl: imageUrl,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) => Image.network('https://via.placeholder.com/150'),
-                          ),
-                        ),
-                      ),
-
-                      // Product Info
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              name,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              'RM${price.toStringAsFixed(2)}',
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.green),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Buttons
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Favorite
-                            IconButton(
-                              icon: Icon(
-                                isFavorite ? Icons.favorite : Icons.favorite_border,
-                                color: isFavorite ? Colors.red : Colors.grey,
-                              ),
-                              onPressed: () {
-                                if (isFavorite) {
-                                  favoriteModel.remove(name);
-                                  _showSnackbar(context, '$name removed from favorites');
-                                } else {
-                                  favoriteModel.add(FavoriteItem(
-                                    name: name,
-                                    image: imageUrl,
-                                    price: price,
-                                    shopId: shopId,
-                                    shopName: shopName,
-                                  ));
-                                  _showSnackbar(context, '$name added to favorites');
-                                }
-                              },
-                            ),
-
-                            // Add to Cart
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  if (existingCartItem == null) {
-                                    cartModel.add(CartItem(
-                                      name: name,
-                                      image: imageUrl,
-                                      price: price,
-                                      shopId: shopId,
-                                      shopName: shopName,
-                                      quantity: 1,
-                                    ));
-                                    _showSnackbar(context, '$name added to cart');
-                                  } else {
-                                    cartModel.increaseQuantity(existingCartItem);
-                                    _showSnackbar(context, 'Increased quantity for $name');
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: Text(
-                                  existingCartItem != null
-                                      ? 'Qty: ${existingCartItem.quantity}'
-                                      : 'Add to Cart',
-                                  style: const TextStyle(fontSize: 14, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
+              ),
+            ),
           );
         },
       ),

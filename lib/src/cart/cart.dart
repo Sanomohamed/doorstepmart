@@ -9,22 +9,33 @@ class CartPage extends StatelessWidget {
   const CartPage({super.key, this.showBackArrow = false});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(context),
-      backgroundColor: const Color(0xFFF0F0F0),
-      body: Consumer<CartModel>(
-        builder: (context, cart, child) {
-          return Column(
-            children: [
-              Expanded(child: cart.items.isEmpty ? _buildEmptyCart() : _buildCartList(cart)),
-              CartSummary(cart: cart), // ✅ Moved to separate file
-            ],
-          );
-        },
-      ),
-    );
-  }
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: _buildAppBar(context),
+     backgroundColor: const Color.fromARGB(192, 210, 219, 214),
+    body: Consumer<CartModel>(
+      builder: (context, cart, child) {
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800), // adjust as needed
+            child: Column(
+              children: [
+                Expanded(
+                  child: cart.items.isEmpty
+                      ? _buildEmptyCart()
+                      : _buildCartList(cart),
+                ),
+                CartSummary(cart: cart),
+              ],
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}
+
 
   /// ✅ App Bar
   AppBar _buildAppBar(BuildContext context) {

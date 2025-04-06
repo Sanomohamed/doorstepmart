@@ -16,7 +16,7 @@ class ProductDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartModel = Provider.of<CartModel>(context);
 
-    // ✅ Fix: Properly handle `imageUrls`
+    // ✅ Handle imageUrls safely
     final List<dynamic>? imageUrls = product['imageUrls'] as List<dynamic>?;
     final String imageUrl = (imageUrls != null && imageUrls.isNotEmpty)
         ? imageUrls.first
@@ -28,17 +28,22 @@ class ProductDetailPage extends StatelessWidget {
         children: [
           SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ProductImage(imageUrl: imageUrl), // ✅ Pass the correct `imageUrl`
-                const SizedBox(height: 20),
-                ProductInfo(product: product),
-                const SizedBox(height: 20),
-                ShopInfo(shopId: product['shopId'] ?? ''),
-                const SizedBox(height: 30),
-                const RelatedProducts(),
-              ],
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ProductImage(imageUrl: imageUrl),
+                    const SizedBox(height: 20),
+                    ProductInfo(product: product),
+                    const SizedBox(height: 20),
+                    ShopInfo(shopId: product['shopId'] ?? ''),
+                    const SizedBox(height: 30),
+                    const RelatedProducts(),
+                  ],
+                ),
+              ),
             ),
           ),
           BottomButtons(product: product, cartModel: cartModel),

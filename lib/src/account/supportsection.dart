@@ -6,10 +6,10 @@ class SupportSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // ✅ Support Card Section
-        Card(
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Card(
           elevation: 30,
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           shape: RoundedRectangleBorder(
@@ -33,7 +33,7 @@ class SupportSection extends StatelessWidget {
                   ),
                 ),
 
-                // Help Center Option
+                // ✅ Help Center Option
                 _buildSupportItem(
                   icon: Icons.help_center,
                   text: 'Help Center',
@@ -49,11 +49,11 @@ class SupportSection extends StatelessWidget {
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 
-  // Custom ListTile with better design
+  // Custom ListTile with improved design
   Widget _buildSupportItem({
     required IconData icon,
     required String text,
@@ -64,7 +64,6 @@ class SupportSection extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       leading: CircleAvatar(
         radius: 22,
-        // ignore: deprecated_member_use
         backgroundColor: color.withOpacity(0.2),
         child: Icon(icon, color: color, size: 24),
       ),

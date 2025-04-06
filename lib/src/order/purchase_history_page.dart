@@ -32,58 +32,70 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
             }).toList());
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFBF8FF),
-      appBar: AppBar(
-        title: const Text("Purchase History"),
-        backgroundColor: const Color.fromARGB(255, 58, 183, 100),
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          OrderStatusToggle(
-            selectedStatus: selectedStatus,
-            onStatusChanged: (status) {
-              setState(() => selectedStatus = status);
-            },
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: StreamBuilder<List<Map<String, dynamic>>>(
-              stream: fetchOrdersStream(selectedStatus),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text("No orders found."));
-                }
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color.fromARGB(192, 210, 219, 214),
+    appBar: AppBar(
+      title: const Text("Purchase History"),
+      backgroundColor: const Color.fromARGB(255, 58, 183, 100),
+      foregroundColor: Colors.white,
+      elevation: 0,
+    ),
+    body: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
 
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    final order = snapshot.data![index];
-                    return OrderCard(
-                      order: order,
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => order_detail_page.OrderDetailsPage(orderData: order),
-                        ),
-                      ),
-                    );
-                  },
-                );
+            // ✅ Status Toggle (Centered Layout)
+            OrderStatusToggle(
+              selectedStatus: selectedStatus,
+              onStatusChanged: (status) {
+                setState(() => selectedStatus = status);
               },
             ),
-          ),
-        ],
+
+            const SizedBox(height: 10),
+
+            // ✅ Order List
+            Expanded(
+              child: StreamBuilder<List<Map<String, dynamic>>>(
+                stream: fetchOrdersStream(selectedStatus),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text("No orders found."));
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final order = snapshot.data![index];
+                      return OrderCard(
+                        order: order,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                order_detail_page.OrderDetailsPage(orderData: order),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

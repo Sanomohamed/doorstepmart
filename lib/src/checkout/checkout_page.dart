@@ -34,7 +34,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+       backgroundColor: const Color.fromARGB(192, 210, 219, 214),
       appBar: AppBar(
         title: Consumer<CartModel>(
           builder: (context, cart, child) {

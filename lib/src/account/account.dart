@@ -27,7 +27,7 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: const Color.fromARGB(192, 210, 219, 214),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [

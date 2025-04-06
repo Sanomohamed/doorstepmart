@@ -110,118 +110,115 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return _isLoading
-        ? const Center(child: CircularProgressIndicator()) // Show loading indicator
-        : Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Card(
-              elevation: 10,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // ✅ Profile Picture with Floating Edit Button
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  // ignore: deprecated_member_use
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
+@override
+Widget build(BuildContext context) {
+  return _isLoading
+      ? const Center(child: CircularProgressIndicator())
+      : Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // ✅ Profile Picture with Floating Edit Button
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                radius: 55,
+                                backgroundImage: _pickedImage != null
+                                    ? FileImage(_pickedImage!)
+                                    : (_profileImageUrl != null
+                                        ? CachedNetworkImageProvider(_profileImageUrl!)
+                                        : const AssetImage('assets/default_avatar.png') as ImageProvider),
+                              ),
                             ),
-                            child: CircleAvatar(
-                              radius: 55,
-                              backgroundImage: _pickedImage != null
-                                  ? FileImage(_pickedImage!)
-                                  : (_profileImageUrl != null
-                                      ? CachedNetworkImageProvider(_profileImageUrl!)
-                                      : const AssetImage('assets/default_avatar.png') as ImageProvider),
+                            FloatingActionButton(
+                              mini: true,
+                              backgroundColor: Colors.green,
+                              child: const Icon(Icons.edit, size: 20, color: Colors.white),
+                              onPressed: _pickImage,
                             ),
-                          ),
-                          FloatingActionButton(
-                            mini: true,
-                            backgroundColor: Colors.green,
-                            // ignore: sort_child_properties_last
-                            child: const Icon(Icons.edit, size: 20, color: Colors.white),
-                            onPressed: _pickImage,
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
 
-                      const SizedBox(height: 25),
+                        const SizedBox(height: 25),
 
-                      // ✅ Name Field
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: _inputDecoration("Name", Icons.person),
-                        validator: validateName,
-                      ),
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: _inputDecoration("Name", Icons.person),
+                          validator: validateName,
+                        ),
+                        const SizedBox(height: 20),
 
-                      const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _emailController,
+                          decoration: _inputDecoration("Email", Icons.email),
+                          validator: validateEmail,
+                        ),
+                        const SizedBox(height: 20),
 
-                      // ✅ Email Field
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: _inputDecoration("Email", Icons.email),
-                        validator: validateEmail,
-                      ),
+                        TextFormField(
+                          controller: _phoneController,
+                          decoration: _inputDecoration("Phone", Icons.phone),
+                          validator: validatePhone,
+                        ),
+                        const SizedBox(height: 30),
 
-                      const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _isLoading ? null : _saveUserProfile,
+                          style: _buttonStyle(Colors.green),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                )
+                              : const Text('Save', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(height: 15),
 
-                      // ✅ Phone Field
-                      TextFormField(
-                        controller: _phoneController,
-                        decoration: _inputDecoration("Phone", Icons.phone),
-                        validator: validatePhone,
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      // ✅ Save Button (Improved)
-                      ElevatedButton(
-                        onPressed: _isLoading ? null : _saveUserProfile,
-                        style: _buttonStyle(Colors.green),
-                        child: _isLoading
-                            ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                              )
-                            : const Text('Save', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      ),
-
-                      const SizedBox(height: 15),
-
-                      // ✅ Sell Button (Improved)
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => SellPage(editProduct: {}, productData: null, productId: null,)),
-                          );
-                        },
-                        style: _buttonStyle(Colors.black),
-                        child: const Text('Sell', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      ),
-                    ],
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SellPage(editProduct: {}, productData: null, productId: null)),
+                            );
+                          },
+                          style: _buttonStyle(Colors.black),
+                          child: const Text('Sell', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          );
-  }
+          ),
+        );
+}
+
 
   // ✅ Modern Input Field Styling
   InputDecoration _inputDecoration(String label, IconData icon) {

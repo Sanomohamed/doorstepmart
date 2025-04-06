@@ -39,48 +39,58 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Favorites', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      backgroundColor: const Color(0xFFEFFAF1),
-      body: Consumer<FavoriteModel>(
-        builder: (context, favoriteModel, child) {
-          if (favoriteModel.favorites.isEmpty) {
-            return const Center(
-              child: Text("No favorite items found!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54)),
-            );
-          }
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                childAspectRatio: 0.85,
-              ),
-              itemCount: favoriteModel.favorites.length,
-              itemBuilder: (context, index) {
-                final product = favoriteModel.favorites[index];
-
-                return Stack(
-                  children: [
-                    _buildFavoriteCard(product),
-                    _buildDeleteButton(context, product),
-                    _buildAddToCartButton(context, product),
-                  ],
-                );
-              },
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Favorites', style: TextStyle(color: Colors.black)),
+      backgroundColor: Colors.white,
+      iconTheme: const IconThemeData(color: Colors.black),
+    ),
+    backgroundColor: const Color.fromARGB(192, 210, 219, 214),
+    body: Consumer<FavoriteModel>(
+      builder: (context, favoriteModel, child) {
+        if (favoriteModel.favorites.isEmpty) {
+          return const Center(
+            child: Text(
+              "No favorite items found!",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black54),
             ),
           );
-        },
-      ),
-    );
-  }
+        }
+
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 0.85,
+                ),
+                itemCount: favoriteModel.favorites.length,
+                itemBuilder: (context, index) {
+                  final product = favoriteModel.favorites[index];
+                  return Stack(
+                    children: [
+                      _buildFavoriteCard(product),
+                      _buildDeleteButton(context, product),
+                      _buildAddToCartButton(context, product),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}
+
 
   /// ✅ Favorite Product Card
   Widget _buildFavoriteCard(FavoriteItem product) {
