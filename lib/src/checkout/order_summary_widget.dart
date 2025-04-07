@@ -149,3 +149,5 @@ class OrderSummaryWidget extends StatelessWidget {
     return groupedItems;
   }
 }
+
+//need to break the code into smaller widgets to make it more readable and maintainable
