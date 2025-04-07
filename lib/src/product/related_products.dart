@@ -1,5 +1,5 @@
+import 'package:doorstepmart/src/shop/product_grid/productgrid.dart';
 import 'package:flutter/material.dart';
-import 'package:doorstepmart/src/shop/productgrid.dart';
 
 class RelatedProducts extends StatelessWidget {
   const RelatedProducts({super.key});
