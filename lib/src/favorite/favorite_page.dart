@@ -157,3 +157,4 @@ Widget build(BuildContext context) {
     return CircleAvatar(backgroundColor: color, radius: 22, child: IconButton(icon: Icon(icon, color: Colors.white), onPressed: onPressed));
   }
 }
+//try to break the code into smaller widgets for better readability and maintainability.

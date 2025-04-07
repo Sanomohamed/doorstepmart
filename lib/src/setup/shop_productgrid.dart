@@ -144,6 +144,5 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
-
 }
+//try to break the code into smaller widgets

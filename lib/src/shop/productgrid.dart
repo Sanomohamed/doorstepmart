@@ -249,3 +249,5 @@ class _ProductGridState extends State<ProductGrid> {
     );
   }
 }
+//try to break the code into smaller widgets to make it more readable and maintainable
+// and also to follow the DRY principle. For example, you can create a separate widget for the product card,

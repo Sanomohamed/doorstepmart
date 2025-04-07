@@ -1,4 +1,4 @@
-import 'package:doorstepmart/src/account/purchase_history.dart';
+import 'package:doorstepmart/src/order/purchase_history_page.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseSection extends StatelessWidget {

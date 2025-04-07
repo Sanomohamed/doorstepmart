@@ -32,7 +32,7 @@ class SupportSection extends StatelessWidget {
                     ),
                   ),
                 ),
-
+   //Modify the logic
                 // ✅ Help Center Option
                 _buildSupportItem(
                   icon: Icons.help_center,

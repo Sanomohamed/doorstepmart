@@ -124,3 +124,4 @@ class CategoriesSection extends StatelessWidget {
     );
   }
 }
+//try to break the code into smaller widgets

@@ -25,7 +25,7 @@ class CartItemWidget extends StatelessWidget {
               children: [
                 _buildProductImage(),
                 const SizedBox(width: 15),
-                _buildProductInfo(shopName),
+                _buildProductInfo(context,shopName),
                 _buildRemoveButton(context),
               ],
             ),
@@ -51,7 +51,7 @@ class CartItemWidget extends StatelessWidget {
   }
 
   /// ✅ Product Info
-  Widget _buildProductInfo(String shopName) {
+  Widget _buildProductInfo(BuildContext context,String shopName) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,19 +61,23 @@ class CartItemWidget extends StatelessWidget {
           Text('RM${item.price.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.green)),
           const SizedBox(height: 5),
           Text(shopName, style: const TextStyle(fontSize: 14, color: Colors.blue)),
-          _buildQuantityControls(),
+          _buildQuantityControls(context),
         ],
       ),
     );
   }
 
   /// ✅ Quantity Controls
-  Widget _buildQuantityControls() {
+  Widget _buildQuantityControls(BuildContext context) {
     return Row(
       children: [
-        IconButton(icon: const Icon(Icons.remove_circle, color: Colors.redAccent), onPressed: () {}),
+        IconButton(icon: const Icon(Icons.remove_circle, color: Colors.redAccent), onPressed: () {
+          Provider.of<CartModel>(context, listen: false).decreaseQuantity(item);
+        }),
         Text('${item.quantity}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        IconButton(icon: const Icon(Icons.add_circle, color: Colors.green), onPressed: () {}),
+        IconButton(icon: const Icon(Icons.add_circle, color: Colors.green), onPressed: () {
+          Provider.of<CartModel>(context, listen: false).increaseQuantity(item);
+        }),
       ],
     );
   }

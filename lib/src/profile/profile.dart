@@ -16,7 +16,7 @@ class ProfilePage extends StatelessWidget {
             color: Colors.black87,
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 252, 252, 252),
+        backgroundColor:  const Color.fromARGB(192, 210, 219, 214),
         elevation: 3, // ✅ Soft shadow for better visibility
         iconTheme: const IconThemeData(color: Colors.black87),
         leading: IconButton(
@@ -26,7 +26,10 @@ class ProfilePage extends StatelessWidget {
           },
         ),
       ),
-      body: const ProfileForm(),
+      body: Container(
+        color: const Color.fromARGB(192, 210, 219, 214), // Set the background color
+        child: const ProfileForm(),
+      ),
     );
   }
 }

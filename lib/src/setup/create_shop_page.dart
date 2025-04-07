@@ -41,12 +41,17 @@ class _CreateShopPageState extends State<CreateShopPage> {
 
 
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Create Shop')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: ShopForm(onSubmit: _handleSubmit, isLoading: _isLoading),
+      body: Container(
+        color: const Color.fromARGB(192, 210, 219, 214),
+         width: double.infinity, // Ensure it covers the full width
+        height: double.infinity,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: ShopForm(onSubmit: _handleSubmit, isLoading: _isLoading),
+        ),
       ),
     );
   }

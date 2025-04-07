@@ -183,3 +183,5 @@ Future<void> _fetchShopName() async {
     );
   }
 }
+//try break down the code into smaller widgets for better readability and maintainability.
+// For example, you can create separate widgets for the background image, action buttons, and shop name display.

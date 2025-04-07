@@ -193,5 +193,5 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
 }
+//try to break the code into smaller widgets for better readability and maintainability

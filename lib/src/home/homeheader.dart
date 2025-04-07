@@ -115,3 +115,4 @@ class HomeHeader extends StatelessWidget {
     );
   }
 }
+//try to break the code into smaller widgets for better readability and maintainability

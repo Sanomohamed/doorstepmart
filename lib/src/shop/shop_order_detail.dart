@@ -116,3 +116,5 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 }
+//try to break the code into smaller widgets to improve readability and maintainability
+// and to make it easier to test individual components.

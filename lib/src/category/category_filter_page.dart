@@ -48,23 +48,26 @@ class _CategoryFilterPageState extends State<CategoryFilterPage> {
         title: const Text("Filter by Category"),
         backgroundColor: Colors.green,
       ),
-      body: Column(
-        children: [
-          CategorySelector(
-            selectedCategory: selectedCategory,
-            onCategorySelected: (value) {
-              setState(() {
-                selectedCategory = value;
-              });
-            },
-          ),
-          Expanded(
-            child: ProductGrid(
-              products: filteredProducts,
-              horizontalPadding: horizontalPadding,
+      body: Container(
+        color:  const Color.fromARGB(192, 210, 219, 214),
+        child: Column(
+          children: [
+            CategorySelector(
+              selectedCategory: selectedCategory,
+              onCategorySelected: (value) {
+                setState(() {
+                  selectedCategory = value;
+                });
+              },
             ),
-          ),
-        ],
+            Expanded(
+              child: ProductGrid(
+                products: filteredProducts,
+                horizontalPadding: horizontalPadding,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

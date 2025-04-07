@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:doorstepmart/src/account/purchase_history.dart';
-import 'package:doorstepmart/src/account/purchase_history/order_detail_page.dart' as order_detail_page;
+import 'package:doorstepmart/src/order/order_detail_page.dart' as order_detail_page;
 import 'package:doorstepmart/src/order/widget/order_cart.dart';
 import 'package:doorstepmart/src/order/widget/order_status_toggle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -97,5 +96,4 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
 }

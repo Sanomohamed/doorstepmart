@@ -209,3 +209,4 @@ class ShopPage extends StatelessWidget {
     );
   }
 }
+//try to break the code into smaller widgets and functions to improve readability and maintainability.

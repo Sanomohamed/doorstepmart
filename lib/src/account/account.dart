@@ -64,23 +64,29 @@ class _AccountPageState extends State<AccountPage> {
           const SizedBox(height: 20),
 
           // Logout Button
-          ElevatedButton.icon(
-            onPressed: _controller.logout,
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              backgroundColor: Colors.redAccent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-            icon: _controller.isLoggingOut
-                ? const SizedBox(
-                    height: 20, width: 20,
-                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                : const Icon(Icons.logout, color: Colors.white),
-            label: Text(
-              _controller.isLoggingOut ? 'Logging out...' : 'Logout',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-          ),
+Align(
+  alignment: Alignment.center, // Align the button to the center
+  child: SizedBox(
+    width: 200, // Set the desired width
+    child: ElevatedButton.icon(
+      onPressed: _controller.logout,
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        backgroundColor: Colors.redAccent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      ),
+      icon: _controller.isLoggingOut
+          ? const SizedBox(
+              height: 10, width: 1,
+              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+          : const Icon(Icons.logout, color: Colors.white),
+      label: Text(
+        _controller.isLoggingOut ? 'Logging out...' : 'Logout',
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+    ),
+  ),
+),
         ],
       ),
     );
