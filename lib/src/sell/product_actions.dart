@@ -106,11 +106,13 @@ class ProductActions extends StatelessWidget {
         : Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ElevatedButton.icon(
+              Center(
+             child:ElevatedButton.icon(
                 onPressed: () => _uploadProduct(context),
                 icon: const Icon(Icons.upload),
                 label: Text(productId != null ? "Update Product" : "Upload Product"),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              ),
               ),
               if (productId != null) ...[
                 const SizedBox(height: 10),

@@ -14,9 +14,12 @@ class _SellPageState extends State<SellPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Sell Product")),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: SellForm(),
+      body: Container(
+        color: const Color.fromARGB(192, 210, 219, 214),
+        child: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: SellForm(),
+        ),
       ),
     );
   }
