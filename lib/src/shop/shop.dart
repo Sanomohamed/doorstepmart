@@ -1,5 +1,6 @@
 import 'package:doorstepmart/src/setup/shop_productgrid.dart';
-import 'package:doorstepmart/src/shop/headeersection.dart'; // ✅ Import your ShopProductGrid
+import 'package:doorstepmart/src/shop/header/header_section.dart';
+//import 'package:doorstepmart/src/shop/headeersection.dart'; // ✅ Import your ShopProductGrid
 import 'package:flutter/material.dart';
 
 class MiniMartPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _MiniMartPageState extends State<MiniMartPage> with AutomaticKeepAliveClie
     super.build(context);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: const Color.fromARGB(244, 228, 243, 230),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -38,9 +38,8 @@ class ProductCard extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                               context,
-
                               MaterialPageRoute(
-                                builder: (context) => MiniMartPage(),
+                              builder: (context) => MiniMartPage(),
                             ),
                   );
                   // Add your onPressed code here

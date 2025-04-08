@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       home: const AuthWrapper(),
       routes: {
         '/Signup': (context) => const Signup(),
-        '/Landing': (context) => Landing(key: Landing.landingKey), // ✅ registered with global key
+        '/Landing': (context) => Landing(key: Landing.landingKey), 
         '/Login': (context) => const Login(),
       },
     );
