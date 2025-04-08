@@ -35,6 +35,9 @@ class ProductDetailPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ProductImage(imageUrl: imageUrl),
+                    const SizedBox(height: 2),
+                    // ✅ Add button directly under image
+                    BottomButtons(product: product, cartModel: cartModel),
                     const SizedBox(height: 20),
                     ProductInfo(product: product),
                     const SizedBox(height: 20),
@@ -46,7 +49,7 @@ class ProductDetailPage extends StatelessWidget {
               ),
             ),
           ),
-          BottomButtons(product: product, cartModel: cartModel),
+         // BottomButtons(product: product, cartModel: cartModel),
         ],
       ),
     );

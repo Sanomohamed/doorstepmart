@@ -1,54 +1,53 @@
-import 'package:flutter/material.dart';
+// 📄 bottom_buttons.dart
+import 'package:doorstepmart/src/product/widgets/view_cart_toast.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BottomButtons extends StatelessWidget {
   final Map<String, dynamic> product;
-  final CartModel cartModel;
+  final CartModel? cartModel;
 
-  const BottomButtons({super.key, required this.product, required this.cartModel});
+  const BottomButtons({super.key, required this.product, this.cartModel});
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 0,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        color: Colors.white,
-        child: Row(
-          children: [
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  cartModel.add(
-                    CartItem(
-                      name: product['name'] ?? 'Unnamed Product',
-                      image: (product['imageUrls'] as List<dynamic>?)?.firstOrNull ?? '',
-                      price: (product['price'] as num?)?.toDouble() ?? 0.0,
-                      shopId: product['shopId'] ?? '',
-                      shopName: 'Unknown Shop', // shopName will be handled later
-                      quantity: 1,
-                    ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${product['name']} added to cart'),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.add_shopping_cart),
-                label: const Text("Add to Cart"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-              ),
-            ),
-          ],
+    final cart = cartModel ?? Provider.of<CartModel>(context, listen: false);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: ElevatedButton.icon(
+          onPressed: () {
+            final newItem = CartItem(
+              name: product['name'] ?? 'Unnamed Product',
+              image: (product['imageUrls'] as List<dynamic>?)?.firstOrNull ?? '',
+              price: (product['price'] as num?)?.toDouble() ?? 0.0,
+              shopId: product['shopId'] ?? '',
+              shopName: product['shopName'] ?? 'Unknown Shop',
+              quantity: 1,
+            );
+
+            cart.add(newItem);
+
+            showViewCartToastBottomSheet(
+              context: context,
+              productName: newItem.name,
+            );
+          },
+          icon: const Icon(Icons.add_shopping_cart, size: 18,color: Colors.white),
+          label: const Text(
+            "Add to Cart",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            minimumSize: const Size(10, 40), // Smaller button
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            textStyle: const TextStyle(fontSize: 14),
+          ),
         ),
       ),
     );

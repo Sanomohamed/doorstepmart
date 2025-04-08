@@ -9,7 +9,7 @@ class RelatedProducts extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
-        Text("More Products", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text("More Products", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
         SizedBox(height: 10),
         ProductGrid(),
       ],

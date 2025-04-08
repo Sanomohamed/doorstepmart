@@ -1,15 +1,20 @@
 import 'package:doorstepmart/src/account/account.dart';
-import 'package:doorstepmart/src/home/home.dart';
 import 'package:doorstepmart/src/cart/cart.dart';
+import 'package:doorstepmart/src/home/home.dart';
 import 'package:doorstepmart/src/notification/notification_page.dart';
 import 'package:flutter/material.dart';
 
 class Landing extends StatefulWidget {
+  static final GlobalKey<_LandingState> landingKey = GlobalKey<_LandingState>();
+
   const Landing({super.key});
 
+  static void jumpToTab(int index) {
+    landingKey.currentState?._onItemTapped(index);
+  }
+
   @override
-  // ignore: library_private_types_in_public_api
-  _LandingState createState() => _LandingState();
+  State<Landing> createState() => _LandingState();
 }
 
 class _LandingState extends State<Landing> {
@@ -32,7 +37,7 @@ class _LandingState extends State<Landing> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        index: _selectedIndex, // Keeps all pages in memory, only switching visibility
+        index: _selectedIndex,
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(

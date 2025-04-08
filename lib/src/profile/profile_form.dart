@@ -1,29 +1,35 @@
-import 'package:doorstepmart/services/profile_service.dart';
-import 'package:doorstepmart/src/home/home.dart';
-import 'package:doorstepmart/src/sell/sell.dart';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:doorstepmart/src/profile/validators.dart';
-import 'dart:io';
+
+import 'package:doorstepmart/services/profile_service.dart';
+import 'package:doorstepmart/src/profile/widgets/validators.dart';
+import 'package:doorstepmart/src/sell/sell.dart';
+
+// Modularized widgets
+import 'package:doorstepmart/src/profile/widgets/profile_image_editor.dart';
+import 'package:doorstepmart/src/profile/widgets/profile_text_field.dart';
+import 'package:doorstepmart/src/profile/widgets/profile_action_button.dart';
+import 'package:doorstepmart/src/profile/widgets/profile_update_dialog.dart';
+import 'package:doorstepmart/src/profile/widgets/profile_confirmation_snackbar.dart';
 
 class ProfileForm extends StatefulWidget {
   const ProfileForm({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _ProfileFormState createState() => _ProfileFormState();
+  State<ProfileForm> createState() => _ProfileFormState();
 }
 
 class _ProfileFormState extends State<ProfileForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+
   String? _profileImageUrl;
-  bool _isLoading = true;
   File? _pickedImage;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -35,213 +41,157 @@ class _ProfileFormState extends State<ProfileForm> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        Map<String, dynamic> userData = await fetchUserData(user.uid);
-        setState(() {
-          _nameController.text = userData['displayName'] ?? '';
-          _emailController.text = userData['email'] ?? '';
-          _phoneController.text = userData['phoneNumber'] ?? '';
+        final userData = await fetchUserData(user.uid);
+        _nameController.text = userData['displayName'] ?? '';
+        _emailController.text = userData['email'] ?? '';
+        _phoneController.text = userData['phoneNumber'] ?? '';
+        _profileImageUrl = userData['profileImageUrl'];
 
-          // Ensure a valid profile image URL
-          String? fetchedImageUrl = userData['profileImageUrl'];
-          if (fetchedImageUrl != null && fetchedImageUrl.isNotEmpty) {
-            _profileImageUrl = fetchedImageUrl;
-          } else {
-            _profileImageUrl = null; // Use a local placeholder instead
-          }
-        });
+        // Autofill from Google Sign-In
+        if (user.providerData.any((info) => info.providerId == 'google.com')) {
+          _autofillFromGoogle(user);
+        }
       }
     } catch (e) {
-      print('Error fetching user data: $e');
+      debugPrint('Error fetching user data: $e');
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
+  void _autofillFromGoogle(User user) {
+    setState(() {
+      _nameController.text = user.displayName ?? '';
+      _emailController.text = user.email ?? '';
+      _profileImageUrl = user.photoURL;
+    });
+  }
+
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _pickedImage = File(pickedFile.path);
-      });
+    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      setState(() => _pickedImage = File(picked.path));
     }
+  }
+
+  void _confirmBeforeUpdate() {
+    showConfirmationSnackbar(
+      context: context,
+      onConfirmed: _showUploadProgressAndSave,
+    );
+  }
+
+  void _showUploadProgressAndSave() async {
+    showUploadProgressDialog(context);
+    await _saveUserProfile();
+    if (mounted) Navigator.of(context).pop(); // Close the dialog
   }
 
   Future<void> _saveUserProfile() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
-
     try {
-      String? newProfileImageUrl = _profileImageUrl;
-
-      if (_pickedImage != null) {
-        newProfileImageUrl = await uploadProfileImage(_pickedImage!);
-      }
-
-      User? user = FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      Map<String, dynamic> userData = {
+      final profileUrl = _pickedImage != null
+          ? await uploadProfileImage(_pickedImage!)
+          : _profileImageUrl;
+
+      final updatedData = {
         'email': _emailController.text.trim(),
         'displayName': _nameController.text.trim(),
         'phoneNumber': _phoneController.text.trim(),
-        'profileImageUrl': newProfileImageUrl ?? _profileImageUrl,
+        'profileImageUrl': profileUrl,
       };
 
-      await saveUserData(user.uid, userData);
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated successfully')),
-      );
+      await saveUserData(user.uid, updatedData);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated successfully')),
+        );
+      }
     } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error saving profile')),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error saving profile')),
+        );
+      }
     }
   }
 
   @override
-@override
-Widget build(BuildContext context) {
-  return _isLoading
-      ? const Center(child: CircularProgressIndicator())
-      : Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                elevation: 10,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // ✅ Profile Picture with Floating Edit Button
-                        Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: CircleAvatar(
-                                radius: 55,
-                                backgroundImage: _pickedImage != null
-                                    ? FileImage(_pickedImage!)
-                                    : (_profileImageUrl != null
-                                        ? CachedNetworkImageProvider(_profileImageUrl!)
-                                        : const AssetImage('assets/default_avatar.png') as ImageProvider),
-                              ),
-                            ),
-                            FloatingActionButton(
-                              mini: true,
-                              backgroundColor: Colors.green,
-                              child: const Icon(Icons.edit, size: 20, color: Colors.white),
-                              onPressed: _pickImage,
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 25),
-
-                        TextFormField(
-                          controller: _nameController,
-                          decoration: _inputDecoration("Name", Icons.person),
-                          validator: validateName,
-                        ),
-                        const SizedBox(height: 20),
-
-                        TextFormField(
-                          controller: _emailController,
-                          decoration: _inputDecoration("Email", Icons.email),
-                          validator: validateEmail,
-                        ),
-                        const SizedBox(height: 20),
-
-                        TextFormField(
-                          controller: _phoneController,
-                          decoration: _inputDecoration("Phone", Icons.phone),
-                          validator: validatePhone,
-                        ),
-                        const SizedBox(height: 30),
-
-                        ElevatedButton(
-                          onPressed: _isLoading ? null : _saveUserProfile,
-                          style: _buttonStyle(Colors.green),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                                )
-                              : const Text('Save', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        ),
-                        const SizedBox(height: 15),
-
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => SellPage(editProduct: {}, productData: null, productId: null)),
-                            );
-                          },
-                          style: _buttonStyle(Colors.black),
-                          child: const Text('Sell', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        ),
-                      ],
+  Widget build(BuildContext context) {
+    return _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ProfileImageEditor(
+                            pickedImage: _pickedImage,
+                            profileImageUrl: _profileImageUrl,
+                            onPickImage: _pickImage,
+                          ),
+                          const SizedBox(height: 25),
+                          ProfileTextField(
+                            controller: _nameController,
+                            label: "Name",
+                            icon: Icons.person,
+                            validator: validateName,
+                          ),
+                          const SizedBox(height: 20),
+                          ProfileTextField(
+                            controller: _emailController,
+                            label: "Email",
+                            icon: Icons.email,
+                            validator: validateEmail,
+                          ),
+                          const SizedBox(height: 20),
+                          ProfileTextField(
+                            controller: _phoneController,
+                            label: "Phone",
+                            icon: Icons.phone,
+                            validator: validatePhone,
+                          ),
+                          const SizedBox(height: 30),
+                          ProfileActionButton(
+                            label: 'Save',
+                            color: Colors.green,
+                            onPressed: _confirmBeforeUpdate,
+                          ),
+                          const SizedBox(height: 15),
+                          ProfileActionButton(
+                            label: 'Sell',
+                            color: Colors.black,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => SellPage(editProduct: {}, productData: null, productId: null),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
-}
-
-
-  // ✅ Modern Input Field Styling
-  InputDecoration _inputDecoration(String label, IconData icon) {
-    return InputDecoration(
-      labelText: label,
-      prefixIcon: Icon(icon),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.green, width: 2),
-        borderRadius: BorderRadius.circular(15),
-      ),
-    );
-  }
-
-  // ✅ Modern Button Style
-  ButtonStyle _buttonStyle(Color color) {
-    return ElevatedButton.styleFrom(
-      foregroundColor: Colors.white,
-      backgroundColor: color,
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 90),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 5,
-    );
+          );
   }
 }
-//try to break into smaller widgets

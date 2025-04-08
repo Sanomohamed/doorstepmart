@@ -1,33 +1,25 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class ProductActions extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final bool isUploading;
-  final String? productId;
-  final Map<String, dynamic> productData;
-  final VoidCallback onUploadStart;
-  final VoidCallback onUploadEnd;
-
-  const ProductActions({
-    super.key,
-    required this.formKey,
-    required this.isUploading,
-    required this.productId,
-    required this.productData,
-    required this.onUploadStart,
-    required this.onUploadEnd,
-  });
-
-  Future<void> _uploadProduct(BuildContext context) async {
+class ProductActions {
+  static Future<void> upload({
+    required BuildContext context,
+    required GlobalKey<FormState> formKey,
+    required bool isUploading,
+    required String? productId,
+    required Map<String, dynamic> productData,
+    required VoidCallback onUploadStart,
+    required VoidCallback onUploadEnd,
+  }) async {
     if (!formKey.currentState!.validate() || productData['category'] == null) {
       Fluttertoast.showToast(msg: "Please fill all fields and select a category.");
       return;
     }
+
     onUploadStart();
 
     try {
@@ -78,53 +70,11 @@ class ProductActions extends StatelessWidget {
         Fluttertoast.showToast(msg: "Product uploaded successfully");
       }
 
-      // Close the form and refresh the grid
-      if (context.mounted) {
-        Navigator.pop(context, true);
-      }
+      if (context.mounted) Navigator.pop(context, true); // refresh grid
     } catch (e) {
-      Fluttertoast.showToast(msg: "Error: $e");
+      Fluttertoast.showToast(msg: "Upload failed: $e");
     } finally {
       onUploadEnd();
     }
   }
-
-  Future<void> _deleteProduct(BuildContext context) async {
-    if (productId != null) {
-      await FirebaseFirestore.instance.collection('products').doc(productId).delete();
-      Fluttertoast.showToast(msg: "Product deleted successfully");
-      if (context.mounted) {
-        Navigator.pop(context, true); // Refresh the product grid
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return isUploading
-        ? const Center(child: CircularProgressIndicator())
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Center(
-             child:ElevatedButton.icon(
-                onPressed: () => _uploadProduct(context),
-                icon: const Icon(Icons.upload),
-                label: Text(productId != null ? "Update Product" : "Upload Product"),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-              ),
-              ),
-              if (productId != null) ...[
-                const SizedBox(height: 10),
-                ElevatedButton.icon(
-                  onPressed: () => _deleteProduct(context),
-                  icon: const Icon(Icons.delete),
-                  label: const Text("Delete Product"),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                ),
-              ]
-            ],
-          );
-  }
 }
-//need to break down and make it readable and reusable
