@@ -1,15 +1,12 @@
 import 'package:doorstepmart/src/profile/widgets/profile_update_dialog.dart';
-import 'package:doorstepmart/src/sell/widgets/confirm_buttom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:doorstepmart/src/sell/product_action.dart';
-//import 'package:doorstepmart/widgets/bottomsheets/confirmation_bottom_sheet.dart';
-//import 'package:doorstepmart/widgets/dialogs/upload_progress_dialog.dart';
 
 class ConfirmUploadActions extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final bool isUploading;
   final String? productId;
-  final Map<String, dynamic> productData;
+  final Map<String, dynamic> Function() getProductData; // ✅ New: dynamic data fetch
   final VoidCallback onUploadStart;
   final VoidCallback onUploadEnd;
 
@@ -18,31 +15,65 @@ class ConfirmUploadActions extends StatelessWidget {
     required this.formKey,
     required this.isUploading,
     required this.productId,
-    required this.productData,
+    required this.getProductData,
     required this.onUploadStart,
     required this.onUploadEnd,
   });
 
-  void _showUploadConfirmation(BuildContext context) {
+  void _showConfirmationBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (_) => ConfirmationBottomSheet(
-        title: productId == null ? "Upload this product?" : "Update this product?",
-        confirmLabel: "Yes, Proceed",
-        onConfirm: () => _startUpload(context),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              productId == null ? "Upload this product?" : "Update this product?",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.cancel),
+                  label: const Text("Cancel"),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _startUpload(context);
+                  },
+                  icon: const Icon(Icons.check),
+                  label: const Text("Yes, Proceed"),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 
   void _startUpload(BuildContext context) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    late BuildContext dialogContext;
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => const UploadProgressDialog(),
+      builder: (ctx) {
+        dialogContext = ctx;
+        return const UploadProgressDialog();
+      },
     );
 
     await ProductActions.upload(
@@ -50,10 +81,10 @@ class ConfirmUploadActions extends StatelessWidget {
       formKey: formKey,
       isUploading: isUploading,
       productId: productId,
-      productData: productData,
+      productData: getProductData(), // ✅ Always fetch latest values
       onUploadStart: onUploadStart,
       onUploadEnd: () {
-        if (Navigator.canPop(context)) Navigator.of(context).pop(); // Close dialog
+        Navigator.of(dialogContext).pop(); // Close upload dialog
         onUploadEnd();
       },
     );
@@ -62,7 +93,7 @@ class ConfirmUploadActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      onPressed: () => _showUploadConfirmation(context),
+      onPressed: () => _showConfirmationBottomSheet(context),
       icon: Icon(productId == null ? Icons.cloud_upload : Icons.edit),
       label: Text(productId == null ? "Upload Product" : "Update Product"),
       style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
