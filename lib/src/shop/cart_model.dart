@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+//importing necessary packages for Firebase, Firestore, and Flutter widgets
 
 class CartItem {
+  ///CartItem class represents an item in the shopping cart
+  ///It contains properties for the item's name, image, price, quantity, shop ID, and shop name.
   final String name;
   final String image;
   final double price;
@@ -45,6 +48,9 @@ class CartItem {
 }
 
 class CartModel extends ChangeNotifier {
+  ///CartModel class manages the shopping cart items and their operations
+  ///It provides methods to add, remove, and update items in the cart,
+  ///as well as to fetch and save the cart data to Firestore.
   final List<CartItem> _items = [];
   final Map<String, String> _shopNamesCache = {}; //Cache shop names
 
@@ -62,6 +68,7 @@ class CartModel extends ChangeNotifier {
   //Fetch cart from Firestore when user logs in
   Future<void> fetchCart() async {
     try {
+      // Get the current user's cart document
       var cartDoc = await cartRef.get();
       if (cartDoc.exists) {
         var cartData = cartDoc.data();
@@ -70,7 +77,7 @@ class CartModel extends ChangeNotifier {
           _items.addAll(
             (cartData['items'] as List<dynamic>).map((item) => CartItem.fromMap(item)),
           );
-          await _fetchShopNames(); // ✅ Ensure shop names are up-to-date
+          await _fetchShopNames(); // Ensure shop names are up-to-date
         }
       }
       notifyListeners();
@@ -81,6 +88,8 @@ class CartModel extends ChangeNotifier {
 
   //Fetch shop names for all cart items
   Future<void> _fetchShopNames() async {
+    // Loop through each item in the cart and fetch its shop name
+    // Check if the shop name is already cached to avoid redundant calls
     for (var item in _items) {
       if (!_shopNamesCache.containsKey(item.shopId)) {
         String shopName = await _fetchShopName(item.shopId);
@@ -93,14 +102,16 @@ class CartModel extends ChangeNotifier {
 
   //Fetch shop name from Firestore
   Future<String> _fetchShopName(String shopId) async {
+    // Check if the shop name is already cached to avoid redundant calls
     if (_shopNamesCache.containsKey(shopId)) {
       return _shopNamesCache[shopId]!;
     }
 
     try {
+      // Get the shop document from Firestore
+      // Fetch the shop name from Firestore using the shopId
       DocumentSnapshot shopDoc =
-          await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
-
+        await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
       if (shopDoc.exists) {
         String shopName = shopDoc['name'] ?? "Unknown Shop";
         _shopNamesCache[shopId] = shopName;
@@ -109,7 +120,6 @@ class CartModel extends ChangeNotifier {
     } catch (e) {
       debugPrint("🔥 Error fetching shop name: $e");
     }
-
     return "Unknown Shop";
   }
 
@@ -126,6 +136,9 @@ class CartModel extends ChangeNotifier {
 
   //Add item to cart
 void add(CartItem item) async {
+  //Check if the item is already in the cart
+  // If it is, increase the quantity by 1
+  // If not, add it to the cart with quantity 1
   String shopName = await _fetchShopName(item.shopId); //Fetch correct shop name
   item.shopName = shopName;
 
@@ -137,7 +150,6 @@ void add(CartItem item) async {
       return;
     }
   }
-
   _items.add(item);
   notifyListeners();
   saveCart();
@@ -164,7 +176,7 @@ void add(CartItem item) async {
     saveCart();
   }
 
-  //Clear cart (useful on logout)
+  //Clear cart
   void clearCart() {
     _items.clear();
     notifyListeners();
@@ -180,9 +192,12 @@ void add(CartItem item) async {
   double get serviceFee => 2.0;
   // Get total amount including tax and service fee
   double get total => totalPrice + tax + serviceFee;
+
   //Group items by shopName for checkout
   Map<String, List<CartItem>> getGroupedByShop() {
+
     Map<String, List<CartItem>> groupedItems = {};
+    // Loop through each item in the cart and group them by shop name
     for (var item in _items) {
       if (!groupedItems.containsKey(item.shopName)) {
         groupedItems[item.shopName] = [];

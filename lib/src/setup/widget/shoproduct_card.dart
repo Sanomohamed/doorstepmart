@@ -1,10 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+//importing the necessary packages for the card widget
 
 class ShopProductCard extends StatelessWidget {
+  /// This widget is used to create a card for displaying shop product details.
   final Map<String, dynamic> product;
+  /// The product is represented as a map with keys like 'imageUrls', 'name', and 'price'.
+  /// The imageUrls key is expected to be a list of image URLs.
   final VoidCallback onEdit;
+  /// Callback function to be called when the edit button is pressed.
+  /// This function is expected to be passed from the parent widget.
   final VoidCallback onDelete;
+  /// Callback function to be called when the delete button is pressed.
+  /// This function is expected to be passed from the parent widget.
 
   const ShopProductCard({
     super.key,
@@ -15,11 +23,14 @@ class ShopProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Extracting the product details from the map
+    // Using null-aware operators to provide default values in case of missing data
     final imageUrl = (product['imageUrls'] as List?)?.first ?? 'https://via.placeholder.com/150';
     final name = product['name'] ?? 'Unnamed';
     final price = product['price'] ?? 0.0;
 
     return Card(
+      // Using Card widget to create a card-like UI
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,
       child: Column(

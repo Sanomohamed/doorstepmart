@@ -13,11 +13,13 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  // Controllers for text fields
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  // AuthService instance for authentication
   final AuthService _authService = AuthService();
 
-  
+  // Method to handle login
 void _login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -50,17 +52,15 @@ void _login() async {
       );
     }
   }
-
+/// Method to handle Google Sign-In
   void _signInWithGoogle() async {
     final userCredential = await _authService.signInWithGoogle();
 
     if (userCredential != null) {
-      // Navigate to the landing page or show a success message
       if (mounted) {
         Navigator.pushNamed(context, '/Landing');
       }
     } else {
-      // Show an error message
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Google Sign-In failed. Please try again.')),
@@ -71,9 +71,12 @@ void _login() async {
  @override
 Widget build(BuildContext context) {
   return Center(
+    // Centering the form for better aesthetics
     child: Container(
-      width: 400, // Adjusted width for better responsiveness
-      padding: const EdgeInsets.all(20),
+      //container for the form
+      width: 400, 
+      padding: const EdgeInsets.all(30),
+      //decoration for the form
       decoration: BoxDecoration(
         color: const Color.fromARGB(26, 145, 167, 145), // Soothing modern green
         borderRadius: BorderRadius.circular(42),
@@ -96,20 +99,20 @@ Widget build(BuildContext context) {
               fontSize: 40,
               color: Color.fromARGB(255, 41, 39, 39),
               fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-              letterSpacing: 4.2, // Slightly improved spacing for elegance
+              letterSpacing: 2.2, // Slightly improved spacing for elegance
             ),
           ),
-          const SizedBox(height: 25),
+          const SizedBox(height: 20),
           /// Email Input
           CustomTextField(hintText: 'Email', controller: emailController),
-          const SizedBox(height: 35),
-
+          const SizedBox(height: 25),
           /// Password Input
           CustomTextField(hintText: 'Password', obscureText: true, controller: passwordController),
-          const SizedBox(height: 35),
-
-          /// Login Button (Full Width for Better UX)
+          const SizedBox(height: 10),      
+          /// Forgot Password (Centered & Styled)
+           ForgotPassword(),
+           const SizedBox(height: 20),
+          /// Login Button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -133,16 +136,44 @@ Widget build(BuildContext context) {
               ),
             ),
           ),
-          const SizedBox(height: 35),
-
-          /// Google Sign-In Button (Full Width & Icon for Better Recognition)
+           const SizedBox(height: 15),
+          //Divider with Text
+          Row(
+            children: [
+              const Expanded(
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.grey,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  'OR',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              const Expanded(
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          /// Google Sign-In Button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: _signInWithGoogle,
               icon: FaIcon(FontAwesomeIcons.google, size: 25,color: const Color.fromARGB(255, 27, 34, 26)), // Use FontAwesomeIcons.google
               label: const Text(
-                '  Sign In',
+                '  Sign In with Google',
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -154,15 +185,13 @@ Widget build(BuildContext context) {
                 backgroundColor: const Color.fromARGB(76, 160, 235, 157), // Vibrant green
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(42),
+                  borderRadius: BorderRadius.circular(32),
                 ),
                 elevation: 9,
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          /// Forgot Password (Centered & Styled)
-           ForgotPassword(),
+          const SizedBox(height: 15),
         ],
       ),
     ),

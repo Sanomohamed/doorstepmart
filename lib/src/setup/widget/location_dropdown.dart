@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+/// This widget is used to create a pair of dropdowns for selecting a state and a city.
+/// The first dropdown allows the user to select a state, and the second dropdown allows the user to select a city based on the selected state.
 
 class LocationDropdowns extends StatelessWidget {
+  /// The [LocationDropdowns] widget is a stateless widget that creates two dropdown menus:
   final List<String> states;
+  //final list of states to be displayed in the first dropdown
+  /// - The first dropdown allows the user to select a state.
   final Map<String, List<String>> cities;
+  //final map of cities where the key is the state and the value is a list of cities in that state
+  /// - The second dropdown allows the user to select a city based on the selected state.
   final String? selectedState;
+  //the currently selected state in the first dropdown
+  /// - The selected state is passed as a parameter to the widget.
   final String? selectedCity;
   final Function(String?) onStateChanged;
   final Function(String?) onCityChanged;
@@ -20,11 +29,13 @@ class LocationDropdowns extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The [build] method returns a [Column] widget that contains two dropdown menus.
     final cityOptions = cities[selectedState] ?? [];
+
 
     return Column(
       children: [
-        // ✅ State Dropdown
+        //  State Dropdown
         DropdownButtonFormField<String>(
           value: selectedState,
           isExpanded: true,
@@ -40,8 +51,12 @@ class LocationDropdowns extends StatelessWidget {
           ),
           items: states
               .map((state) => DropdownMenuItem(value: state, child: Text(state)))
+              //convert the list of states to a list of DropdownMenuItem widgets
+              //each DropdownMenuItem widget has a value and a child widget (Text widget displaying the state name)
               .toList(),
           onChanged: onStateChanged,
+          //when the user selects a state, the onStateChanged function is called with the selected state as an argument
+          //this function is passed as a parameter to the widget
         ),
 
         const SizedBox(height: 20),

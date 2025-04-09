@@ -34,7 +34,7 @@ class CategorySelector extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1200),
         child: SizedBox(
-          height: 80,
+          height: 180,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: categories.length,
@@ -45,25 +45,35 @@ class CategorySelector extends StatelessWidget {
               return GestureDetector(
                 onTap: () => onCategorySelected(category['name']),
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.green : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
+                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        category['icon'],
-                        size: iconSize,
-                        color: isSelected ? Colors.white : Colors.black,
+                      // Circle background with icon
+                      Container(
+                        width: iconSize + 60, // Circle size
+                        height: iconSize + 60,
+                        decoration: BoxDecoration(
+                          color: isSelected ? Colors.green : Colors.grey[200],
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Icon(
+                            category['icon'],
+                            size: iconSize+25,
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
+                        ),
                       ),
-                      const SizedBox(width: 5),
+                      const SizedBox(height: 10), // Space between icon and text
+                      // Category name
                       Text(
                         category['name'],
                         style: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black,
-                          fontSize: screenWidth > 600 ? 18.0 : 16.0,
+                          color: isSelected ? Colors.green : Colors.black,
+                          fontSize: screenWidth > 600 ? 20.0 : 18.0,
+                          fontWeight: FontWeight.bold,
+                        
                         ),
                       ),
                     ],

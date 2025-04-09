@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:doorstepmart/src/sell/widgets/image_picker_widget.dart';
 import 'package:doorstepmart/src/sell/widgets/product_form_fields.dart';
 import 'package:doorstepmart/src/sell/widgets/confirm_upload_actions.dart';
+//importing necessary packages and files
 
 class SellForm extends StatefulWidget {
   final Map<String, dynamic>? productData;
@@ -25,14 +26,17 @@ class _SellFormState extends State<SellForm> {
   bool _isUploading = false;
 
   final List<String> _categories = ['Drinks', 'Fruits', 'Poultry', 'Vegetable', 'Rice'];
+  // This list contains the categories available for selection
 
   @override
   void initState() {
     super.initState();
     if (widget.productData != null) _populateForm(widget.productData!);
+    // If product data is provided, populate the form with existing data
   }
 
   void _populateForm(Map<String, dynamic> data) {
+    // This method populates the form fields with existing product data
     _nameController.text = data['name'] ?? '';
     _priceController.text = data['price'].toString();
     _descriptionController.text = data['description'] ?? '';
@@ -57,11 +61,13 @@ class _SellFormState extends State<SellForm> {
                 child: Column(
                   children: [
                     ImagePickerWidget(
+                      // This widget allows users to select images for the product
                       existingImageUrls: _existingImageUrls,
                       onImageSelected: (paths) => setState(() => _selectedImagePaths = paths),
                     ),
                     const SizedBox(height: 20),
                     ProductFormFields(
+                      // This widget contains the form fields for product details
                       nameController: _nameController,
                       priceController: _priceController,
                       descriptionController: _descriptionController,
@@ -71,6 +77,7 @@ class _SellFormState extends State<SellForm> {
                     ),
                     const SizedBox(height: 20),
                     ConfirmUploadActions(
+                      // This widget contains the buttons for confirming or canceling the upload
                       formKey: _formKey,
                       isUploading: _isUploading,
                       productId: widget.productId,

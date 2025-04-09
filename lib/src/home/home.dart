@@ -1,9 +1,11 @@
 import 'package:doorstepmart/services/product.provider.dart';
+import 'package:doorstepmart/src/home/categories/categories_section.dart';
+//import 'package:doorstepmart/src/home/header/home_header.dart';
 import 'package:doorstepmart/src/shop/product_grid/productgrid.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:doorstepmart/src/home/homeheader.dart';
-import 'package:doorstepmart/src/home/categories_section.dart';
+//import 'package:doorstepmart/src/home/categories_section.dart';
 
 
 class Home extends StatefulWidget {
@@ -47,9 +49,9 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 8.0),
+                      //const SizedBox(height: 8.0),
                       const CategoriesSection(),
-                      const SizedBox(height: 8.0),
+                     // const SizedBox(height: 8.0),
 
                       Consumer<ProductProvider>(
                         builder: (context, productProvider, _) {

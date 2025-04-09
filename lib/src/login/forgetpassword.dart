@@ -8,19 +8,29 @@ class ForgotPassword extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        IconButton(
-          icon: const Icon(Icons.visibility),
-          color: const Color.fromARGB(255, 46, 45, 45),
-          onPressed: () {
+        GestureDetector(
+          onTap: () {
             // Add your onPressed code here!
           },
-        ),
-        const Text(
-          'Forgot Password?',
-          style: TextStyle(
-            color: Color.fromARGB(255, 54, 53, 53),
-            fontSize: 16,
-            fontWeight: FontWeight.bold
+          child: Container(
+            color: Colors.transparent, // Ensures the entire area is clickable
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.visibility,
+                  color: Color.fromARGB(255, 46, 45, 45),
+                ),
+                const SizedBox(width: 5), // Space between icon and text
+                const Text(
+                  'Forgot Password?',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 54, 53, 53),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

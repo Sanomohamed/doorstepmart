@@ -1,5 +1,6 @@
 import 'package:doorstepmart/src/signup/signup.dart';
 import 'package:flutter/material.dart';
+
 class SignupPrompt extends StatelessWidget {
   const SignupPrompt({super.key});
 
@@ -18,7 +19,7 @@ class SignupPrompt extends StatelessWidget {
               child: const Text(
                 "Don't have an account? Sign up",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 68, 65, 65),
+                  color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 20,
                   fontStyle: FontStyle.italic,
                 ),

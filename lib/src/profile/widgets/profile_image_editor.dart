@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+//importing the necessary packages for the image editor
 
 class ProfileImageEditor extends StatelessWidget {
   final File? pickedImage;
@@ -17,6 +18,7 @@ class ProfileImageEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      //using stack to overlay the image and the edit button
       alignment: Alignment.bottomRight,
       children: [
         Container(
@@ -27,15 +29,19 @@ class ProfileImageEditor extends StatelessWidget {
             ],
           ),
           child: CircleAvatar(
+            //using circle avatar to display the profile image
             radius: 55,
             backgroundImage: pickedImage != null
                 ? FileImage(pickedImage!)
+                //if the image is picked, use FileImage to display it
                 : (profileImageUrl != null
+                   //if the image URL is not null, use CachedNetworkImageProvider to display it
                     ? CachedNetworkImageProvider(profileImageUrl!)
                     : const AssetImage('assets/default_avatar.png')) as ImageProvider,
           ),
         ),
         FloatingActionButton(
+          //floating action button to edit the image
           mini: true,
           backgroundColor: Colors.green,
           onPressed: onPickImage,

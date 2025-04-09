@@ -73,7 +73,7 @@ class CategoriesSection extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1200),
             child: SizedBox(
-              height: 80,
+              height: 150,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -92,28 +92,40 @@ class CategoriesSection extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 207, 234, 209),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(category['icon'], size: iconSize, color: Colors.black),
-                          const SizedBox(width: 8),
-                          Text(
-                            category['name'],
-                            style: TextStyle(
-                              fontSize: screenWidth > 600 ? 18.0 : 16.0,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+  child: Container(
+    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Circle background with icon
+        Container(
+                        width: iconSize + 60, // Circle size
+                        height: iconSize + 60,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 207, 234, 209),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Icon(
+              category['icon'],
+              size: iconSize + 25, // Larger icon size
+              color: Colors.black,
+            ),
+          ),
+        ),
+        const SizedBox(height: 10), // Space between icon and text
+        // Category name
+        Text(
+          category['name'],
+          style: TextStyle(
+            fontSize: screenWidth > 600 ? 20.0 : 18.0,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ],
+    ),
+  ),
                   );
                 },
               ),
@@ -125,3 +137,4 @@ class CategoriesSection extends StatelessWidget {
   }
 }
 //try to break the code into smaller widgets
+///can be delete latter 

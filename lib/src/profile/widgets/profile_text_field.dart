@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+//importing necessary packages
 
 class ProfileTextField extends StatelessWidget {
+  //creating a stateless widget for the profile text field
   final TextEditingController controller;
   final String label;
   final IconData icon;
   final String? Function(String?) validator;
+  //defining the required parameters for the text field
+  //controller for the text field, label for the text field, icon for the text field, and validator function
 
   const ProfileTextField({
     super.key,

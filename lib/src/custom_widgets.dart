@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+/// Custom widgets for the app
+/// including text fields and icon buttons with modern design.
 class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
@@ -14,49 +15,30 @@ class CustomTextField extends StatelessWidget {
 
 @override
 Widget build(BuildContext context) {
+  // A modern text field design with rounded corners and subtle colors
   return TextField(
     controller: controller,
     obscureText: obscureText,
-    style: TextStyle(fontSize: 22, color: Colors.black87), // Modern font style
+    style: TextStyle(fontSize: 22, color: Colors.black87), 
     decoration: InputDecoration(
       hintText: hintText,
-      hintStyle: TextStyle(color: const Color.fromARGB(197, 0, 0, 0)), // Subtle hint color
+      hintStyle: TextStyle(color: const Color.fromARGB(197, 0, 0, 0)), 
       filled: true,
-      fillColor: const Color.fromARGB(172, 238, 238, 238), // Light background for modern look
-      contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30), // Better spacing
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(25), // Smoother corners
-        borderSide: BorderSide.none, // No default border for a cleaner UI
+      fillColor: const Color.fromARGB(172, 238, 238, 238), 
+      contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30), 
+        border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(25), 
+        borderSide: BorderSide.none,
       ),
-      focusedBorder: OutlineInputBorder(
+        focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
-        borderSide: BorderSide(color: const Color.fromARGB(255, 105, 133, 106), width: 2), // Highlight on focus
+        borderSide: BorderSide(color: const Color.fromARGB(255, 105, 133, 106), width: 2), // Focused border color
       ),
-      enabledBorder: OutlineInputBorder(
+        enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide(color: const Color.fromARGB(129, 227, 250, 221)), // Subtle default border
       ),
     ),
   );
 }
-}
-
-class CustomIconButton extends StatelessWidget {
-  final Widget icon;
-  final VoidCallback onPressed;
-
-  const CustomIconButton({
-    super.key,
-    required this.icon,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: icon,
-      iconSize: 40,
-      onPressed: onPressed,
-    );
-  }
 }

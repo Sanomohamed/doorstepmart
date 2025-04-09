@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//importing the necessary package 
 
 class ProfileActionButton extends StatelessWidget {
   final String label;
@@ -17,6 +18,8 @@ class ProfileActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+      // This button is used to perform an action in the profile page
+      // It takes a label, onPressed callback, color, and loading state as parameters
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,

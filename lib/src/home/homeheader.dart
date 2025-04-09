@@ -37,11 +37,11 @@ class HomeHeader extends StatelessWidget {
             children: [
               // 🔍 Search Bar
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
                 margin: const EdgeInsets.only(top: 5),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(5),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -52,8 +52,8 @@ class HomeHeader extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.search, size: 24, color: Colors.black54),
-                    const SizedBox(width: 10),
+                    const Icon(Icons.search, size: 20, color: Colors.black54),
+                    const SizedBox(width: 15),
                     Expanded(
                       child: TextField(
                         decoration: const InputDecoration(
@@ -68,7 +68,7 @@ class HomeHeader extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.mic, size: 24, color: Colors.black54),
+                      icon: const Icon(Icons.mic, size: 20, color: Colors.black54),
                       onPressed: () {
                         // Future: Voice search functionality
                       },
@@ -115,4 +115,5 @@ class HomeHeader extends StatelessWidget {
     );
   }
 }
+//cam be deleted when solve the new header visibility 
 //try to break the code into smaller widgets for better readability and maintainability

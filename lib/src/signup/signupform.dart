@@ -2,6 +2,7 @@ import 'package:doorstepmart/services/auth_service.dart';
 import 'package:doorstepmart/src/custom_widgets.dart';
 import 'package:doorstepmart/src/login/forgetpassword.dart';
 import 'package:flutter/material.dart';
+//importing necessary packages and files
 
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
@@ -11,12 +12,16 @@ class SignupForm extends StatefulWidget {
   _SignupFormState createState() => _SignupFormState();
 }
 class _SignupFormState extends State<SignupForm> {
+  // Controllers for text fields
+  // These controllers are used to retrieve the text entered by the user in the text fields.
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  /// AuthService instance for authentication
   final AuthService _authService = AuthService();
-
+  /// Method to handle registration
+  /// This method checks if the passwords match and then calls the AuthService to register the user.
   void _register() async {
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -24,12 +29,10 @@ class _SignupFormState extends State<SignupForm> {
       );
       return;
     }
-
     final userCredential = await _authService.registerWithEmailPassword(
       emailController.text,
       passwordController.text,
     );
-
     if (userCredential != null) {
       if (mounted) {
        ScaffoldMessenger.of(context).showSnackBar(
@@ -38,7 +41,6 @@ class _SignupFormState extends State<SignupForm> {
         Navigator.pushNamed(context, '/Landing');
       }
     } else {
-      // Show an error message
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Registration failed. Please try again.')),
@@ -49,11 +51,14 @@ class _SignupFormState extends State<SignupForm> {
   @override
   Widget build(BuildContext context) {
     return Center(
-       child: Container(
-      width: 400, // Adjusted width for better responsiveness
-      padding: const EdgeInsets.all(20),
+      /// Center the form in the available space
+      child: Container(
+      // Container to hold the form
+      // This container has a fixed width and padding for better layout
+      width: 400, 
+      padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(26, 145, 167, 145), // Soothing modern green
+        color: const Color.fromARGB(26, 145, 167, 145), 
         borderRadius: BorderRadius.circular(42),
         boxShadow: [
           BoxShadow(
@@ -63,6 +68,8 @@ class _SignupFormState extends State<SignupForm> {
           ),
         ],
       ),
+      /// Main content of the form
+      /// This is a Column widget that arranges its children vertically
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center, // Center alignment for better balance
@@ -71,46 +78,45 @@ class _SignupFormState extends State<SignupForm> {
           const Text(
             'Sign Up',
             style: TextStyle(
-              fontSize: 35,
+              fontSize: 40,
               color: Color.fromARGB(255, 41, 39, 39),
               fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-              letterSpacing: 4.2, // Slightly improved spacing for elegance
+              letterSpacing: 2.2, 
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 10),
           CustomTextField(hintText: 'Name', controller: nameController),
-          const SizedBox(height: 29),
+          const SizedBox(height: 20),
           CustomTextField(hintText: 'Email', controller: emailController),
-          const SizedBox(height: 28),
+          const SizedBox(height: 20),
           CustomTextField(hintText: 'Password', obscureText: true, controller: passwordController),
-          const SizedBox(height: 29),
+          const SizedBox(height: 20),
           CustomTextField(hintText: 'Confirm Password', obscureText: true, controller: confirmPasswordController),
-          const SizedBox(height: 30),
+          const SizedBox(height: 25),
+          /// Sign Up Button
+          /// This button triggers the registration process when pressed
                SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _register,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(76, 160, 235, 157), // Vibrant green
-                padding: const EdgeInsets.symmetric(vertical: 14), // Improved padding
+                backgroundColor: const Color.fromARGB(76, 160, 235, 157),
+                padding: const EdgeInsets.symmetric(vertical: 14), 
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(42), // More modern rounded corners
+                  borderRadius: BorderRadius.circular(42),
                 ),
                 elevation: 9,
               ),
               child: const Text(
                 'Sign Up',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
                   color: Color.fromARGB(197, 0, 0, 0),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 5),
           ], 
           ),
       ),
