@@ -1,10 +1,11 @@
+import 'package:doorstepmart/src/account/profile_section.dart';
 import 'package:doorstepmart/src/shop/product_grid/productgrid.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:doorstepmart/services/product.provider.dart';
 import 'package:doorstepmart/src/account/account_page_controller.dart';
 import 'package:doorstepmart/src/account/ActivitySection.dart';
-import 'package:doorstepmart/src/account/ProfileSection.dart';
+//import 'package:doorstepmart/src/account/ProfileSection.dart';
 import 'package:doorstepmart/src/account/PurchaseSection.dart';
 import 'package:doorstepmart/src/account/SupportSection.dart';
 

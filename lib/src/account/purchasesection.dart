@@ -78,7 +78,7 @@ class PurchaseSection extends StatelessWidget {
     );
   }
 
-  // ✅ Uniform Styled Status Item
+  // Uniform Styled Status Item
   Widget _buildPurchaseItem(IconData icon, String label, Color color) {
     return Column(
       children: [
