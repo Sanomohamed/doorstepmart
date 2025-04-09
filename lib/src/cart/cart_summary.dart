@@ -29,7 +29,7 @@ class CartSummary extends StatelessWidget {
     );
   }
 
-  /// ✅ Subtotal Row
+  /// Subtotal Row
   Widget _buildSubtotal() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,7 +41,7 @@ class CartSummary extends StatelessWidget {
     );
   }
 
-  /// ✅ Checkout Button
+  ///Checkout Button
   Widget _buildCheckoutButton(BuildContext context) {
     return ElevatedButton(
       onPressed: cart.items.isEmpty

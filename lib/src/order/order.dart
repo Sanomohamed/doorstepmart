@@ -8,12 +8,12 @@ Future<void> placeOrder({
   required List<CartItem> cartItems,
   required double total,
   required String paymentMethod,
+  required Map<String, dynamic> deliveryAddress, // ✅ Added parameter
 }) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) return;
 
   try {
-    // ✅ Get user data
     final userSnapshot = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
     final userData = userSnapshot.data() ?? {};
     final userName = userData['displayName'] ?? 'Unknown User';
@@ -24,12 +24,11 @@ Future<void> placeOrder({
       shopOrders.putIfAbsent(item.shopId, () => []).add(item);
     }
 
-    // ✅ Loop through each shop and create an order
     for (var entry in shopOrders.entries) {
       String shopId = entry.key;
       List<CartItem> items = entry.value;
 
-      // ✅ Fetch shop name from Firestore
+      // ✅ Fetch shop name
       String shopName = 'Unknown Shop';
       final shopSnapshot = await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
       if (shopSnapshot.exists) {
@@ -45,10 +44,10 @@ Future<void> placeOrder({
         "image": item.image,
       }).toList();
 
-      // ✅ Calculate total for this shop
+      // ✅ Calculate shop total
       double shopTotal = items.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
-      // ✅ Create order data
+      // ✅ Create complete order payload
       final orderData = {
         "userId": user.uid,
         "userName": userName,
@@ -57,14 +56,15 @@ Future<void> placeOrder({
         "orderItems": orderItems,
         "totalAmount": shopTotal,
         "paymentMethod": paymentMethod,
+        "deliveryAddress": deliveryAddress, // ✅ Save address
         "status": "Pending",
         "timestamp": FieldValue.serverTimestamp(),
       };
 
-      // ✅ Save order globally
+      // ✅ Save globally
       final orderRef = await FirebaseFirestore.instance.collection('orders').add(orderData);
 
-      // ✅ Save order under user's personal order history
+      // ✅ Save under user
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
@@ -73,14 +73,11 @@ Future<void> placeOrder({
           .set(orderData);
     }
 
-    // ✅ Show success message
-    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("✅ Orders placed successfully")),
     );
   } catch (e) {
     print("❌ Order error: $e");
-    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("❌ Failed to place order")),
     );

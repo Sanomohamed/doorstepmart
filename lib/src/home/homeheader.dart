@@ -1,3 +1,4 @@
+import 'package:doorstepmart/src/address/manage_addresses_page.dart';
 import 'package:doorstepmart/src/favorite/favorite_page.dart';
 import 'package:doorstepmart/src/shop/shop.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,7 @@ class HomeHeader extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const MiniMartPage()),
+                        MaterialPageRoute(builder: (context) => const ManageAddressesPage()),
                       );
                     },
                   ),

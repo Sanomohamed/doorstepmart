@@ -25,7 +25,7 @@ class PaymentMethodWidget extends StatelessWidget {
             const SizedBox(height: 8.0),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color.fromARGB(249, 255, 255, 255),
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(

@@ -23,7 +23,7 @@ class CategorySelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // ✅ Make sure all values are doubles
+    // Make sure all values are doubles
     final double iconSize = screenWidth > 1000
         ? 28.0
         : screenWidth > 600
@@ -41,7 +41,6 @@ class CategorySelector extends StatelessWidget {
             itemBuilder: (context, index) {
               final category = categories[index];
               final isSelected = category['name'] == selectedCategory;
-
               return GestureDetector(
                 onTap: () => onCategorySelected(category['name']),
                 child: Container(
@@ -65,7 +64,7 @@ class CategorySelector extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10), // Space between icon and text
+                      const SizedBox(height: 10), 
                       // Category name
                       Text(
                         category['name'],

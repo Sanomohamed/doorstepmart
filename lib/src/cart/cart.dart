@@ -35,9 +35,7 @@ Widget build(BuildContext context) {
     ),
   );
 }
-
-
-  /// ✅ App Bar
+  /// App Bar
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: const Text('My Cart', style: TextStyle(color: Colors.black)),
@@ -51,8 +49,7 @@ Widget build(BuildContext context) {
           : null,
     );
   }
-
-  /// ✅ Empty Cart View
+  /// Empty Cart View
   Widget _buildEmptyCart() {
     return const Center(
       child: Text(
@@ -61,15 +58,14 @@ Widget build(BuildContext context) {
       ),
     );
   }
-
-  /// ✅ Cart List View
+  /// Cart List View
   Widget _buildCartList(CartModel cart) {
     return ListView.builder(
       padding: const EdgeInsets.all(8.0),
       itemCount: cart.items.length,
       itemBuilder: (context, index) {
         final item = cart.items[index];
-        return CartItemWidget(item: item); // ✅ Moved to separate file
+        return CartItemWidget(item: item); 
       },
     );
   }

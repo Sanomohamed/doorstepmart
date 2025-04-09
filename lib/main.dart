@@ -1,3 +1,4 @@
+import 'package:doorstepmart/src/order/purchase_history_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const AuthWrapper(),
       routes: {
+        '/PurchaseHistory': (context) => const PurchaseHistoryPage(),
         '/Signup': (context) => const Signup(),
         '/Landing': (context) => Landing(key: Landing.landingKey), 
         '/Login': (context) => const Login(),

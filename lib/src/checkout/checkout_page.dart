@@ -1,3 +1,4 @@
+import 'package:doorstepmart/src/checkout/checkout_address_card.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final TextEditingController _promoCodeController = TextEditingController();
   double _discount = 0.0;
   String _paymentMethod = 'Card';
+  Map<String, dynamic>? _selectedAddress;
 
   void _applyPromoCode(CartModel cart) {
     if (_promoCodeController.text.trim().toUpperCase() == 'WELCOME' && cart.totalPrice > 20) {
@@ -34,7 +36,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: const Color.fromARGB(192, 210, 219, 214),
+       backgroundColor: const Color.fromARGB(246, 237, 241, 239),
       appBar: AppBar(
         title: Consumer<CartModel>(
           builder: (context, cart, child) {
@@ -49,7 +51,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           },
         ),
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 3,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Consumer<CartModel>(
@@ -65,6 +67,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                          // ✅ Address Selector Section
+                    CheckoutAddressCard(
+                    onAddressSelected: (address) {
+                    setState(() {
+                   _selectedAddress = address.isEmpty ? null : address;
+                   });
+               },
+               ),
+                       const SizedBox(height: 16.0),
                       OrderSummaryWidget(cart: cart, discount: _discount),
                       const SizedBox(height: 16.0),
                       PromoCodeWidget(
@@ -87,7 +98,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  color: Color.fromARGB(104, 255, 255, 255),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey,
@@ -97,7 +108,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   ],
                 ),
-                child: BottomBarWidget(grandTotalWithDiscount: grandTotalWithDiscount,paymentMethod: _paymentMethod,),
+                child: BottomBarWidget(grandTotalWithDiscount: grandTotalWithDiscount,paymentMethod: _paymentMethod,selectedAddress: _selectedAddress,),
               ),
             ],
           );

@@ -11,10 +11,9 @@ class CartItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: fetchShopName(item.shopId), //Moved helper function
+      future: fetchShopName(item.shopId),
       builder: (context, snapshot) {
         String shopName = snapshot.data ?? "Unknown Shop";
-
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -50,7 +49,7 @@ class CartItemWidget extends StatelessWidget {
     );
   }
 
-  /// ✅ Product Info
+  //Product Info
   Widget _buildProductInfo(BuildContext context,String shopName) {
     return Expanded(
       child: Column(
@@ -67,7 +66,7 @@ class CartItemWidget extends StatelessWidget {
     );
   }
 
-  /// ✅ Quantity Controls
+  // Quantity Controls
   Widget _buildQuantityControls(BuildContext context) {
     return Row(
       children: [
@@ -82,7 +81,7 @@ class CartItemWidget extends StatelessWidget {
     );
   }
 
-  /// ✅ Remove Button
+  //Remove Button
   Widget _buildRemoveButton(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.delete, color: Colors.redAccent),

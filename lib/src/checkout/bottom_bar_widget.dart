@@ -5,12 +5,14 @@ import 'package:provider/provider.dart';
 
 class BottomBarWidget extends StatelessWidget {
   final double grandTotalWithDiscount;
-  final String paymentMethod; // ✅ added
+  final String paymentMethod;
+  final Map<String, dynamic>? selectedAddress; // ✅ Add this line
 
   const BottomBarWidget({
     super.key,
     required this.grandTotalWithDiscount,
-    required this.paymentMethod, // ✅ added
+    required this.paymentMethod,
+    required this.selectedAddress, // ✅ Add this line
   });
 
   @override
@@ -18,11 +20,10 @@ class BottomBarWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color.fromARGB(255, 221, 231, 221),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 3,
             blurRadius: 6,
@@ -33,34 +34,31 @@ class BottomBarWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Total Display
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Total Payment:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black54,
-                ),
-              ),
-              Text(
-                'RM${grandTotalWithDiscount.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                  color: Colors.green,
-                ),
-              ),
+              const Text('Total Payment:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black54)),
+              Text('RM${grandTotalWithDiscount.toStringAsFixed(2)}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.green)),
             ],
           ),
+
+          // ✅ Place Order Button
           ElevatedButton(
             onPressed: () async {
               final cartModel = Provider.of<CartModel>(context, listen: false);
+
               if (cartModel.items.isEmpty) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content: Text("Cart is empty")));
+                return;
+              }
+
+              if (selectedAddress == null || selectedAddress!.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Cart is empty")),
-                );
+                    const SnackBar(content: Text("Please select a delivery address")));
                 return;
               }
 
@@ -68,31 +66,28 @@ class BottomBarWidget extends StatelessWidget {
                 context: context,
                 cartItems: cartModel.items,
                 total: grandTotalWithDiscount,
-                paymentMethod: paymentMethod, // ✅ use passed method
+                paymentMethod: paymentMethod,
+                deliveryAddress: selectedAddress!, // ✅ now this is accepted
               );
 
-              cartModel.clearCart(); // 🧹 Clear after placing order
+              cartModel.clearCart();
+
+              if (context.mounted) {
+                Navigator.pushReplacementNamed(context, '/PurchaseHistory');
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               elevation: 5,
             ),
             child: const Row(
               children: [
                 Icon(Icons.shopping_cart_checkout, color: Colors.white),
                 SizedBox(width: 10),
-                Text(
-                  'Place Order',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                ),
+                Text('Place Order',
+                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18)),
               ],
             ),
           ),
