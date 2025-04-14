@@ -55,7 +55,7 @@ class ProductFormFields extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: Colors.blue),
+        prefixIcon: Icon(icon, color: Colors.green),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       keyboardType: isNumeric ? TextInputType.number : TextInputType.text,

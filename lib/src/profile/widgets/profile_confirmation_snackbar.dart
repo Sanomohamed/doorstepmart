@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-//importing the necessary packages for the snackbar
 
 void showConfirmationSnackbar({
-  // Function to show a confirmation snackbar
-  // This function takes a BuildContext and a callback function to be executed on confirmation
   required BuildContext context,
   required VoidCallback onConfirmed,
 }) {

@@ -8,7 +8,6 @@ class SettingsButton extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.settings, size: 28, color: Colors.black54),
       onPressed: () {
-        // Future implementation of settings page
       },
     );
   }

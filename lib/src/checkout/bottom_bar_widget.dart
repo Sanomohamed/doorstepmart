@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:doorstepmart/src/order/order.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,7 @@ class BottomBarWidget extends StatelessWidget {
             ],
           ),
 
-          // ✅ Place Order Button
+// Place Order Button
           ElevatedButton(
             onPressed: () async {
               final cartModel = Provider.of<CartModel>(context, listen: false);
@@ -67,7 +69,7 @@ class BottomBarWidget extends StatelessWidget {
                 cartItems: cartModel.items,
                 total: grandTotalWithDiscount,
                 paymentMethod: paymentMethod,
-                deliveryAddress: selectedAddress!, // ✅ now this is accepted
+                deliveryAddress: selectedAddress!, 
               );
 
               cartModel.clearCart();

@@ -6,14 +6,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseHistoryPage extends StatefulWidget {
-  const PurchaseHistoryPage({super.key});
+  const PurchaseHistoryPage({super.key,});
+  //const PurchaseHistoryPage({super.key});
 
   @override
   State<PurchaseHistoryPage> createState() => _PurchaseHistoryPageState();
 }
 
 class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
-  String selectedStatus = "Pending";
+  String selectedStatus = " ";
   final userId = FirebaseAuth.instance.currentUser?.uid;
 
   Stream<List<Map<String, dynamic>>> fetchOrdersStream(String status) {
@@ -29,12 +30,12 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
               data['id'] = doc.id;
               return data;
             }).toList());
-  }
+  }  
 
 @override
 Widget build(BuildContext context) {
   return Scaffold(
-    backgroundColor: const Color.fromARGB(192, 210, 219, 214),
+    backgroundColor: const Color.fromARGB(222, 231, 235, 233),
     appBar: AppBar(
       title: const Text("Purchase History"),
       backgroundColor: const Color.fromARGB(255, 58, 183, 100),
@@ -47,8 +48,7 @@ Widget build(BuildContext context) {
         child: Column(
           children: [
             const SizedBox(height: 10),
-
-            // ✅ Status Toggle (Centered Layout)
+      // Status Toggle (Centered Layout)
             OrderStatusToggle(
               selectedStatus: selectedStatus,
               onStatusChanged: (status) {
@@ -58,7 +58,7 @@ Widget build(BuildContext context) {
 
             const SizedBox(height: 10),
 
-            // ✅ Order List
+      // Order List
             Expanded(
               child: StreamBuilder<List<Map<String, dynamic>>>(
                 stream: fetchOrdersStream(selectedStatus),
@@ -83,7 +83,7 @@ Widget build(BuildContext context) {
                             builder: (_) =>
                                 order_detail_page.OrderDetailsPage(orderData: order),
                           ),
-                        ),
+                        ), 
                       );
                     },
                   );

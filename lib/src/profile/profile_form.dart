@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:doorstepmart/src/shop/shop.dart';
+//import 'package:doorstepmart/src/shop/shop_page/shop_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:doorstepmart/services/profile_service.dart';
 import 'package:doorstepmart/src/profile/widgets/validators.dart';
-import 'package:doorstepmart/src/sell/sell.dart';
+//import 'package:doorstepmart/src/sell/sell.dart';
 // Modularized widgets
 import 'package:doorstepmart/src/profile/widgets/profile_image_editor.dart';
 import 'package:doorstepmart/src/profile/widgets/profile_text_field.dart';
@@ -190,13 +192,13 @@ class _ProfileFormState extends State<ProfileForm> {
                           ),
                           const SizedBox(height: 15),
                           ProfileActionButton(
-                            label: 'Sell',
+                            label: 'My Shop',
                             color: Colors.black,
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => SellPage(editProduct: {}, productData: null, productId: null),
+                                  builder: (_) => MiniMartPage(),
                                 ),
                               );
                             },

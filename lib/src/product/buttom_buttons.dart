@@ -1,6 +1,5 @@
-// 📄 bottom_buttons.dart
 import 'package:doorstepmart/src/product/widgets/view_cart_toast.dart';
-import 'package:doorstepmart/src/shop/cart_model.dart';
+import 'package:doorstepmart/src/shop/cart_model.dart';     // importing necessary packages and files
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

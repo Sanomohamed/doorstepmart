@@ -4,7 +4,7 @@ class OrderCard extends StatelessWidget {
   final Map<String, dynamic> order;
   final VoidCallback onTap;
 
-  const OrderCard({super.key, required this.order, required this.onTap});
+  const OrderCard({super.key, required this.order,required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,8 @@ class OrderCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(order['shopName'] ?? 'Unknown Shop',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text("Shop Name: ${order['shopName'] ?? 'Unknown Shop'}",
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),    
             Text("Total: RM${order['totalAmount']?.toStringAsFixed(2) ?? '0.00'}",
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),

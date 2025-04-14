@@ -1,6 +1,6 @@
 import 'package:doorstepmart/src/product/buttom_buttons.dart';
 import 'package:doorstepmart/src/product/product_image.dart';
-import 'package:doorstepmart/src/product/product_info.dart';
+import 'package:doorstepmart/src/product/product_info.dart';         // importing necessary packages and files
 import 'package:doorstepmart/src/product/related_products.dart';
 import 'package:doorstepmart/src/product/shop_info.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class ProductDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartModel = Provider.of<CartModel>(context);
 
-    // ✅ Handle imageUrls safely
+// Handle imageUrls safely
     final List<dynamic>? imageUrls = product['imageUrls'] as List<dynamic>?;
     final String imageUrl = (imageUrls != null && imageUrls.isNotEmpty)
         ? imageUrls.first
@@ -36,7 +36,6 @@ class ProductDetailPage extends StatelessWidget {
                   children: [
                     ProductImage(imageUrl: imageUrl),
                     const SizedBox(height: 2),
-                    // ✅ Add button directly under image
                     BottomButtons(product: product, cartModel: cartModel),
                     const SizedBox(height: 20),
                     ProductInfo(product: product),

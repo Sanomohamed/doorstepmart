@@ -18,7 +18,7 @@ class _SellPageState extends State<SellPage> {
     return Scaffold(
       appBar: AppBar(title: const Text("Sell Product")),
       body: Container(
-        color: const Color.fromARGB(192, 210, 219, 214),
+        color:  const Color.fromARGB(248, 237, 245, 236),
         child: const Padding(
           padding: EdgeInsets.all(16.0),
           child: SellForm(),

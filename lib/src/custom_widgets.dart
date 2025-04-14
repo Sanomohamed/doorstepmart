@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-/// Custom widgets for the app
-/// including text fields and icon buttons with modern design.
+/// Custom widgets for the app login and signup screens,
 class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
@@ -15,7 +14,6 @@ class CustomTextField extends StatelessWidget {
 
 @override
 Widget build(BuildContext context) {
-  // A modern text field design with rounded corners and subtle colors
   return TextField(
     controller: controller,
     obscureText: obscureText,
@@ -32,11 +30,11 @@ Widget build(BuildContext context) {
       ),
         focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
-        borderSide: BorderSide(color: const Color.fromARGB(255, 105, 133, 106), width: 2), // Focused border color
+        borderSide: BorderSide(color: const Color.fromARGB(255, 105, 133, 106), width: 2), 
       ),
         enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: const Color.fromARGB(129, 227, 250, 221)), // Subtle default border
+        borderSide: BorderSide(color: const Color.fromARGB(129, 227, 250, 221)), 
       ),
     ),
   );

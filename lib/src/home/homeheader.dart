@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:doorstepmart/src/address/manage_addresses_page.dart';
 import 'package:doorstepmart/src/favorite/favorite_page.dart';
 import 'package:doorstepmart/src/shop/shop.dart';
@@ -12,7 +13,7 @@ class HomeHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 220,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
         color: const Color(0xFFD2DBD6),
         image: const DecorationImage(
@@ -103,7 +104,7 @@ class HomeHeader extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ManageAddressesPage()),
+                        MaterialPageRoute(builder: (context) =>  const FavoritePage()),
                       );
                     },
                   ),
@@ -116,5 +117,3 @@ class HomeHeader extends StatelessWidget {
     );
   }
 }
-//cam be deleted when solve the new header visibility 
-//try to break the code into smaller widgets for better readability and maintainability

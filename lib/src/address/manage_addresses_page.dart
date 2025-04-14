@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, sort_child_properties_last
+
 import 'package:doorstepmart/services/address_services.dart';
 import 'package:doorstepmart/src/address/widgets/address_card.dart';
 import 'package:flutter/material.dart';

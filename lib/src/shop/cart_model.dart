@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';      //importing necessary packages for Firebase, Firestore, and Flutter widgets
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//importing necessary packages for Firebase, Firestore, and Flutter widgets
-
-class CartItem {
-  ///CartItem class represents an item in the shopping cart
-  ///It contains properties for the item's name, image, price, quantity, shop ID, and shop name.
+//CartItem class represents an item in the shopping cart
+ class CartItem {
   final String name;
   final String image;
   final double price;
@@ -21,8 +18,7 @@ class CartItem {
     required this.shopId,
     required this.shopName,
   });
-
-  //Convert CartItem to Firestore-friendly format
+//Convert CartItem to Firestore-friendly format
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -32,9 +28,8 @@ class CartItem {
       'shopId': shopId,
       'shopName': shopName,
     };
-  }
-
-  //Create CartItem from Firestore document
+    }
+//Create CartItem from Firestore document
   factory CartItem.fromMap(Map<String, dynamic> data) {
     return CartItem(
       name: data['name'],
@@ -42,21 +37,18 @@ class CartItem {
       price: (data['price'] as num).toDouble(),
       quantity: data['quantity'],
       shopId: data['shopId'],
-      shopName: data['shopName'] ?? "Unknown Shop", //Fetch stored shop name
+      shopName: data['shopName'] ?? "Unknown Shop", 
     );
-  }
-}
-
+     }
+    }
+//CartModel class manages the shopping cart items and their operations
 class CartModel extends ChangeNotifier {
-  ///CartModel class manages the shopping cart items and their operations
-  ///It provides methods to add, remove, and update items in the cart,
-  ///as well as to fetch and save the cart data to Firestore.
-  final List<CartItem> _items = [];
+  final List<CartItem> _items = []; //List of cart items
   final Map<String, String> _shopNamesCache = {}; //Cache shop names
 
   List<CartItem> get items => _items;
 
-  //Firestore reference for the cart
+//Firestore reference for the cart
   DocumentReference<Map<String, dynamic>> get cartRef {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -64,11 +56,9 @@ class CartModel extends ChangeNotifier {
     }
     return FirebaseFirestore.instance.collection('carts').doc(user.uid);
   }
-
-  //Fetch cart from Firestore when user logs in
+//Fetch cart from Firestore when user logs in
   Future<void> fetchCart() async {
     try {
-      // Get the current user's cart document
       var cartDoc = await cartRef.get();
       if (cartDoc.exists) {
         var cartData = cartDoc.data();
@@ -85,12 +75,9 @@ class CartModel extends ChangeNotifier {
       debugPrint("🔥 Error fetching cart: $e");
     }
   }
-
-  //Fetch shop names for all cart items
+//Fetch shop names for all cart items
   Future<void> _fetchShopNames() async {
-    // Loop through each item in the cart and fetch its shop name
-    // Check if the shop name is already cached to avoid redundant calls
-    for (var item in _items) {
+    for (var item in _items) { // Loop through each item in the cart and fetch its shop name
       if (!_shopNamesCache.containsKey(item.shopId)) {
         String shopName = await _fetchShopName(item.shopId);
         _shopNamesCache[item.shopId] = shopName;
@@ -99,17 +86,13 @@ class CartModel extends ChangeNotifier {
     }
     notifyListeners();
   }
-
-  //Fetch shop name from Firestore
+//Fetch shop name from Firestore
   Future<String> _fetchShopName(String shopId) async {
     // Check if the shop name is already cached to avoid redundant calls
     if (_shopNamesCache.containsKey(shopId)) {
       return _shopNamesCache[shopId]!;
     }
-
     try {
-      // Get the shop document from Firestore
-      // Fetch the shop name from Firestore using the shopId
       DocumentSnapshot shopDoc =
         await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
       if (shopDoc.exists) {
@@ -122,8 +105,7 @@ class CartModel extends ChangeNotifier {
     }
     return "Unknown Shop";
   }
-
-  //Save cart to Firestore
+//Save cart to Firestore
   Future<void> saveCart() async {
     try {
       await cartRef.set({
@@ -133,15 +115,11 @@ class CartModel extends ChangeNotifier {
       debugPrint("🔥 Error saving cart: $e");
     }
   }
-
-  //Add item to cart
-void add(CartItem item) async {
-  //Check if the item is already in the cart
-  // If it is, increase the quantity by 1
-  // If not, add it to the cart with quantity 1
+//Add item to cart
+ void add(CartItem item) async {
   String shopName = await _fetchShopName(item.shopId); //Fetch correct shop name
   item.shopName = shopName;
-
+//Check if item already exists in cart
   for (var cartItem in _items) {
     if (cartItem.name == item.name && cartItem.shopId == item.shopId) {
       cartItem.quantity += 1;
@@ -153,21 +131,21 @@ void add(CartItem item) async {
   _items.add(item);
   notifyListeners();
   saveCart();
-}
-
-  void remove(CartItem item) {//Remove item from cart
+ }
+//Remove item from cart
+  void remove(CartItem item) {
     _items.remove(item);
     notifyListeners();
     saveCart();
   }
-
-  void increaseQuantity(CartItem item) {  //Increase item quantity
+//Increase item quantity
+  void increaseQuantity(CartItem item) {  
     item.quantity += 1;
     notifyListeners();
     saveCart();
   }
-
-  void decreaseQuantity(CartItem item) {  //Decrease item quantity
+//Decrease item quantity
+  void decreaseQuantity(CartItem item) { 
     item.quantity -= 1;
     if (item.quantity == 0) {
       remove(item);
@@ -175,30 +153,27 @@ void add(CartItem item) async {
     notifyListeners();
     saveCart();
   }
-
-  //Clear cart
+//Clear cart
   void clearCart() {
     _items.clear();
     notifyListeners();
     saveCart();
   }
-
-  //Get total price of cart items
+//Get total price of cart items
   // ignore: avoid_types_as_parameter_names
   double get totalPrice => _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
-  //Calculate tax
+//Calculate tax
   double get tax => totalPrice * 0.05;
-  //Service fee
+//Service fee
   double get serviceFee => 2.0;
-  // Get total amount including tax and service fee
+// Get total amount including tax and service fee
   double get total => totalPrice + tax + serviceFee;
-
-  //Group items by shopName for checkout
+//Group items by shopName for checkout
   Map<String, List<CartItem>> getGroupedByShop() {
 
     Map<String, List<CartItem>> groupedItems = {};
-    // Loop through each item in the cart and group them by shop name
-    for (var item in _items) {
+    
+    for (var item in _items) {  // Loop through each item in the cart and group them by shop name
       if (!groupedItems.containsKey(item.shopName)) {
         groupedItems[item.shopName] = [];
       }

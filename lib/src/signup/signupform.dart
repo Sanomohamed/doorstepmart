@@ -1,8 +1,7 @@
 import 'package:doorstepmart/services/auth_service.dart';
-import 'package:doorstepmart/src/custom_widgets.dart';
+import 'package:doorstepmart/src/custom_widgets.dart';          //importing the necessary packages and files
 import 'package:doorstepmart/src/login/forgetpassword.dart';
 import 'package:flutter/material.dart';
-//importing necessary packages and files
 
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
@@ -13,7 +12,6 @@ class SignupForm extends StatefulWidget {
 }
 class _SignupFormState extends State<SignupForm> {
   // Controllers for text fields
-  // These controllers are used to retrieve the text entered by the user in the text fields.
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -21,7 +19,6 @@ class _SignupFormState extends State<SignupForm> {
   /// AuthService instance for authentication
   final AuthService _authService = AuthService();
   /// Method to handle registration
-  /// This method checks if the passwords match and then calls the AuthService to register the user.
   void _register() async {
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -51,10 +48,7 @@ class _SignupFormState extends State<SignupForm> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      /// Center the form in the available space
       child: Container(
-      // Container to hold the form
-      // This container has a fixed width and padding for better layout
       width: 400, 
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
@@ -68,13 +62,10 @@ class _SignupFormState extends State<SignupForm> {
           ),
         ],
       ),
-      /// Main content of the form
-      /// This is a Column widget that arranges its children vertically
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center, // Center alignment for better balance
+        crossAxisAlignment: CrossAxisAlignment.center, 
         children: [
-          /// Title
           const Text(
             'Sign Up',
             style: TextStyle(
@@ -93,9 +84,8 @@ class _SignupFormState extends State<SignupForm> {
           const SizedBox(height: 20),
           CustomTextField(hintText: 'Confirm Password', obscureText: true, controller: confirmPasswordController),
           const SizedBox(height: 25),
-          /// Sign Up Button
           /// This button triggers the registration process when pressed
-               SizedBox(
+            SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _register,

@@ -38,6 +38,7 @@ class SupportSection extends StatelessWidget {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   leading: CircleAvatar(
                     radius: 22,
+                    // ignore: deprecated_member_use
                     backgroundColor: Colors.blue.withOpacity(0.2),
                     child: const Icon(Icons.help_center, color: Colors.blue, size: 24),
                   ),

@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';    /// Importing necessary packages and files
 import 'package:doorstepmart/firebase_options.dart';
 import 'package:doorstepmart/services/product.provider.dart';
 import 'package:doorstepmart/src/favorite/favoritemodel.dart';
@@ -11,8 +11,6 @@ import 'package:doorstepmart/src/landing.dart';
 import 'package:doorstepmart/src/login/login.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:doorstepmart/src/signup/signup.dart';
-/// Importing necessary packages and files
-/// for Firebase, Firestore, Provider, and the app's UI components.
 
 //initializes the Firebase app and sets up Firestore settings
 void main() async {
@@ -20,15 +18,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   // Enable Offline Mode for Firestore
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
-
- //creates the main app widget and sets up providers for state management
-//using MultiProvider to manage multiple providers in the app
+ //creates the main app widget and sets up providers for state management, using MultiProvider to manage multiple providers in the app
   runApp(
     MultiProvider(
       providers: [
@@ -40,9 +35,7 @@ void main() async {
     ),
   );
 }
-
 /// The main app widget that sets up the MaterialApp and routes
-/// for the application.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -60,9 +53,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-/// A widget that wraps the authentication logic and displays either
-/// the landing page or the login page based on the authentication state.
+/// A widget that wraps the authentication logic and displays either, the landing page or the login page based on the authentication state.
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
 

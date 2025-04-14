@@ -11,17 +11,17 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  final user = FirebaseAuth.instance.currentUser;
+  final userId = FirebaseAuth.instance.currentUser;
 
   Stream<QuerySnapshot> _notificationsStream() {
-    if (user == null) return const Stream.empty();
+    if (userId == null) return const Stream.empty();
 
-    final uid = user!.uid;
+    final uid = userId!.uid;
 
-    // ✅ Using 'shopId' instead of 'userId' for clarity
+    // ✅ FIXED: Query by userId (not shopId)
     return FirebaseFirestore.instance
         .collection('notifications')
-        .where('shopId', isEqualTo: uid)
+        .where('userId', isEqualTo: uid)
         .orderBy('timestamp', descending: true)
         .snapshots();
   }
@@ -41,7 +41,8 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   void _handleNotificationTap(Map<String, dynamic> notification) {
-    final String? orderId = notification['orderId'];
+    // ✅ FIXED: Use 'targetId' instead of 'orderId'
+    final String? orderId = notification['targetId'];
     if (orderId != null) {
       Navigator.pushNamed(context, '/orderDetails', arguments: orderId);
     }
@@ -88,7 +89,6 @@ class _NotificationPageState extends State<NotificationPage> {
               final formattedTime = dateTime != null
                   ? DateFormat('MMM dd, yyyy | hh:mm a').format(dateTime)
                   : '';
-
               return Dismissible(
                 key: Key(doc.id),
                 direction: DismissDirection.endToStart,
@@ -164,7 +164,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           IconButton(
                             icon: const Icon(Icons.more_vert, color: Colors.grey),
                             onPressed: () {
-                              // Future menu options can go here
+                              
                             },
                           ),
                         ],

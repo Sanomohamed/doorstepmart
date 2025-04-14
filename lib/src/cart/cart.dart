@@ -13,7 +13,7 @@ class CartPage extends StatelessWidget {
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: _buildAppBar(context),
-     backgroundColor: const Color.fromARGB(192, 210, 219, 214),
+     backgroundColor:const Color(0xFFF8F8F8),
     body: Consumer<CartModel>(
       builder: (context, cart, child) {
         return Center(

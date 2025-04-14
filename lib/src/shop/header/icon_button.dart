@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-//importing the necessary packages for the CircleIconButton widget
 
 class CircleIconButton extends StatelessWidget {
-  // This widget is used to create a circular icon button with a shadow effect.
-  // It is a stateless widget that takes an icon, a callback function, and optional colors for the icon and background.
+ 
   final IconData icon;
   final VoidCallback onPressed;
   final Color iconColor;
   final Color backgroundColor;
 
   const CircleIconButton({
-    //constructor for the CircleIconButton widget
-    // It takes the following parameters:
     super.key,
     required this.icon,
     required this.onPressed,
@@ -21,7 +17,6 @@ class CircleIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The build method returns an InkWell widget that wraps a Container widget.
     return InkWell(
       borderRadius: BorderRadius.circular(50),
       onTap: onPressed,

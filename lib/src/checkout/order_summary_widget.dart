@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
@@ -149,5 +151,3 @@ class OrderSummaryWidget extends StatelessWidget {
     return groupedItems;
   }
 }
-
-//need to break the code into smaller widgets to make it more readable and maintainable

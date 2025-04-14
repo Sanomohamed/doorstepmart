@@ -80,7 +80,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
           onPressed: _pickImages,
           /// When the button is pressed, it calls the _pickImages method to allow the user to select images.
           icon: const Icon(Icons.image, color: Colors.white),
-          label: const Text("Pick Images"),
+          label: const Text("Pick Images", style: TextStyle(color: Colors.black)),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
         ),
       ],

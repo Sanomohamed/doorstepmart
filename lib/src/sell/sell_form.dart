@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:doorstepmart/src/sell/widgets/image_picker_widget.dart';
-import 'package:doorstepmart/src/sell/widgets/product_form_fields.dart';
+import 'package:doorstepmart/src/sell/widgets/product_form_fields.dart';     //importing necessary packages and files
 import 'package:doorstepmart/src/sell/widgets/confirm_upload_actions.dart';
-//importing necessary packages and files
 
 class SellForm extends StatefulWidget {
   final Map<String, dynamic>? productData;
@@ -15,7 +14,9 @@ class SellForm extends StatefulWidget {
 }
 
 class _SellFormState extends State<SellForm> {
+
   final _formKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -26,17 +27,14 @@ class _SellFormState extends State<SellForm> {
   bool _isUploading = false;
 
   final List<String> _categories = ['Drinks', 'Fruits', 'Poultry', 'Vegetable', 'Rice'];
-  // This list contains the categories available for selection
 
   @override
   void initState() {
     super.initState();
-    if (widget.productData != null) _populateForm(widget.productData!);
-    // If product data is provided, populate the form with existing data
+    if (widget.productData != null) _populateForm(widget.productData!);    // If product data is provided, populate the form with existing data
   }
-
+// This method populates the form fields with existing product data
   void _populateForm(Map<String, dynamic> data) {
-    // This method populates the form fields with existing product data
     _nameController.text = data['name'] ?? '';
     _priceController.text = data['price'].toString();
     _descriptionController.text = data['description'] ?? '';
@@ -60,14 +58,14 @@ class _SellFormState extends State<SellForm> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
+// This widget allows users to select images for the product                    
                     ImagePickerWidget(
-                      // This widget allows users to select images for the product
                       existingImageUrls: _existingImageUrls,
                       onImageSelected: (paths) => setState(() => _selectedImagePaths = paths),
                     ),
                     const SizedBox(height: 20),
+ // This widget contains the form fields for product details                    
                     ProductFormFields(
-                      // This widget contains the form fields for product details
                       nameController: _nameController,
                       priceController: _priceController,
                       descriptionController: _descriptionController,
@@ -76,8 +74,8 @@ class _SellFormState extends State<SellForm> {
                       onCategoryChanged: (val) => setState(() => _selectedCategory = val),
                     ),
                     const SizedBox(height: 20),
+ // This widget contains the buttons for confirming or canceling the upload                    
                     ConfirmUploadActions(
-                      // This widget contains the buttons for confirming or canceling the upload
                       formKey: _formKey,
                       isUploading: _isUploading,
                       productId: widget.productId,

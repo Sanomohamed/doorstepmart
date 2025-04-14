@@ -112,8 +112,8 @@ class UploadButton extends StatelessWidget {
       child: ElevatedButton.icon(
         onPressed: () => _handleUpload(context),
         icon: const Icon(Icons.upload),
-        label: Text(productId != null ? "Update Product" : "Upload Product"),
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+        label: Text(productId != null ? "Update Product" : "Upload Product",style: TextStyle(color: Colors.black),),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
       ),
     );
   }

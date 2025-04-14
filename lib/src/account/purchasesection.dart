@@ -38,6 +38,7 @@ class PurchaseSection extends StatelessWidget {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                   leading: CircleAvatar(
                     radius: 28,
+                    // ignore: deprecated_member_use
                     backgroundColor: Colors.blueAccent.withOpacity(0.2),
                     child: const Icon(Icons.history, color: Colors.blueAccent, size: 28),
                   ),
@@ -84,6 +85,7 @@ class PurchaseSection extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 30,
+          // ignore: deprecated_member_use
           backgroundColor: color.withOpacity(0.2),
           child: Icon(icon, size: 30, color: color),
         ),
