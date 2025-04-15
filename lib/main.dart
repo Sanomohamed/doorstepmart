@@ -35,7 +35,8 @@ void main() async {
     ),
   );
 }
-/// The main app widget that sets up the MaterialApp and routes
+
+// The main app widget that sets up the MaterialApp and routes
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -47,13 +48,14 @@ class MyApp extends StatelessWidget {
       routes: {
         '/PurchaseHistory': (context) => const PurchaseHistoryPage(),
         '/Signup': (context) => const Signup(),
-        '/Landing': (context) => Landing(key: Landing.landingKey), 
+        '/Landing': (context) => Landing(), 
         '/Login': (context) => const Login(),
       },
     );
   }
 }
-/// A widget that wraps the authentication logic and displays either, the landing page or the login page based on the authentication state.
+
+// A widget that wraps the authentication logic and displays either, the landing page or the login page based on the authentication state.
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
 

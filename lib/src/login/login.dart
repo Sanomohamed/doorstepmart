@@ -3,7 +3,6 @@ import 'package:doorstepmart/src/login/signup_prompt.dart';
 import 'package:flutter/material.dart';
 import 'login_image.dart';
 
-
 class Login extends StatelessWidget {
   const Login({super.key});
 

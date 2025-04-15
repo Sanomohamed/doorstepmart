@@ -8,7 +8,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ignore: no_leading_underscores_for_local_identifiers
-    final _controller = AccountPageController(context); // Initialize the controller
+    final _controller = AccountPageController(context); 
 
     return Scaffold(
       appBar: AppBar(
@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
         backgroundColor: const Color(0xFFF8F8F8),
-        elevation: 3, // ✅ Soft shadow for better visibility
+        elevation: 3, 
         iconTheme: const IconThemeData(color: Colors.black87),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, size: 28),
@@ -31,19 +31,19 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: const Color(0xFFF8F8F8), // Set the background color
+        color: const Color(0xFFF8F8F8), 
         child: Column(
           children: [
             const Expanded(
-              child: ProfileForm(), // Profile form remains unchanged
+              child: ProfileForm(), 
             ),
             const SizedBox(height: 20),
 
             // Logout Button
             Align(
-              alignment: Alignment.center, // Align the button to the center
+              alignment: Alignment.center, 
               child: SizedBox(
-                width: 200, // Set the desired width
+                width: 200, 
                 child: ElevatedButton.icon(
                   onPressed: _controller.logout,
                   style: ElevatedButton.styleFrom(

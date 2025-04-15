@@ -33,6 +33,7 @@ class _SellFormState extends State<SellForm> {
     super.initState();
     if (widget.productData != null) _populateForm(widget.productData!);    // If product data is provided, populate the form with existing data
   }
+  
 // This method populates the form fields with existing product data
   void _populateForm(Map<String, dynamic> data) {
     _nameController.text = data['name'] ?? '';

@@ -30,14 +30,13 @@ class HomeHeader extends StatelessWidget {
         ],
       ),
 
-      // ✅ Center inner content if screen is wide
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // 🔍 Search Bar
+          
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
                 margin: const EdgeInsets.only(top: 5),
@@ -79,7 +78,7 @@ class HomeHeader extends StatelessWidget {
                 ),
               ),
 
-              // ❤️ Favorite Button
+              // Favorite Button
               Align(
                 alignment: Alignment.bottomRight,
                 child: Container(

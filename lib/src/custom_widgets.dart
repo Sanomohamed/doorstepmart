@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-/// Custom widgets for the app login and signup screens,
 class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;

@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +31,7 @@ class ProfileImageEditor extends StatelessWidget {
             radius: 55,
             backgroundImage: pickedImage != null
                 ? FileImage(pickedImage!)
-                //if the image is picked, use FileImage to display it
                 : (profileImageUrl != null
-                   //if the image URL is not null, use CachedNetworkImageProvider to display it
                     ? CachedNetworkImageProvider(profileImageUrl!)
                     : const AssetImage('assets/default_avatar.png')) as ImageProvider,
           ),

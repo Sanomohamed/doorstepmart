@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:doorstepmart/src/order/order.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +7,13 @@ import 'package:provider/provider.dart';
 class BottomBarWidget extends StatelessWidget {
   final double grandTotalWithDiscount;
   final String paymentMethod;
-  final Map<String, dynamic>? selectedAddress; // ✅ Add this line
+  final Map<String, dynamic>? selectedAddress; 
 
   const BottomBarWidget({
     super.key,
     required this.grandTotalWithDiscount,
     required this.paymentMethod,
-    required this.selectedAddress, // ✅ Add this line
+    required this.selectedAddress,
   });
 
   @override
@@ -33,10 +32,10 @@ class BottomBarWidget extends StatelessWidget {
           ),
         ],
       ),
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Total Display
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -47,7 +46,6 @@ class BottomBarWidget extends StatelessWidget {
             ],
           ),
 
-// Place Order Button
           ElevatedButton(
             onPressed: () async {
               final cartModel = Provider.of<CartModel>(context, listen: false);
@@ -63,7 +61,6 @@ class BottomBarWidget extends StatelessWidget {
                     const SnackBar(content: Text("Please select a delivery address")));
                 return;
               }
-
               await placeOrder(
                 context: context,
                 cartItems: cartModel.items,
@@ -71,13 +68,12 @@ class BottomBarWidget extends StatelessWidget {
                 paymentMethod: paymentMethod,
                 deliveryAddress: selectedAddress!, 
               );
-
               cartModel.clearCart();
-
               if (context.mounted) {
                 Navigator.pushReplacementNamed(context, '/PurchaseHistory');
               }
             },
+
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),

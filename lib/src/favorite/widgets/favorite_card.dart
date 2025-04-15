@@ -82,6 +82,14 @@ class FavoriteCard extends StatelessWidget {
           shopId: product.shopId,
           shopName: product.shopName,
         ));
+
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${product.name} added to cart!'),
+          duration: const Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        ),
+      );
       }),
     );
   }

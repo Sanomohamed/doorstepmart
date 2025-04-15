@@ -54,6 +54,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         elevation: 3,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
+
       body: Consumer<CartModel>(
         builder: (context, cart, child) {
           final double totalWithDiscount = cart.totalPrice - _discount;
@@ -67,7 +68,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                          // ✅ Address Selector Section
                     CheckoutAddressCard(
                     onAddressSelected: (address) {
                     setState(() {

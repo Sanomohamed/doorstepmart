@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doorstepmart/src/address/widgets/customtext.dart';
+import 'package:doorstepmart/src/address/widgets/submitbutton.dart';
 import 'package:flutter/material.dart';
 
 class AddressForm extends StatefulWidget {
@@ -76,49 +78,34 @@ class _AddressFormState extends State<AddressForm> {
         key: _formKey,
         child: ListView(
           children: [
-            _buildTextField(_fullNameController, "Full Name"),
+            CustomTextField(controller: _fullNameController, label: "Full Name"),
             const SizedBox(height: 16),
-            _buildTextField(_phoneController, "Phone", keyboardType: TextInputType.phone),
+            CustomTextField(
+              controller: _phoneController,
+              label: "Phone",
+              keyboardType: TextInputType.phone,
+            ),
             const SizedBox(height: 16),
-            _buildTextField(_streetController, "Street"),
+            CustomTextField(controller: _streetController, label: "Street"),
             const SizedBox(height: 16),
-            _buildTextField(_cityController, "City"),
+            CustomTextField(controller: _cityController, label: "City"),
             const SizedBox(height: 16),
-            _buildTextField(_stateController, "State"),
+            CustomTextField(controller: _stateController, label: "State"),
             const SizedBox(height: 30),
-            _buildTextField(_postcodeController, "Post code", keyboardType: TextInputType.number),
+            CustomTextField(
+              controller: _postcodeController,
+              label: "Post code",
+              keyboardType: TextInputType.number,
+            ),
             const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: widget.isLoading ? null : _submitForm,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-              child: widget.isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : Text(widget.isEditing ? "Update Address" : "Save Address", style: const TextStyle(fontSize: 18)),
+            SubmitButton(
+              isLoading: widget.isLoading,
+              isEditing: widget.isEditing,
+              onPressed: _submitForm,
             ),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildTextField(TextEditingController controller, String label,
-      {TextInputType keyboardType = TextInputType.text}) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-      validator: (value) => value == null || value.trim().isEmpty ? "Required" : null,
-    );
-  }
 }
-//need to modularize this code to make it more readable and maintainable.
-// This can be done by breaking down the widget into smaller widgets or methods.

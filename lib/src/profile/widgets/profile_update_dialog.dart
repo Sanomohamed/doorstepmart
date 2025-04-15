@@ -19,7 +19,6 @@ void showUploadProgressDialog(BuildContext context) {
 }
 
 class UploadProgressDialog extends StatelessWidget {
- 
   const UploadProgressDialog({super.key});
 
   @override

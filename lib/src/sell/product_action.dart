@@ -45,10 +45,9 @@ class ProductActions {
       }
 
       final shopId = shopSnapshot.docs.first.id;
-     
       final shopName = shopSnapshot.docs.first.data()['shopName'] ?? 'Shop';
-
       List<String> imageUrls = List<String>.from(productData['existingImages']);
+      
 // This loop iterates through the image paths and uploads each image to Firebase Storage    
       for (var imagePath in productData['imagePaths']) {
         File file = File(imagePath);

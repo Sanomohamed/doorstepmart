@@ -7,7 +7,7 @@ class InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0), // Adds spacing between cards
+      padding: const EdgeInsets.only(bottom: 20.0), 
       child: Card(
         elevation: 10,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

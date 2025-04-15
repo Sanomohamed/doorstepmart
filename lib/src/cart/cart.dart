@@ -18,7 +18,7 @@ Widget build(BuildContext context) {
       builder: (context, cart, child) {
         return Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800), // adjust as needed
+            constraints: const BoxConstraints(maxWidth: 800), 
             child: Column(
               children: [
                 Expanded(

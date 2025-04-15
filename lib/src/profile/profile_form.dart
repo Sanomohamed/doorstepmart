@@ -1,19 +1,15 @@
 import 'dart:io';
 import 'package:doorstepmart/src/shop/shop.dart';
-//import 'package:doorstepmart/src/shop/shop_page/shop_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:doorstepmart/services/profile_service.dart';
 import 'package:doorstepmart/src/profile/widgets/validators.dart';
-//import 'package:doorstepmart/src/sell/sell.dart';
-// Modularized widgets
 import 'package:doorstepmart/src/profile/widgets/profile_image_editor.dart';
-import 'package:doorstepmart/src/profile/widgets/profile_text_field.dart';
+import 'package:doorstepmart/src/profile/widgets/profile_text_field.dart';    //importing necessary packages and files
 import 'package:doorstepmart/src/profile/widgets/profile_action_button.dart';
 import 'package:doorstepmart/src/profile/widgets/profile_update_dialog.dart';
 import 'package:doorstepmart/src/profile/widgets/profile_confirmation_snackbar.dart';
-//importing necessary packages and files
 
 class ProfileForm extends StatefulWidget {
   const ProfileForm({super.key});
@@ -39,12 +35,10 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
   Future<void> _fetchUserData() async {
-    //fetching user data from Firebase
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // Fetch user data from Firestore or your database
-        // Assuming you have a function fetchUserData that retrieves user data
+
         final userData = await fetchUserData(user.uid);
         _nameController.text = userData['displayName'] ?? '';
         _emailController.text = userData['email'] ?? '';
@@ -63,8 +57,7 @@ class _ProfileFormState extends State<ProfileForm> {
     }
   }
 
-  void _autofillFromGoogle(User user) {
-    // Autofill the name and email fields if the user signed in with Google
+  void _autofillFromGoogle(User user) {   // Autofill the name and email fields if the user signed in with Google
     setState(() {
       _nameController.text = user.displayName ?? '';
       _emailController.text = user.email ?? '';
@@ -73,8 +66,6 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
   Future<void> _pickImage() async {
-    // Picking an image from the gallery
-    // Using ImagePicker to select an image from the gallery
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
       setState(() => _pickedImage = File(picked.path));
@@ -82,8 +73,6 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
   void _confirmBeforeUpdate() {
-    // Show a confirmation dialog before updating the profile
-    // This function is called when the user presses the "Save" button
     showConfirmationSnackbar(
       context: context,
       onConfirmed: _showUploadProgressAndSave,
@@ -91,39 +80,27 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
   void _showUploadProgressAndSave() async {
-    // Show a progress dialog while the profile is being updated
-    // This function is called when the user confirms the update
     showUploadProgressDialog(context);
     await _saveUserProfile();
-    if (mounted) Navigator.of(context).pop(); // Close the dialog
+    if (mounted) Navigator.of(context).pop(); 
   }
 
   Future<void> _saveUserProfile() async {
-    // Validate the form and save the user profile
-    // This function is called when the user confirms the update
     if (!_formKey.currentState!.validate()) return;
 
     try {
       final user = FirebaseAuth.instance.currentUser;
-      //first check if the user is null
       if (user == null) return;
-      // Check if the user is null
-      final profileUrl = _pickedImage != null
-          // If a new image is picked, upload it and get the URL
-          // Otherwise, use the existing profile image URL
-          ? await uploadProfileImage(_pickedImage!)
-          : _profileImageUrl;
+      final profileUrl = _pickedImage != null ? await uploadProfileImage(_pickedImage!) : _profileImageUrl;
 
-      final updatedData = {
-        //update the user data in Firestore or your database
+      final updatedData = {//update the user data in Firestore or your database
         'email': _emailController.text.trim(),
         'displayName': _nameController.text.trim(),
         'phoneNumber': _phoneController.text.trim(),
         'profileImageUrl': profileUrl,
       };
 
-      await saveUserData(user.uid, updatedData);
-      // Update the user's profile in Firebase Auth
+      await saveUserData(user.uid, updatedData);  // Update the user's profile in Firebase Auth
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

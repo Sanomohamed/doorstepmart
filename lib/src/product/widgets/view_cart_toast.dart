@@ -37,7 +37,7 @@ void showViewCartToastBottomSheet({
                     Navigator.of(ctx).pop(); // Close toast
                     Navigator.of(context).popUntil((route) => route.isFirst);
                     Future.delayed(const Duration(milliseconds: 200), () {
-                      Landing.jumpToTab(1); // Navigate to cart tab
+                     Landing.jumpToTab(1); // Navigate to cart tab
                     });
                   },
                   child: const Text('VIEW', style: TextStyle(color: Colors.green)),

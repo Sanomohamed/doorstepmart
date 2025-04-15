@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-//importing the necessary packages for the widget
 
 class ShopNameField extends StatelessWidget {
-  /// This widget is used to create a text field for entering the shop name.
-  /// It is a stateless widget that takes a TextEditingController as a parameter.
   final TextEditingController controller;
 
   const ShopNameField({super.key, required this.controller});
@@ -24,7 +21,6 @@ class ShopNameField extends StatelessWidget {
         ),
       ),
       validator: (value) => value!.isEmpty ? "Enter shop name" : null,
-      //validating the input to ensure that the shop name is not empty
     );
   }
 }

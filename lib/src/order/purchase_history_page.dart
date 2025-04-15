@@ -14,23 +14,38 @@ class PurchaseHistoryPage extends StatefulWidget {
 }
 
 class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
-  String selectedStatus = " ";
+  String selectedStatus = "Pending";
   final userId = FirebaseAuth.instance.currentUser?.uid;
 
-  Stream<List<Map<String, dynamic>>> fetchOrdersStream(String status) {
-    if (userId == null) return const Stream.empty();
-    return FirebaseFirestore.instance
-        .collectionGroup('orders')
-        .where('userId', isEqualTo: userId)
-        .where('status', isEqualTo: status)
-        .orderBy('timestamp', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) {
-              final data = doc.data();
-              data['id'] = doc.id;
-              return data;
-            }).toList());
-  }  
+Stream<List<Map<String, dynamic>>> fetchOrdersStream(String status) {
+  if (userId == null || status.trim().isEmpty) return const Stream.empty();
+
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('orders')
+      .where('status', isEqualTo: status)
+      .snapshots()
+      .map((snapshot) {
+        final orders = snapshot.docs.map((doc) {
+          final data = doc.data();
+          data['id'] = doc.id;
+          return data;
+        }).toList();
+
+        // Safety: manual sort in case any timestamp issues
+        orders.sort((a, b) {
+          final aTime = a['timestamp'];
+          final bTime = b['timestamp'];
+          if (aTime is Timestamp && bTime is Timestamp) {
+            return bTime.compareTo(aTime); // descending
+          }
+          return 0;
+        });
+
+        return orders;
+      });
+}
 
 @override
 Widget build(BuildContext context) {

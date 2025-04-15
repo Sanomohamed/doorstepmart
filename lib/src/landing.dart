@@ -19,7 +19,6 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
-  // This is the index of the currently selected tab in the BottomNavigationBar. It is used to keep track of which page to display.
     int _selectedIndex = 0;
     final List<Widget> _pages = [
     const Home(),
@@ -27,13 +26,13 @@ class _LandingState extends State<Landing> {
     NotificationPage(),
     const AccountPage(),
   ];
-// This method is called when a tab in the BottomNavigationBar is tapped. It updates the _selectedIndex state variable to reflect the newly selected tab.
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-// This method is used to fetch the count of unread notifications for the current user from Firestore. It returns a Stream that emits the count of unread notifications.
+
     Stream<int> _unreadNotificationsCount() {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return const Stream.empty();
@@ -45,7 +44,7 @@ class _LandingState extends State<Landing> {
         .snapshots()
         .map((snapshot) => snapshot.docs.length);
     }
-// This method is used to fetch the count of items in the user's cart from Firestore. It returns a Stream that emits the count of items in the cart.
+
     Stream<int> _cartItemsCount() {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) return const Stream.empty();
@@ -56,7 +55,7 @@ class _LandingState extends State<Landing> {
       .snapshots()
       .map((snapshot) => snapshot.docs.length);
   }
-// This method is used to build the UI of the Landing widget. It returns a Scaffold widget that contains an IndexedStack for the pages and a BottomNavigationBar for navigation.
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

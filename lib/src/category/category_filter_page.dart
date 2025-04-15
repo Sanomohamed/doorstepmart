@@ -25,11 +25,7 @@ class _CategoryFilterPageState extends State<CategoryFilterPage> {
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductProvider>(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    final horizontalPadding = screenWidth > 1000
-        ? 32.0
-        : screenWidth > 600
-            ? 24.0
-            : 12.0;
+    final horizontalPadding = screenWidth > 1000 ? 32.0 : screenWidth > 600 ? 24.0 : 12.0;
 
     if (productProvider.isLoading) {
       return const Center(child: CircularProgressIndicator());

@@ -28,7 +28,7 @@ class _CreateShopPageState extends State<CreateShopPage> {
   setState(() => _isLoading = true);
 
   try {
-    await ShopServices.createShop(context, name, state, city, image, days, opening, closing); // 🔹 Pass context
+    await ShopServices.createShop(context, name, state, city, image, days, opening, closing); // Pass context
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Shop created successfully')));
     // ignore: use_build_context_synchronously

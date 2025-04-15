@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:doorstepmart/src/profile/widgets/profile_update_dialog.dart';    
 import 'package:flutter/material.dart';                            //importing the necessary packages and files
 import 'package:doorstepmart/src/sell/product_action.dart';

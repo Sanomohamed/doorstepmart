@@ -29,6 +29,7 @@ class _SignupFormState extends State<SignupForm> {
     final userCredential = await _authService.registerWithEmailPassword(
       emailController.text,
       passwordController.text,
+      nameController.text,
     );
     if (userCredential != null) {
       if (mounted) {

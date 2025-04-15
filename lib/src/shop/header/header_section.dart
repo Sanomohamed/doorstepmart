@@ -1,10 +1,10 @@
+import 'package:doorstepmart/src/landing.dart';
 import 'package:doorstepmart/src/sell/sell.dart';
 import 'package:doorstepmart/src/shop/header/header_background_image.dart';
 import 'package:doorstepmart/src/shop/header/icon_button.dart';
 import 'package:doorstepmart/src/shop/header/shop_name_display.dart';
 import 'package:doorstepmart/src/shop/shoporder/order_managment.dart';   //importing the necessary packages and files
 import 'package:doorstepmart/src/setup/create_shop_page.dart';
-import 'package:doorstepmart/src/landing.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -53,17 +53,17 @@ class _HeaderSectionState extends State<HeaderSection> {
     return Stack(
       children: [
         const HeaderBackgroundImage(),
-        Positioned(
-          top: 30,
-          left: 10,
-          child: CircleIconButton(
-            icon: Icons.arrow_back,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const Landing()),
-            ),
-          ),
+    Positioned(
+      top: 30,
+      left: 10,
+      child: CircleIconButton(
+        icon: Icons.arrow_back,
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const Landing()),
         ),
+      ),
+    ), 
         Positioned(
           top: 40,
           right: 10,

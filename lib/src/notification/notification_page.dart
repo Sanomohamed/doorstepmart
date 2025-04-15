@@ -18,7 +18,6 @@ class _NotificationPageState extends State<NotificationPage> {
 
     final uid = userId!.uid;
 
-    // ✅ FIXED: Query by userId (not shopId)
     return FirebaseFirestore.instance
         .collection('notifications')
         .where('userId', isEqualTo: uid)
@@ -64,9 +63,11 @@ class _NotificationPageState extends State<NotificationPage> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black87),
       ),
+
       backgroundColor: const Color(0xFFF8F8F8),
       body: StreamBuilder<QuerySnapshot>(
         stream: _notificationsStream(),
+
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -74,7 +75,6 @@ class _NotificationPageState extends State<NotificationPage> {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(child: Text('No notifications found'));
           }
-
           final notifications = snapshot.data!.docs;
 
           return ListView.builder(
@@ -86,9 +86,8 @@ class _NotificationPageState extends State<NotificationPage> {
               final isRead = data['read'] == true;
               final timestamp = data['timestamp'] as Timestamp?;
               final dateTime = timestamp?.toDate();
-              final formattedTime = dateTime != null
-                  ? DateFormat('MMM dd, yyyy | hh:mm a').format(dateTime)
-                  : '';
+              final formattedTime = dateTime != null ? DateFormat('MMM dd, yyyy | hh:mm a').format(dateTime) : '';
+
               return Dismissible(
                 key: Key(doc.id),
                 direction: DismissDirection.endToStart,
@@ -104,12 +103,14 @@ class _NotificationPageState extends State<NotificationPage> {
                     _markAsRead(doc.id);
                     _handleNotificationTap(data);
                   },
+
                   child: Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     margin: const EdgeInsets.only(bottom: 12),
+
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Row(
@@ -164,7 +165,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           IconButton(
                             icon: const Icon(Icons.more_vert, color: Colors.grey),
                             onPressed: () {
-                              
+                              //future implementation for more options
                             },
                           ),
                         ],

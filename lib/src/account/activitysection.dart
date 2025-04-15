@@ -20,7 +20,7 @@ class ActivitySection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ✅ Section Title
+                // Section Title
                 const Padding(
                   padding: EdgeInsets.only(left: 8, bottom: 10),
                   child: Text(
@@ -33,7 +33,7 @@ class ActivitySection extends StatelessWidget {
                   ),
                 ),
 
-                // 🔖 Favorite Option
+                // Favorite Option
                 ActivityItem(
                   icon: Icons.favorite,
                   text: 'My Favorite',

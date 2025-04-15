@@ -1,3 +1,4 @@
+import 'package:doorstepmart/services/helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -5,12 +6,19 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  Future<UserCredential?> registerWithEmailPassword(String email, String password) async {
+  Future<UserCredential?> registerWithEmailPassword(String email, String password, String name) async {
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+    await userCredential.user!.updateDisplayName(name);
+    await userCredential.user!.reload(); // Refresh the user object
+    final updatedUser = _auth.currentUser!;
+    await createUserInFirestore(updatedUser); 
+
+      await createUserInFirestore(userCredential.user!);
       return userCredential;
       // User registered successfully
     } on FirebaseAuthException catch (e) {
@@ -68,6 +76,7 @@ class AuthService {
       );
 
       UserCredential userCredential = await _auth.signInWithCredential(credential);
+       await createUserInFirestore(userCredential.user!);
       print('User signed in with Google successfully: ${userCredential.user?.uid}');
       return userCredential;
       

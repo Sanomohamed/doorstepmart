@@ -1,12 +1,9 @@
 import 'package:doorstepmart/services/product.provider.dart';
 import 'package:doorstepmart/src/home/categories/categories_section.dart';
-//import 'package:doorstepmart/src/home/header/home_header.dart';
 import 'package:doorstepmart/src/shop/product_grid/productgrid.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:doorstepmart/src/home/homeheader.dart';
-//import 'package:doorstepmart/src/home/categories_section.dart';
-
 
 class Home extends StatefulWidget {
   const Home({super.key});

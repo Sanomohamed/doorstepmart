@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -18,19 +17,14 @@ class CategorySelector extends StatelessWidget {
     {'name': 'Vegetables', 'icon': FontAwesomeIcons.carrot},
     {'name': 'Poultry', 'icon': FontAwesomeIcons.egg},
     {'name': 'Drinks', 'icon': FontAwesomeIcons.wineBottle},
-    {'name': 'Others', 'icon': FontAwesomeIcons.boxOpen},
+    {'name': 'Grains', 'icon': FontAwesomeIcons.seedling},
   ];
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Make sure all values are doubles
-    final double iconSize = screenWidth > 1000
-        ? 28.0
-        : screenWidth > 600
-            ? 24.0
-            : 20.0;
+    final double iconSize = screenWidth > 1000 ? 28.0 : screenWidth > 600 ? 24.0 : 20.0;
 
     return Center(
       child: ConstrainedBox(

@@ -10,8 +10,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final imageUrl = (product['imageUrls'] as List<dynamic>?)?.firstOrNull ??
-        'https://via.placeholder.com/150';
+    final imageUrl = (product['imageUrls'] as List<dynamic>?)?.firstOrNull ?? 'https://via.placeholder.com/150';
     final name = product['name']?.toString() ?? 'Unknown Product';
     final price = (product['price'] as num?)?.toDouble() ?? 0.0;
 

@@ -37,6 +37,9 @@ class OrderCard extends StatelessWidget {
             Text("Status: ${order['status']}"),
             Text("Date: ${order['timestamp']?.toDate()?.toString().split(".").first ?? ''}",
                 style: const TextStyle(color: Colors.grey)),
+              const SizedBox(height: 6),
+            Text("Order ID: ${order['id']}", // Display the orderRef.id
+                style: const TextStyle(color: Colors.grey, fontSize: 14)),
           ],
         ),
       ),
