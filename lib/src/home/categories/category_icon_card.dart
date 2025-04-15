@@ -23,7 +23,7 @@ class CategoryIconCard extends StatelessWidget {
         ),
       ),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -31,11 +31,11 @@ class CategoryIconCard extends StatelessWidget {
               width: iconSize + 60,
               height: iconSize + 60,
               decoration: const BoxDecoration(
-                color: Color.fromARGB(127, 192, 196, 190),
+                color: Color.fromARGB(253, 219, 224, 217),
                 shape: BoxShape.circle,
               ),
               child: Center(
-                child: Icon(icon, size: iconSize + 25, color: const Color.fromARGB(255, 115, 202, 115)),
+                child: Icon(icon, size: iconSize + 15, color: const Color.fromARGB(255, 115, 202, 115)),
               ),
             ),
             const SizedBox(height: 10),

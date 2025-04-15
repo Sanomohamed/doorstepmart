@@ -50,8 +50,8 @@ class _SignupFormState extends State<SignupForm> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-      width: 400, 
-      padding: const EdgeInsets.all(28),
+      width: 350, 
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: const Color.fromARGB(26, 145, 167, 145), 
         borderRadius: BorderRadius.circular(42),

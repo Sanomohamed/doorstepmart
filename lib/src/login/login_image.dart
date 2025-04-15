@@ -9,7 +9,7 @@ class LoginImage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(2.0),
       width: 500,
-      height: 290,
+      height: 280,
       decoration: BoxDecoration(
         color: const Color(0xFFD2DBD6),
         borderRadius: BorderRadius.circular(20),

@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:doorstepmart/src/home/categories/category_icon_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,7 +26,7 @@ class CategoryIconScroller extends StatelessWidget {
           height: 150,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 2),
             itemCount: categories.length,
             itemBuilder: (context, index) {
               final category = categories[index];

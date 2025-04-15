@@ -19,7 +19,6 @@ class Login extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: const <Widget>[
                 LoginImage(),
-                SizedBox(height: 16),
                 LoginForm(),
                 SignupPrompt(),
               ],

@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
       body: Column(
         children: [
           const HomeHeader(),
+           const CategoriesSection(),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
@@ -46,7 +47,7 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const CategoriesSection(),
+                     
                       Consumer<ProductProvider>(
                         builder: (context, productProvider, _) {
                           if (productProvider.isLoading) {

@@ -70,8 +70,8 @@ void _login() async {
 Widget build(BuildContext context) {
   return Center(
     child: Container(
-      width: 400, 
-      padding: const EdgeInsets.all(30),
+      width: 350, 
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: const Color.fromARGB(26, 145, 167, 145), 
         borderRadius: BorderRadius.circular(42),
@@ -125,7 +125,6 @@ Widget build(BuildContext context) {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
                   color: Color.fromARGB(197, 0, 0, 0),
                 ),
               ),
@@ -162,30 +161,42 @@ Widget build(BuildContext context) {
           ),
           const SizedBox(height: 15),
     // Google Sign-In Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _signInWithGoogle,
-              icon: FaIcon(FontAwesomeIcons.google, size: 25,color: const Color.fromARGB(255, 27, 34, 26)), // Use FontAwesomeIcons.google
-              label: const Text(
-                '  Sign In with Google',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                  color: Color.fromARGB(197, 0, 0, 0),
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(76, 160, 235, 157), // Vibrant green
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32),
-                ),
-                elevation: 9,
-              ),
-            ),
+Column(
+  children: [
+    // Text
+    const Text(
+      'Sign in with Google',
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.grey,
+      ),
+    ),
+    const SizedBox(height: 10), // Space between text and button
+    // Circular Icon Button
+    Tooltip(
+      message: 'Sign in with Google',
+      child: SizedBox(
+        width: 50, // Circular size
+        height: 50, // Circular size
+        child: ElevatedButton(
+          onPressed: _signInWithGoogle,
+          style: ElevatedButton.styleFrom(
+            shape: const CircleBorder(), // Circular shape
+            padding: const EdgeInsets.all(0), // Remove padding
+            backgroundColor: const Color.fromARGB(76, 160, 235, 157), // Background color
           ),
+          child: const FaIcon(
+            FontAwesomeIcons.google,
+            size: 30,
+            color: Color.fromARGB(255, 27, 34, 26),
+          ),
+        ),
+      ),
+    ),
+  ],
+),
+       
           const SizedBox(height: 15),
         ],
       ),

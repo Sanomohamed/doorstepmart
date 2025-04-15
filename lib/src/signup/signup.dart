@@ -21,7 +21,7 @@ class Signup extends StatelessWidget {
                 const LoginImage(),
                 const SizedBox(height: 5),
                 const SignupForm(),
-                const SizedBox(height: 15),
+                const SizedBox(height: 10),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
