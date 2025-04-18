@@ -19,6 +19,7 @@ class _PurchaseHistoryPageState extends State<PurchaseHistoryPage> {
 
 Stream<List<Map<String, dynamic>>> fetchOrdersStream(String status) {
   if (userId == null || status.trim().isEmpty) return const Stream.empty();
+  print("Fetching all orders for user"); // Debug print
 
   return FirebaseFirestore.instance
       .collection('users')
@@ -78,6 +79,8 @@ Widget build(BuildContext context) {
               child: StreamBuilder<List<Map<String, dynamic>>>(
                 stream: fetchOrdersStream(selectedStatus),
                 builder: (context, snapshot) {
+                  print("Snapshot connection state: ${snapshot.connectionState}");
+  print("Snapshot data: ${snapshot.data}");
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
