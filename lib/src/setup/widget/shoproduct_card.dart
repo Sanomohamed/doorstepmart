@@ -15,44 +15,67 @@ class ShopProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = (product['imageUrls'] as List?)?.first ?? 'https://via.placeholder.com/150';
+    final imageUrl = (product['imageUrls'] as List?)?.first
+            ?? 'https://via.placeholder.com/150';
     final name = product['name'] ?? 'Unnamed';
     final price = product['price'] ?? 0.0;
 
     return Card(
+      margin: EdgeInsets.zero,  // remove default Card margin
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,
+      clipBehavior: Clip.antiAlias, 
       child: Column(
         children: [
+          // image takes up available space
           Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
+              fit: BoxFit.cover,
+              width: double.infinity,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text('RM${price.toStringAsFixed(2)}', style: const TextStyle(color: Colors.green)),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(onPressed: onEdit, icon: const Icon(Icons.edit, color: Colors.blue)),
-                    IconButton(onPressed: onDelete, icon: const Icon(Icons.delete, color: Colors.red)),
-                  ],
-                )
-              ],
-            ),
-          )
+
+          // metadata & actions, no padding
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // name
+              Text(
+                name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+
+              // price
+              Text(
+                'RM${price.toStringAsFixed(2)}',
+                style: const TextStyle(color: Colors.green),
+              ),
+
+              // edit/delete row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: onEdit,
+                    icon: const Icon(Icons.edit, color: Colors.blue),
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,       // remove button padding
+                    constraints: const BoxConstraints(), 
+                  ),
+                  IconButton(
+                    onPressed: onDelete,
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );

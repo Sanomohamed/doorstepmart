@@ -1,36 +1,42 @@
+// lib/src/setup/mini_mart_page.dart
+import 'package:doorstepmart/src/shop/header/header_section.dart';
 import 'package:doorstepmart/src/setup/shop_productgrid.dart';
-import 'package:doorstepmart/src/shop/header/header_section.dart';    //importing the necessary packages and files
 import 'package:flutter/material.dart';
 
 class MiniMartPage extends StatefulWidget {
-  const MiniMartPage({super.key});
+  const MiniMartPage({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _MiniMartPageState createState() => _MiniMartPageState();
 }
-/// This class manages the state of the MiniMartPage widget
-class _MiniMartPageState extends State<MiniMartPage> with AutomaticKeepAliveClientMixin {
+
+class _MiniMartPageState extends State<MiniMartPage>
+    with AutomaticKeepAliveClientMixin {
   @override
-  bool get wantKeepAlive => true; ///Keeps state
-  //manually refresh ShopProductGrid if needed
+  bool get wantKeepAlive => true;
+
   final GlobalKey<ShopProductGridState> _gridKey = GlobalKey();
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Call super.build to ensure the state is kept alive
+    super.build(context);
     return Scaffold(
-      backgroundColor: const Color.fromARGB(244, 228, 243, 230),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const HeaderSection(),
+          HeaderSection(
+            onSearchChanged: (val) {
+              setState(() => _searchQuery = val);
+            },
+          ),
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () async {
-                _gridKey.currentState?.refresh(); 
-              },
-              child: ShopProductGrid(key: _gridKey), 
+              onRefresh: () async => await _gridKey.currentState?.refresh(),
+              child: ShopProductGrid(
+                key: _gridKey,
+                searchQuery: _searchQuery,
+              ),
             ),
           ),
         ],

@@ -21,7 +21,7 @@ class OrderStatusDropdown extends StatelessWidget {
         DropdownMenuItem(value: 'Pending', child: Text('Pending', style: TextStyle(fontSize: 20))),
         DropdownMenuItem(value: 'Processing', child: Text('Processing',style: TextStyle(fontSize: 20))),
         DropdownMenuItem(value: 'Confirmed', child: Text('Confirmed', style: TextStyle(fontSize: 20))),
-        DropdownMenuItem(value: 'Cancelled', child: Text('Cancelled', style: TextStyle(fontSize: 20))),
+      //  DropdownMenuItem(value: 'Cancelled', child: Text('Cancelled', style: TextStyle(fontSize: 20))),
       ],
 //defining the function that will be called when the status is changed, the value parameter will be the new status selected from the dropdown menu
       onChanged: (value) {

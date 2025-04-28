@@ -24,6 +24,12 @@ void main() async {
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
  //creates the main app widget and sets up providers for state management, using MultiProvider to manage multiple providers in the app
+
+   // Build the CartModel, fetch the cart and load the default address immediately:
+  final cartModel = CartModel()
+    ..fetchCart()
+    ..loadDefaultAddress();
+
   runApp(
     MultiProvider(
       providers: [

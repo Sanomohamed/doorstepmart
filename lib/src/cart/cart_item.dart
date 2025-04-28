@@ -1,4 +1,5 @@
 import 'package:doorstepmart/src/cart/cart_helper.dart';
+import 'package:doorstepmart/src/shop/shop_page/shop_page.dart';    // ← import ShopPage
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,7 +14,7 @@ class CartItemWidget extends StatelessWidget {
     return FutureBuilder<String>(
       future: fetchShopName(item.shopId),
       builder: (context, snapshot) {
-        String shopName = snapshot.data ?? "Unknown Shop";
+        final shopName = snapshot.data ?? "Unknown Shop";
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -24,7 +25,7 @@ class CartItemWidget extends StatelessWidget {
               children: [
                 _buildProductImage(),
                 const SizedBox(width: 15),
-                _buildProductInfo(context,shopName),
+                _buildProductInfo(context, shopName),
                 _buildRemoveButton(context),
               ],
             ),
@@ -34,7 +35,6 @@ class CartItemWidget extends StatelessWidget {
     );
   }
 
-  ///  Product Image
   Widget _buildProductImage() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -43,51 +43,77 @@ class CartItemWidget extends StatelessWidget {
         width: 70,
         height: 70,
         fit: BoxFit.cover,
-        placeholder: (context, url) => const CircularProgressIndicator(),
-        errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+        placeholder: (ctx, _) => const CircularProgressIndicator(strokeWidth: 2),
+        errorWidget: (ctx, _, __) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
       ),
     );
   }
 
-  //Product Info
-  Widget _buildProductInfo(BuildContext context,String shopName) {
+  Widget _buildProductInfo(BuildContext context, String shopName) {
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(item.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)),
+          Text(
+            item.name,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
           const SizedBox(height: 5),
-          Text('RM${item.price.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.green)),
+          Text(
+            'RM${item.price.toStringAsFixed(2)}',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.green),
+          ),
           const SizedBox(height: 5),
-          Text(shopName, style: const TextStyle(fontSize: 14, color: Colors.blue)),
+
+          // ← clickable shop name
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => ShopPage(shopId: item.shopId)),
+              );
+            },
+            child: Text(
+              shopName,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+
           _buildQuantityControls(context),
         ],
       ),
     );
   }
 
-  // Quantity Controls
   Widget _buildQuantityControls(BuildContext context) {
     return Row(
       children: [
-        IconButton(icon: const Icon(Icons.remove_circle, color: Colors.redAccent), onPressed: () {
-          Provider.of<CartModel>(context, listen: false).decreaseQuantity(item);
-        }),
-        Text('${item.quantity}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        IconButton(icon: const Icon(Icons.add_circle, color: Colors.green), onPressed: () {
-          Provider.of<CartModel>(context, listen: false).increaseQuantity(item);
-        }),
+        IconButton(
+          icon: const Icon(Icons.remove_circle, color: Colors.redAccent),
+          onPressed: () => Provider.of<CartModel>(context, listen: false)
+              .decreaseQuantity(item),
+        ),
+        Text(
+          '${item.quantity}',
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        IconButton(
+          icon: const Icon(Icons.add_circle, color: Colors.green),
+          onPressed: () => Provider.of<CartModel>(context, listen: false)
+              .increaseQuantity(item),
+        ),
       ],
     );
   }
 
-  //Remove Button
   Widget _buildRemoveButton(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.delete, color: Colors.redAccent),
-      onPressed: () {
-        Provider.of<CartModel>(context, listen: false).remove(item);
-      },
+      onPressed: () => Provider.of<CartModel>(context, listen: false).remove(item),
     );
   }
 }

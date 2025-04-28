@@ -1,117 +1,158 @@
-// ignore_for_file: deprecated_member_use
-import 'package:doorstepmart/src/address/manage_addresses_page.dart';
-import 'package:doorstepmart/src/favorite/favorite_page.dart';
-import 'package:doorstepmart/src/shop/shop.dart';
+// home_header.dart
+import 'dart:async';
+
+import 'package:doorstepmart/src/home/categories/categories_section.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:doorstepmart/src/favorite/favorite_page.dart';
+//import 'package:doorstepmart/src/shop/category_page.dart'; // your category screen
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class HomeHeader extends StatelessWidget {
+class HomeHeader extends StatefulWidget {
   const HomeHeader({super.key});
 
   @override
+  State<HomeHeader> createState() => _HomeHeaderState();
+}
+
+class _HomeHeaderState extends State<HomeHeader> {
+  final PageController _pageController = PageController();
+  Timer? _timer;
+  int _currentPage = 0;
+  late Future<List<String>> _adsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _adsFuture = _loadAdUrls();
+    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (_pageController.hasClients) {
+        _currentPage = (_currentPage + 1) % (_adsFutureData?.length ?? 1);
+        _pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  List<String>? _adsFutureData;
+
+  Future<List<String>> _loadAdUrls() async {
+    final ref = FirebaseStorage.instance.ref('ads');
+    final list = await ref.listAll();
+    final urls = await Future.wait(list.items.map((f) => f.getDownloadURL()));
+    // cache for timer logic
+    _adsFutureData = urls;
+    return urls;
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
+      height: 240,
       width: double.infinity,
-      height: 220,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      decoration: BoxDecoration(
-        color: const Color(0xFFD2DBD6),
-        image: const DecorationImage(
-          image: AssetImage('assets/image.png'),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-          
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-                margin: const EdgeInsets.only(top: 5),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.search, size: 20, color: Colors.black54),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          hintText: 'Search for products...',
-                          hintStyle: TextStyle(color: Colors.black45),
-                          border: InputBorder.none,
-                        ),
-                        textInputAction: TextInputAction.search,
-                        onSubmitted: (value) {
-                          // Implement search
-                        },
+      child: Stack(
+        children: [
+          // ─── Ad Carousel ───
+          FutureBuilder<List<String>>(
+            future: _adsFuture,
+            builder: (ctx, snap) {
+              if (!snap.hasData) {
+                return Container(color: Colors.grey[200]);
+              }
+              final ads = snap.data!;
+              return PageView.builder(
+                controller: _pageController,
+                itemCount: ads.length,
+                onPageChanged: (i) => _currentPage = i,
+                itemBuilder: (ctx, i) => GestureDetector(
+                  onTap: () {
+                    // always go to "fruit" category
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const CategoriesSection(),
                       ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.mic, size: 20, color: Colors.black54),
-                      onPressed: () {
-                        // Future: Voice search functionality
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              // Favorite Button
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+                    );
+                  },
+                  child: Image.network(
+                    ads[i],
+                    fit: BoxFit.cover,
+                    width: double.infinity,
                   ),
-                  child: IconButton(
-                    icon: const Icon(
-                      FontAwesomeIcons.heart,
-                      size: 28,
-                      color: Color.fromARGB(179, 76, 175, 79),
-                    ),
+                ),
+              );
+            },
+          ),
+
+          // ─── Top Menu & Favorite ───
+          Positioned(
+            top: 16,
+            left: 16,
+            right: 16,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.menu, color: Color.fromARGB(255, 39, 39, 39), size: 28),
+                  onPressed: () {
+                    // open your drawer or menu
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.heart,
+                    color: Color.fromARGB(255, 20, 20, 20),
+                    size: 26,
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const FavoritePage()),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // ─── Overlay Search Bar ───
+          Positioned(
+            top: 60,
+            left: 16,
+            right: 16,
+            child: Material(
+              color: const Color.fromARGB(197, 255, 255, 255).withOpacity(0.9),
+              elevation: 4,
+              borderRadius: BorderRadius.circular(30),
+              child: TextField(
+                textInputAction: TextInputAction.search,
+                decoration: InputDecoration(
+                  hintText: 'Search for products...',
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.mic, color: Colors.grey),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) =>  const FavoritePage()),
-                      );
+                      // voice search
                     },
                   ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),
+                onSubmitted: (q) {
+                  // your search logic
+                },
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

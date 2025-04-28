@@ -1,9 +1,12 @@
 // ignore_for_file: use_build_context_synchronously, sort_child_properties_last
+
 import 'package:doorstepmart/services/address_services.dart';
 import 'package:doorstepmart/src/address/widgets/address_card.dart';
+import 'package:doorstepmart/src/address/edit_add_address.dart';
+import 'package:doorstepmart/src/shop/cart_model.dart';        // ← import CartModel
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:doorstepmart/src/address/edit_add_address.dart';
+import 'package:provider/provider.dart';                      // ← import Provider
 
 class ManageAddressesPage extends StatefulWidget {
   const ManageAddressesPage({super.key});
@@ -16,14 +19,20 @@ class _ManageAddressesPageState extends State<ManageAddressesPage> {
   final AddressService _addressService = AddressService();
 
   void _confirmDelete(String docId) async {
-    final confirmed = await showDialog(
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text("Delete Address"),
         content: const Text("Are you sure you want to delete this address?"),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancel")),
-          ElevatedButton(onPressed: () => Navigator.pop(context, true), child: const Text("Delete")),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Delete"),
+          ),
         ],
       ),
     );
@@ -36,14 +45,21 @@ class _ManageAddressesPageState extends State<ManageAddressesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Manage Delivery Addresses"), backgroundColor: Colors.green),
-      body: StreamBuilder(
+      appBar: AppBar(
+        title: const Text("Manage Delivery Addresses"),
+        backgroundColor: Colors.green,
+      ),
+      body: StreamBuilder<QuerySnapshot>(
         stream: _addressService.addressStream,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
           final addresses = snapshot.data!.docs;
 
-          if (addresses.isEmpty) return const Center(child: Text("No addresses found. Add one!"));
+          if (addresses.isEmpty) {
+            return const Center(child: Text("No addresses found. Add one!"));
+          }
 
           return ListView.builder(
             itemCount: addresses.length,
@@ -62,13 +78,22 @@ class _ManageAddressesPageState extends State<ManageAddressesPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => AddEditAddressPage(addressId: docId, existingData: data),
+                      builder: (_) => AddEditAddressPage(
+                        addressId: docId,
+                        existingData: data,
+                      ),
                     ),
                   );
                 },
                 onDelete: () => _confirmDelete(docId),
                 onSetDefault: () async {
+                  // 1) Update Firestore
                   await _addressService.setAsDefault(docId);
+
+                  // 2) Persist into CartModel so checkout remembers it
+                  Provider.of<CartModel>(context, listen: false)
+                      .setSelectedAddress(data);
+
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Default address updated")),

@@ -9,33 +9,51 @@ class CartPage extends StatelessWidget {
   const CartPage({super.key, this.showBackArrow = false});
 
   @override
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: _buildAppBar(context),
-     backgroundColor:const Color(0xFFF8F8F8),
-    body: Consumer<CartModel>(
-      builder: (context, cart, child) {
-        return Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800), 
-            child: Column(
-              children: [
-                Expanded(
-                  child: cart.items.isEmpty
-                      ? _buildEmptyCart()
-                      : _buildCartList(cart),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(context),
+      backgroundColor: const Color(0xFFF8F8F8),
+      body: Consumer<CartModel>(
+        builder: (context, cart, _) {
+          if (cart.items.isEmpty) {
+            return const Center(
+              child: Text(
+                "Your cart is empty",
+                style: TextStyle(fontSize: 18, color: Colors.black54),
+              ),
+            );
+          }
+
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: ListView.builder(
+                padding: const EdgeInsets.only(
+                  top: 8,
+                  left: 8,
+                  right: 8,
+                  bottom: 140, // leave room for the bottom sheet
                 ),
-                CartSummary(cart: cart),
-              ],
+                itemCount: cart.items.length,
+                itemBuilder: (context, index) {
+                  final item = cart.items[index];
+                  return CartItemWidget(item: item);
+                },
+              ),
             ),
-          ),
-        );
-      },
-    ),
-  );
-}
-  /// App Bar
+          );
+        },
+      ),
+
+      // ▶️ Sticky bottom summary
+      bottomNavigationBar: Consumer<CartModel>(
+        builder: (context, cart, _) {
+          return CartSummary(cart: cart);
+        },
+      ),
+    );
+  }
+
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: const Text('My Cart', style: TextStyle(color: Colors.black)),
@@ -47,26 +65,6 @@ Widget build(BuildContext context) {
               onPressed: () => Navigator.pop(context),
             )
           : null,
-    );
-  }
-  /// Empty Cart View
-  Widget _buildEmptyCart() {
-    return const Center(
-      child: Text(
-        "Your cart is empty",
-        style: TextStyle(fontSize: 18, color: Colors.black54),
-      ),
-    );
-  }
-  /// Cart List View
-  Widget _buildCartList(CartModel cart) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(8.0),
-      itemCount: cart.items.length,
-      itemBuilder: (context, index) {
-        final item = cart.items[index];
-        return CartItemWidget(item: item); 
-      },
     );
   }
 }

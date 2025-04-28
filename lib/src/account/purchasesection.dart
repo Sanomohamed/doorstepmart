@@ -20,7 +20,6 @@ class PurchaseSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ✅ Section Title
                 const Padding(
                   padding: EdgeInsets.only(left: 8, bottom: 10),
                   child: Text(
@@ -33,42 +32,53 @@ class PurchaseSection extends StatelessWidget {
                   ),
                 ),
 
-                // ✅ Purchase History Option
+                // View all history
                 ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
                   leading: CircleAvatar(
                     radius: 28,
-                    // ignore: deprecated_member_use
                     backgroundColor: Colors.blueAccent.withOpacity(0.2),
-                    child: const Icon(Icons.history, color: Colors.blueAccent, size: 28),
+                    child:
+                        const Icon(Icons.history, color: Colors.blueAccent, size: 28),
                   ),
                   title: const Text(
                     'View Purchase History',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Color.fromARGB(158, 0, 0, 0)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                   tileColor: Colors.white,
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const PurchaseHistoryPage()),
+                      MaterialPageRoute(
+                        builder: (_) => const PurchaseHistoryPage(),
+                      ),
                     );
                   },
                 ),
 
                 const SizedBox(height: 12),
 
-                // ✅ Purchase Status Grid
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildPurchaseItem(Icons.shopping_cart, "Orders", Colors.green),
-                    _buildPurchaseItem(Icons.local_shipping, "Received", Colors.orange),
-                    _buildPurchaseItem(Icons.check_circle, "Completed", Colors.blue),
-                    _buildPurchaseItem(Icons.cancel, "Canceled", Colors.red),
+                    _buildPurchaseItem(context,
+                        icon: Icons.shopping_cart,
+                        label: "Orders",
+                        color: Colors.green),
+                    _buildPurchaseItem(context,
+                        icon: Icons.local_shipping,
+                        label: "Received",
+                        color: Colors.orange),
+                    _buildPurchaseItem(context,
+                        icon: Icons.check_circle,
+                        label: "Confirmed",
+                        color: Colors.blue),
+                    _buildPurchaseItem(context,
+                        icon: Icons.cancel, label: "Canceled", color: Colors.red),
                   ],
                 ),
               ],
@@ -79,22 +89,44 @@ class PurchaseSection extends StatelessWidget {
     );
   }
 
-  // Uniform Styled Status Item
-  Widget _buildPurchaseItem(IconData icon, String label, Color color) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 30,
-          // ignore: deprecated_member_use
-          backgroundColor: color.withOpacity(0.2),
-          child: Icon(icon, size: 30, color: color),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-      ],
+  Widget _buildPurchaseItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color color,
+  }) {
+    // map your UI label to the Firestore status string
+    final status = {
+      'Orders': 'Pending',
+      'Received': 'Processing',
+      'Confirmed': 'Confirmed',
+      'Canceled': 'Canceled',
+    }[label]!;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(40),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => PurchaseHistoryPage(initialStatus: status),
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 30,
+            backgroundColor: color.withOpacity(0.2),
+            child: Icon(icon, size: 30, color: color),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -13,7 +13,7 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Edit Profile',
+          '   Account',
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -37,7 +37,7 @@ class ProfilePage extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               const ProfileForm(),
-              const SizedBox(height: 200),
+              const SizedBox(height: 80),
 
               // Logout Button
               Align(

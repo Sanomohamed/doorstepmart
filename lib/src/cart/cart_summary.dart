@@ -1,7 +1,4 @@
-// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 import 'package:doorstepmart/src/shop/cart_model.dart';
 import 'package:doorstepmart/src/checkout/checkout_page.dart';
 
@@ -11,49 +8,84 @@ class CartSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(color: Colors.grey.withOpacity(0.5), spreadRadius: 5, blurRadius: 7, offset: const Offset(0, 3)),
-        ],
-      ),
-      child: Column(
-        children: [
-          _buildSubtotal(),
-          const SizedBox(height: 10),
-          _buildCheckoutButton(context),
-        ],
-      ),
-    );
-  }
+    final subtotal = cart.totalPrice;
+    final isDisabled = subtotal <= 0;
 
-  /// Subtotal Row
-  Widget _buildSubtotal() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text('Subtotal:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        Text('RM${cart.totalPrice.toStringAsFixed(2)}',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green)),
-      ],
-    );
-  }
+    return SafeArea(
+      top: false,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Subtotal Row
+            Row(
+              children: [
+                const Text(
+                  'Subtotal:',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const Spacer(),
+                Text(
+                  'RM${subtotal.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isDisabled ? Colors.grey : Colors.green,
+                  ),
+                ),
+              ],
+            ),
 
-  ///Checkout Button
-  Widget _buildCheckoutButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: cart.items.isEmpty
-          ? () {
-              Fluttertoast.showToast(msg: "Add items to the cart to checkout", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.BOTTOM, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
-            }
-          : () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => CheckoutPage()));
-            },
-      style: ElevatedButton.styleFrom(backgroundColor: Colors.green, padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 100), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-      child: const Text('Check Out', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+
+            // Check Out button
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: isDisabled
+                    ? null
+                    : () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const CheckoutPage(),
+                          ),
+                        );
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      isDisabled ? Colors.grey[300] : Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(26),
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  'Check Out',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isDisabled ? Colors.white70 : Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

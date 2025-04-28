@@ -2,14 +2,20 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doorstepmart/src/address/address_form.dart';
+import 'package:doorstepmart/src/shop/cart_model.dart';    // ← import CartModel
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';                  // ← import Provider
 
 class AddEditAddressPage extends StatefulWidget {
   final String? addressId; // null = new address
   final Map<String, dynamic>? existingData;
 
-  const AddEditAddressPage({super.key, this.addressId, this.existingData});
+  const AddEditAddressPage({
+    super.key,
+    this.addressId,
+    this.existingData,
+  });
 
   @override
   State<AddEditAddressPage> createState() => _AddEditAddressPageState();
@@ -29,22 +35,32 @@ class _AddEditAddressPageState extends State<AddEditAddressPage> {
 
     try {
       if (widget.addressId != null) {
-        // Update
+        // Update existing
         await ref.doc(widget.addressId).update(addressData);
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Address updated")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Address updated")));
       } else {
         // Add new
-        await ref.add(addressData);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Address added")));
+        final newDoc = await ref.add(addressData);
+        // if you want the generated ID in your stored map:
+        addressData['id'] = newDoc.id;
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Address added")));
+      }
+
+      // ← NEW: if this address is default, persist into CartModel
+      if (addressData['isDefault'] == true) {
+        Provider.of<CartModel>(context, listen: false)
+            .setSelectedAddress(addressData);
       }
 
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      print("Error saving address: $e");
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error saving address")));
+      debugPrint("Error saving address: $e");
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Error saving address")));
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 

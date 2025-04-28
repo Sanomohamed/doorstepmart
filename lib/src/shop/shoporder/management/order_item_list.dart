@@ -8,36 +8,53 @@ class OrderItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-
+      padding: EdgeInsets.zero,
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-    
+        final price = (item['price'] as num?)?.toDouble() ?? 0.0;
+        final qty   = (item['quantity'] as num?)?.toInt()    ?? 1;
+        final total = price * qty;
+
         return Padding(
-          padding: const EdgeInsets.only(bottom: 18), 
+          padding: const EdgeInsets.only(bottom: 18),
           child: Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             elevation: 3,
             child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              leading: ClipRRect(// ClipRRect is used to create rounded corners for the image.
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  item['image'] ?? '',
-                  width: 80,
-                  height: 100,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.image_not_supported),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              minLeadingWidth: 80,
+              leading: SizedBox(
+                width: 80,
+                height: 80,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    item['image'] as String? ?? '',
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.image_not_supported, color: Colors.grey),
+                  ),
                 ),
               ),
               title: Text(
-                item['name'] ?? 'Unknown Item',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                item['name'] as String? ?? 'Unknown Item',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               subtitle: Text(
-                'RM${item['price'] ?? 0} x ${item['quantity'] ?? 1}',
-                style: const TextStyle(color: Colors.black54, fontSize: 16),
+                'RM${price.toStringAsFixed(2)} × $qty',
+                style:
+                    const TextStyle(color: Colors.black54, fontSize: 14),
+              ),
+              trailing: Text(
+                'RM${total.toStringAsFixed(2)}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
           ),

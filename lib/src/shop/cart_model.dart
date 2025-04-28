@@ -1,14 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';      //importing necessary packages for Firebase, Firestore, and Flutter widgets
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//CartItem class represents an item in the shopping cart
- class CartItem {
+
+// CartItem remains unchanged
+class CartItem {
   final String name;
   final String image;
   final double price;
   int quantity;
-  final String shopId; 
-  String shopName; 
+  final String shopId;
+  String shopName;
 
   CartItem({
     required this.name,
@@ -18,56 +19,61 @@ import 'package:flutter/material.dart';
     required this.shopId,
     required this.shopName,
   });
-//Convert CartItem to Firestore-friendly format
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'image': image,
-      'price': price,
-      'quantity': quantity,
-      'shopId': shopId,
-      'shopName': shopName,
-    };
-    }
-//Create CartItem from Firestore document
-  factory CartItem.fromMap(Map<String, dynamic> data) {
-    return CartItem(
-      name: data['name'],
-      image: data['image'],
-      price: (data['price'] as num).toDouble(),
-      quantity: data['quantity'],
-      shopId: data['shopId'],
-      shopName: data['shopName'] ?? "Unknown Shop", 
-    );
-     }
-    }
-//CartModel class manages the shopping cart items and their operations
+
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'image': image,
+        'price': price,
+        'quantity': quantity,
+        'shopId': shopId,
+        'shopName': shopName,
+      };
+
+  factory CartItem.fromMap(Map<String, dynamic> data) => CartItem(
+        name: data['name'],
+        image: data['image'],
+        price: (data['price'] as num).toDouble(),
+        quantity: data['quantity'],
+        shopId: data['shopId'],
+        shopName: data['shopName'] ?? "Unknown Shop",
+      );
+}
+
 class CartModel extends ChangeNotifier {
-  final List<CartItem> _items = []; //List of cart items
-  final Map<String, String> _shopNamesCache = {}; //Cache shop names
+  final List<CartItem> _items = [];
+  final Map<String, String> _shopNamesCache = {};
+
+  // ← NEW: hold the selected address for delivery
+  Map<String, dynamic>? _selectedAddress;
+  Map<String, dynamic>? get selectedAddress => _selectedAddress;
+
+  /// Update the chosen delivery address once—and it will persist
+  void setSelectedAddress(Map<String, dynamic> address) {
+    _selectedAddress = address;
+    notifyListeners();
+  }
 
   List<CartItem> get items => _items;
 
-//Firestore reference for the cart
   DocumentReference<Map<String, dynamic>> get cartRef {
-    User? user = FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       throw Exception("User not logged in");
     }
     return FirebaseFirestore.instance.collection('carts').doc(user.uid);
   }
-//Fetch cart from Firestore when user logs in
+
   Future<void> fetchCart() async {
     try {
-      var cartDoc = await cartRef.get();
+      final cartDoc = await cartRef.get();
       if (cartDoc.exists) {
-        var cartData = cartDoc.data();
+        final cartData = cartDoc.data();
         if (cartData != null && cartData.containsKey('items')) {
-          _items.clear();
-          _items.addAll(
-            (cartData['items'] as List<dynamic>).map((item) => CartItem.fromMap(item)),
-          );
-          await _fetchShopNames(); // Ensure shop names are up-to-date
+          _items
+            ..clear()
+            ..addAll((cartData['items'] as List<dynamic>)
+                .map((item) => CartItem.fromMap(item)));
+          await _fetchShopNames();
         }
       }
       notifyListeners();
@@ -75,37 +81,56 @@ class CartModel extends ChangeNotifier {
       debugPrint("🔥 Error fetching cart: $e");
     }
   }
-//Fetch shop names for all cart items
+
+   /// Call this at startup to load the user’s default delivery address.
+  Future<void> loadDefaultAddress() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final snap = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('addresses')
+        .where('isDefault', isEqualTo: true)
+        .limit(1)
+        .get();
+    if (snap.docs.isNotEmpty) {
+      final addr = snap.docs.first.data() as Map<String, dynamic>;
+      _selectedAddress = addr;
+      notifyListeners();
+    }
+  }
+
   Future<void> _fetchShopNames() async {
-    for (var item in _items) { // Loop through each item in the cart and fetch its shop name
+    for (var item in _items) {
       if (!_shopNamesCache.containsKey(item.shopId)) {
-        String shopName = await _fetchShopName(item.shopId);
+        final shopName = await _fetchShopName(item.shopId);
         _shopNamesCache[item.shopId] = shopName;
         item.shopName = shopName;
       }
     }
     notifyListeners();
   }
-//Fetch shop name from Firestore
+
   Future<String> _fetchShopName(String shopId) async {
-    // Check if the shop name is already cached to avoid redundant calls
     if (_shopNamesCache.containsKey(shopId)) {
       return _shopNamesCache[shopId]!;
     }
     try {
-      DocumentSnapshot shopDoc =
-        await FirebaseFirestore.instance.collection('shops').doc(shopId).get();
+      final shopDoc = await FirebaseFirestore.instance
+          .collection('shops')
+          .doc(shopId)
+          .get();
       if (shopDoc.exists) {
-        String shopName = shopDoc['name'] ?? "Unknown Shop";
-        _shopNamesCache[shopId] = shopName;
-        return shopName;
+        final name = shopDoc['name'] ?? "Unknown Shop";
+        _shopNamesCache[shopId] = name;
+        return name;
       }
     } catch (e) {
       debugPrint("🔥 Error fetching shop name: $e");
     }
     return "Unknown Shop";
   }
-//Save cart to Firestore
+
   Future<void> saveCart() async {
     try {
       await cartRef.set({
@@ -115,70 +140,63 @@ class CartModel extends ChangeNotifier {
       debugPrint("🔥 Error saving cart: $e");
     }
   }
-//Add item to cart
- void add(CartItem item) async {
-  String shopName = await _fetchShopName(item.shopId); //Fetch correct shop name
-  item.shopName = shopName;
-//Check if item already exists in cart
-  for (var cartItem in _items) {
-    if (cartItem.name == item.name && cartItem.shopId == item.shopId) {
-      cartItem.quantity += 1;
-      notifyListeners();
-      saveCart();
-      return;
+
+  void add(CartItem item) async {
+    final name = await _fetchShopName(item.shopId);
+    item.shopName = name;
+
+    for (var cartItem in _items) {
+      if (cartItem.name == item.name && cartItem.shopId == item.shopId) {
+        cartItem.quantity += 1;
+        notifyListeners();
+        saveCart();
+        return;
+      }
     }
+    _items.add(item);
+    notifyListeners();
+    saveCart();
   }
-  _items.add(item);
-  notifyListeners();
-  saveCart();
- }
-//Remove item from cart
+
   void remove(CartItem item) {
     _items.remove(item);
     notifyListeners();
     saveCart();
   }
-//Increase item quantity
-  void increaseQuantity(CartItem item) {  
+
+  void increaseQuantity(CartItem item) {
     item.quantity += 1;
     notifyListeners();
     saveCart();
   }
-//Decrease item quantity
-  void decreaseQuantity(CartItem item) { 
+
+  void decreaseQuantity(CartItem item) {
     item.quantity -= 1;
-    if (item.quantity == 0) {
-      remove(item);
-    }
+    if (item.quantity <= 0) remove(item);
     notifyListeners();
     saveCart();
   }
-//Clear cart
+
   void clearCart() {
     _items.clear();
     notifyListeners();
     saveCart();
   }
-//Get total price of cart items
-  // ignore: avoid_types_as_parameter_names
-  double get totalPrice => _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
-//Calculate tax
-  double get tax => totalPrice * 0.05;
-//Service fee
-  double get serviceFee => 2.0;
-// Get total amount including tax and service fee
-  double get total => totalPrice + tax + serviceFee;
-//Group items by shopName for checkout
-  Map<String, List<CartItem>> getGroupedByShop() {
 
-    Map<String, List<CartItem>> groupedItems = {};
-    
-    for (var item in _items) {  // Loop through each item in the cart and group them by shop name
-      if (!groupedItems.containsKey(item.shopName)) {
-        groupedItems[item.shopName] = [];
-      }
-      groupedItems[item.shopName]!.add(item);
+  double get totalPrice =>
+      _items.fold(0.0, (sum, item) => sum + item.price * item.quantity);
+
+  double get tax => totalPrice * 0.05;
+
+  double get serviceFee => 2.0;
+
+  double get total => totalPrice + tax + serviceFee;
+
+  Map<String, List<CartItem>> getGroupedByShop() {
+    final Map<String, List<CartItem>> grouped = {};
+    for (var item in _items) {
+      grouped.putIfAbsent(item.shopName, () => []).add(item);
     }
-    return groupedItems;
+    return grouped;
   }
 }
