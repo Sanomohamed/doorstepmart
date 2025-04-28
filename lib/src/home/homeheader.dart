@@ -2,10 +2,10 @@
 import 'dart:async';
 
 import 'package:doorstepmart/src/home/categories/categories_section.dart';
+import 'package:doorstepmart/src/search/productsearchdelegate.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:doorstepmart/src/favorite/favorite_page.dart';
-//import 'package:doorstepmart/src/shop/category_page.dart'; // your category screen
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeHeader extends StatefulWidget {
@@ -20,14 +20,15 @@ class _HomeHeaderState extends State<HomeHeader> {
   Timer? _timer;
   int _currentPage = 0;
   late Future<List<String>> _adsFuture;
+  List<String>? _adsFutureData;
 
   @override
   void initState() {
     super.initState();
     _adsFuture = _loadAdUrls();
     _timer = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (_pageController.hasClients) {
-        _currentPage = (_currentPage + 1) % (_adsFutureData?.length ?? 1);
+      if (_pageController.hasClients && _adsFutureData != null) {
+        _currentPage = (_currentPage + 1) % _adsFutureData!.length;
         _pageController.animateToPage(
           _currentPage,
           duration: const Duration(milliseconds: 500),
@@ -37,13 +38,10 @@ class _HomeHeaderState extends State<HomeHeader> {
     });
   }
 
-  List<String>? _adsFutureData;
-
   Future<List<String>> _loadAdUrls() async {
     final ref = FirebaseStorage.instance.ref('ads');
     final list = await ref.listAll();
     final urls = await Future.wait(list.items.map((f) => f.getDownloadURL()));
-    // cache for timer logic
     _adsFutureData = urls;
     return urls;
   }
@@ -76,7 +74,6 @@ class _HomeHeaderState extends State<HomeHeader> {
                 onPageChanged: (i) => _currentPage = i,
                 itemBuilder: (ctx, i) => GestureDetector(
                   onTap: () {
-                    // always go to "fruit" category
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -103,17 +100,15 @@ class _HomeHeaderState extends State<HomeHeader> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.menu, color: Color.fromARGB(255, 39, 39, 39), size: 28),
+                  icon: const Icon(Icons.menu,
+                      color: Color.fromARGB(255, 39, 39, 39), size: 28),
                   onPressed: () {
                     // open your drawer or menu
                   },
                 ),
                 IconButton(
-                  icon: const Icon(
-                    FontAwesomeIcons.heart,
-                    color: Color.fromARGB(255, 20, 20, 20),
-                    size: 26,
-                  ),
+                  icon: const Icon(FontAwesomeIcons.heart,
+                      color: Color.fromARGB(255, 20, 20, 20), size: 26),
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const FavoritePage()),
@@ -129,14 +124,19 @@ class _HomeHeaderState extends State<HomeHeader> {
             left: 16,
             right: 16,
             child: Material(
-              color: const Color.fromARGB(197, 255, 255, 255).withOpacity(0.9),
+              color: Colors.white.withOpacity(0.9),
               elevation: 4,
               borderRadius: BorderRadius.circular(30),
               child: TextField(
-                textInputAction: TextInputAction.search,
+                readOnly: true,           // ← no direct typing here
+                onTap: () => showSearch(
+                  context: context,
+                  delegate: ProductSearchDelegate(),
+                ),
                 decoration: InputDecoration(
                   hintText: 'Search for products...',
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                  prefixIcon:
+                      const Icon(Icons.search, color: Colors.grey),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.mic, color: Colors.grey),
                     onPressed: () {
@@ -144,11 +144,9 @@ class _HomeHeaderState extends State<HomeHeader> {
                     },
                   ),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 14),
                 ),
-                onSubmitted: (q) {
-                  // your search logic
-                },
               ),
             ),
           ),

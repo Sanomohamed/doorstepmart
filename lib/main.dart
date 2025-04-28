@@ -33,7 +33,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => CartModel()),
+        ChangeNotifierProvider<CartModel>.value(value: cartModel),
         ChangeNotifierProvider(create: (context) => FavoriteModel()),
         ChangeNotifierProvider(create: (context) => ProductProvider()),
       ],
