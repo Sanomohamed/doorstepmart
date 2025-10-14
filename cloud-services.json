@@ -1,0 +1,86 @@
+{
+  "repository": "Sanomohamed/doorstepmart",
+  "analysis_date": "2025-10-14",
+  "aws_connected": false,
+  "cloud_platforms": [
+    {
+      "name": "Google Firebase",
+      "status": "active",
+      "project_id": "doorstepmart-9c3ad",
+      "project_number": "572521062790",
+      "services": [
+        {
+          "name": "Firebase Authentication",
+          "version": "^5.4.1",
+          "purpose": "User authentication and authorization"
+        },
+        {
+          "name": "Cloud Firestore",
+          "version": "^5.6.3",
+          "purpose": "NoSQL database for app data"
+        },
+        {
+          "name": "Firebase Storage",
+          "version": "^12.4.2",
+          "purpose": "Cloud storage for media files",
+          "bucket": "doorstepmart-9c3ad.firebasestorage.app"
+        },
+        {
+          "name": "Firebase Realtime Database",
+          "version": "^11.3.3",
+          "purpose": "Real-time data synchronization"
+        },
+        {
+          "name": "Firebase App Check",
+          "version": "^0.3.2+4",
+          "purpose": "Application security"
+        }
+      ],
+      "platforms": {
+        "android": {
+          "app_id": "1:572521062790:android:c9ef1d3b699f3649db4c07",
+          "package_name": "com.example.doorstepmart"
+        },
+        "ios": {
+          "app_id": "1:572521062790:ios:8e622a74f749d99adb4c07",
+          "bundle_id": "com.example.doorstepmart"
+        },
+        "web": {
+          "app_id": "1:572521062790:web:2f6c3efae6c2788fdb4c07",
+          "auth_domain": "doorstepmart-9c3ad.firebaseapp.com"
+        },
+        "macos": {
+          "app_id": "1:572521062790:ios:8e622a74f749d99adb4c07",
+          "bundle_id": "com.example.doorstepmart"
+        }
+      }
+    },
+    {
+      "name": "GitHub Actions",
+      "status": "active",
+      "purpose": "CI/CD automation",
+      "workflows": [
+        {
+          "name": "Dart",
+          "file": ".github/workflows/dart.yml",
+          "triggers": ["push", "pull_request"]
+        }
+      ]
+    }
+  ],
+  "aws_services": {
+    "connected": false,
+    "services": []
+  },
+  "configuration_files": [
+    "lib/firebase_options.dart",
+    "android/app/google-services.json",
+    "firebase.json",
+    ".github/workflows/dart.yml"
+  ],
+  "console_links": {
+    "firebase": "https://console.firebase.google.com/project/doorstepmart-9c3ad",
+    "github": "https://github.com/Sanomohamed/doorstepmart",
+    "storage": "https://doorstepmart-9c3ad.firebasestorage.app"
+  }
+}
