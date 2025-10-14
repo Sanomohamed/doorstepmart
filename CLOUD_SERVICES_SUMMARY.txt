@@ -1,0 +1,96 @@
+================================================================================
+CLOUD SERVICES CONNECTED TO DOORSTEPMART REPOSITORY
+================================================================================
+
+QUICK ANSWER: NO AWS CONNECTIONS FOUND
+This repository uses Google Firebase, not Amazon Web Services (AWS).
+
+================================================================================
+CONNECTED SERVICES
+================================================================================
+
+1. GOOGLE FIREBASE (Primary Backend)
+   Project ID: doorstepmart-9c3ad
+   Project Number: 572521062790
+   
+   Services in use:
+   ✓ Firebase Authentication (User login/signup)
+   ✓ Cloud Firestore (Database)
+   ✓ Firebase Storage (File storage for images)
+   ✓ Firebase Realtime Database
+   ✓ Firebase App Check (Security)
+   ✓ Google Sign-In Integration
+
+2. GITHUB ACTIONS (CI/CD)
+   ✓ Automated testing workflow (.github/workflows/dart.yml)
+   ✓ Runs on GitHub-hosted Ubuntu runners
+
+================================================================================
+AWS SERVICES STATUS
+================================================================================
+
+Current AWS Connections: NONE
+
+Not using:
+✗ AWS S3
+✗ AWS Lambda
+✗ AWS EC2
+✗ AWS RDS
+✗ AWS DynamoDB
+✗ AWS Cognito
+✗ AWS Amplify
+✗ Any other AWS services
+
+================================================================================
+CONFIGURATION FILES
+================================================================================
+
+Firebase Configuration:
+- lib/firebase_options.dart (API keys for all platforms)
+- android/app/google-services.json (Android config)
+- firebase.json (Firebase project settings)
+
+GitHub Actions:
+- .github/workflows/dart.yml (CI/CD workflow)
+
+================================================================================
+PLATFORM CONFIGURATIONS
+================================================================================
+
+Android:
+- App ID: 1:572521062790:android:c9ef1d3b699f3649db4c07
+- Package: com.example.doorstepmart
+
+iOS:
+- App ID: 1:572521062790:ios:8e622a74f749d99adb4c07
+- Bundle ID: com.example.doorstepmart
+
+Web:
+- App ID: 1:572521062790:web:2f6c3efae6c2788fdb4c07
+- Auth Domain: doorstepmart-9c3ad.firebaseapp.com
+
+macOS:
+- App ID: 1:572521062790:ios:8e622a74f749d99adb4c07
+- Bundle ID: com.example.doorstepmart
+
+================================================================================
+HOW TO ACCESS YOUR SERVICES
+================================================================================
+
+Firebase Console:
+https://console.firebase.google.com/project/doorstepmart-9c3ad
+
+GitHub Repository:
+https://github.com/Sanomohamed/doorstepmart
+
+Storage Bucket:
+doorstepmart-9c3ad.firebasestorage.app
+
+================================================================================
+FOR MORE DETAILS
+================================================================================
+
+See: AWS_AND_CLOUD_SERVICES.md (comprehensive documentation)
+
+Last Updated: October 14, 2025
+================================================================================
